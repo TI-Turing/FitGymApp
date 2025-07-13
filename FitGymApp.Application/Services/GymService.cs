@@ -11,6 +11,7 @@ using AutoMapper;
 using QRCoder;
 using System.Drawing;
 using System.IO;
+using FitGymApp.Domain.DTO.Gym.Response;
 
 namespace FitGymApp.Application.Services
 {
@@ -208,6 +209,71 @@ namespace FitGymApp.Application.Services
                 {
                     Success = false,
                     Message = "Error técnico al generar el QR.",
+                    ErrorCode = "TechnicalError"
+                };
+            }
+        }
+
+        public async Task<ApplicationResponse<GenerateGymQrResponse>> GenerateGymQrWithPlanTypeAsync(Guid gymId)
+        {
+            try
+            {
+                var gym = await _gymRepository.GetGymByIdAsync(gymId);
+                if (gym == null)
+                {
+                    return new ApplicationResponse<GenerateGymQrResponse>
+                    {
+                        Success = false,
+                        Message = "Gimnasio no encontrado.",
+                        ErrorCode = "NotFound"
+                    };
+                }
+                var gymPlanSelected = gym.GymPlanSelected;
+                if (gymPlanSelected == null)
+                {
+                    return new ApplicationResponse<GenerateGymQrResponse>
+                    {
+                        Success = false,
+                        Message = "Plan seleccionado de gimnasio no encontrado.",
+                        ErrorCode = "NotFound"
+                    };
+                }
+                var gymPlanSelectedType = gymPlanSelected.GymPlanSelectedType;
+                if (gymPlanSelectedType == null)
+                {
+                    return new ApplicationResponse<GenerateGymQrResponse>
+                    {
+                        Success = false,
+                        Message = "Tipo de plan seleccionado de gimnasio no encontrado.",
+                        ErrorCode = "NotFound"
+                    };
+                }
+                // Generar QR
+                using (var qrGenerator = new QRCodeGenerator())
+                using (var qrCodeData = qrGenerator.CreateQrCode(gymId.ToString(), QRCodeGenerator.ECCLevel.Q))
+                using (var qrCode = new PngByteQRCode(qrCodeData))
+                {
+                    byte[] qrCodeImage = qrCode.GetGraphic(20);
+                    var response = new GenerateGymQrResponse
+                    {
+                        QrCode = qrCodeImage,
+                        GymPlanSelectedType = gymPlanSelectedType
+                    };
+                    return new ApplicationResponse<GenerateGymQrResponse>
+                    {
+                        Success = true,
+                        Data = response,
+                        Message = "QR y tipo de plan seleccionado generados correctamente."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                await _logErrorService.LogErrorAsync(ex);
+                return new ApplicationResponse<GenerateGymQrResponse>
+                {
+                    Success = false,
+                    Message = "Error técnico al generar el QR y tipo de plan.",
                     ErrorCode = "TechnicalError"
                 };
             }

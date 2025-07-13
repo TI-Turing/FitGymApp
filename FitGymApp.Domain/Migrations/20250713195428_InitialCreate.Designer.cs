@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitGymApp.Domain.Migrations
 {
     [DbContext(typeof(FitGymAppContext))]
-    [Migration("20250712121403_InitialCreate")]
+    [Migration("20250713195428_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -749,7 +749,7 @@ namespace FitGymApp.Domain.Migrations
 
                     b.Property<Guid>("GymPlanSelectedTypeId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("GymPlanSelectedType_Id");
+                        .HasColumnName("GymPlanSelectedTypeId");
 
                     b.Property<string>("Ip")
                         .HasMaxLength(45)
@@ -807,11 +807,19 @@ namespace FitGymApp.Domain.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CountryId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Ip")
                         .HasMaxLength(45)
@@ -825,8 +833,14 @@ namespace FitGymApp.Domain.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
+
+                    b.Property<decimal?>("UsdPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -1866,16 +1880,16 @@ namespace FitGymApp.Domain.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<DateTime>("BirthDate")
+                    b.Property<DateTime?>("BirthDate")
                         .HasColumnType("datetime");
 
-                    b.Property<Guid>("CityId")
+                    b.Property<Guid?>("CityId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CountryId")
+                    b.Property<Guid?>("CountryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -1885,7 +1899,7 @@ namespace FitGymApp.Domain.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<Guid>("DocumentTypeId")
+                    b.Property<Guid?>("DocumentTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
@@ -1905,31 +1919,33 @@ namespace FitGymApp.Domain.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("EmployeeRegisterDailyUser_UserId");
 
-                    b.Property<Guid>("GymId")
+                    b.Property<Guid?>("GymId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("IdEps")
+                    b.Property<Guid?>("GymUserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("GymUser_Id");
+
+                    b.Property<Guid?>("IdEps")
                         .HasMaxLength(50)
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("IdEPS");
 
-                    b.Property<Guid>("IdGender")
+                    b.Property<Guid?>("IdGender")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Ip")
                         .HasMaxLength(45)
                         .HasColumnType("nvarchar(45)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -1979,23 +1995,18 @@ namespace FitGymApp.Domain.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("UserFitUser_UserId");
 
-                    b.Property<Guid?>("UserGymUserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("UserGym_UserId");
-
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid>("UserTypeId")
+                    b.Property<Guid?>("UserTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "EmployeeRegisterDailyUserUserId" }, "IX_FK_EmployeeRegisterDailyUser");
+                    b.HasIndex("GymId");
 
-                    b.HasIndex(new[] { "GymId" }, "IX_FK_GymUser");
+                    b.HasIndex(new[] { "EmployeeRegisterDailyUserUserId" }, "IX_FK_EmployeeRegisterDailyUser");
 
                     b.HasIndex(new[] { "ScheduleUserUserId" }, "IX_FK_ScheduleUser");
 
@@ -2005,7 +2016,7 @@ namespace FitGymApp.Domain.Migrations
 
                     b.HasIndex(new[] { "UserFitUserUserId" }, "IX_FK_UserFitUser");
 
-                    b.HasIndex(new[] { "UserGymUserId" }, "IX_FK_UserGym");
+                    b.HasIndex(new[] { "GymUserId" }, "IX_FK_UserGymUser");
 
                     b.HasIndex(new[] { "PlanId" }, "IX_FK_UserPlan");
 
@@ -2566,9 +2577,12 @@ namespace FitGymApp.Domain.Migrations
 
                     b.HasOne("FitGymApp.Domain.Models.Gym", "Gym")
                         .WithMany("UserGyms")
-                        .HasForeignKey("GymId")
-                        .IsRequired()
-                        .HasConstraintName("FK_GymUser");
+                        .HasForeignKey("GymId");
+
+                    b.HasOne("FitGymApp.Domain.Models.Gym", "GymUser")
+                        .WithMany("UserUserGymAssigneds")
+                        .HasForeignKey("GymUserId")
+                        .HasConstraintName("FK_UserGymUser");
 
                     b.HasOne("FitGymApp.Domain.Models.Plan", "Plan")
                         .WithMany("Users")
@@ -2595,20 +2609,16 @@ namespace FitGymApp.Domain.Migrations
                         .HasForeignKey("UserFitUserUserId")
                         .HasConstraintName("FK_UserFitUser");
 
-                    b.HasOne("FitGymApp.Domain.Models.Gym", "UserGymUser")
-                        .WithMany("UserUserGymUsers")
-                        .HasForeignKey("UserGymUserId")
-                        .HasConstraintName("FK_UserGym");
-
                     b.HasOne("FitGymApp.Domain.Models.UserType", "UserType")
                         .WithMany("Users")
                         .HasForeignKey("UserTypeId")
-                        .IsRequired()
                         .HasConstraintName("FK_UserUserType");
 
                     b.Navigation("EmployeeRegisterDailyUserUser");
 
                     b.Navigation("Gym");
+
+                    b.Navigation("GymUser");
 
                     b.Navigation("Plan");
 
@@ -2619,8 +2629,6 @@ namespace FitGymApp.Domain.Migrations
                     b.Navigation("UserEmployeeUserUser");
 
                     b.Navigation("UserFitUserUser");
-
-                    b.Navigation("UserGymUser");
 
                     b.Navigation("UserType");
                 });
@@ -2727,7 +2735,7 @@ namespace FitGymApp.Domain.Migrations
 
                     b.Navigation("UserGyms");
 
-                    b.Navigation("UserUserGymUsers");
+                    b.Navigation("UserUserGymAssigneds");
                 });
 
             modelBuilder.Entity("FitGymApp.Domain.Models.GymPlanSelected", b =>

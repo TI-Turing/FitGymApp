@@ -1,6 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using System.IO;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+// Solo para design-time
+#if NET9_0_OR_GREATER
+#endif
 
 namespace FitGymApp.Domain.Models;
 
@@ -469,7 +476,7 @@ public partial class FitGymAppContext : DbContext
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
             entity.Property(e => e.EndDate).HasColumnType("datetime");
-            entity.Property(e => e.GymPlanSelectedTypeId).HasColumnName("GymPlanSelectedType_Id");
+            entity.Property(e => e.GymPlanSelectedTypeId).HasColumnName("GymPlanSelectedTypeId");
             entity.Property(e => e.Ip).HasMaxLength(45);
             entity.Property(e => e.StartDate).HasColumnType("datetime");
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
@@ -1129,4 +1136,22 @@ public partial class FitGymAppContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+}
+
+public class FitGymAppContextFactory : IDesignTimeDbContextFactory<FitGymAppContext>
+{
+    public FitGymAppContext CreateDbContext(string[] args)
+    {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false)
+            .Build();
+
+        var optionsBuilder = new DbContextOptionsBuilder<FitGymAppContext>();
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+        optionsBuilder.UseSqlServer(connectionString);
+
+        return new FitGymAppContext(optionsBuilder.Options);
+    }
 }

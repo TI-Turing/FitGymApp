@@ -10,6 +10,7 @@ using System.Drawing;
 using QRCoder;
 using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 using FitGymApp.Domain.DTO.Gym.Request;
+using FitGymApp.Domain.DTO.Gym.Response;
 using FitGymApp.Utils;
 
 namespace FitGymApp.Functions.GymFunction;
@@ -44,17 +45,16 @@ public class UtilsFunction
             return badResponse;
         }
 
-        var qrResult = await _gymService.GenerateGymQrAsync(requestDto.GymId);
-        if (!qrResult.Success || qrResult.Data == null)
+        var result = await _gymService.GenerateGymQrWithPlanTypeAsync(requestDto.GymId);
+        if (!result.Success || result.Data == null)
         {
             var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
-            await notFoundResponse.WriteStringAsync(qrResult.Message ?? "No se pudo generar el QR");
+            await notFoundResponse.WriteStringAsync(result.Message ?? "No se pudo generar el QR y tipo de plan");
             return notFoundResponse;
         }
 
         var response = req.CreateResponse(HttpStatusCode.OK);
-        response.Headers.Add("Content-Type", "image/png");
-        await response.Body.WriteAsync(qrResult.Data, 0, qrResult.Data.Length);
+        await response.WriteAsJsonAsync(result.Data);
         return response;
     }
 }

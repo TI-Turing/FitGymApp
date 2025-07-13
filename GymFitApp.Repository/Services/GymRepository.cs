@@ -29,7 +29,10 @@ namespace FitGymApp.Repository.Services
 
         public async Task<Gym?> GetGymByIdAsync(Guid id)
         {
-            return await _context.Gyms.FirstOrDefaultAsync(e => e.Id == id && e.IsActive);
+            return await _context.Gyms
+                .Include(g => g.GymPlanSelected)
+                    .ThenInclude(gps => gps.GymPlanSelectedType)
+                .FirstOrDefaultAsync(e => e.Id == id && e.IsActive);
         }
 
         public async Task<IEnumerable<Gym>> GetAllGymsAsync()

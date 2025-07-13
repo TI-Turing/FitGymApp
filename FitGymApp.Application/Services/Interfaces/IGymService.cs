@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FitGymApp.Domain.Models;
 using FitGymApp.Domain.DTO.Gym.Request;
 using FitGymApp.Domain.DTO;
+using FitGymApp.Domain.DTO.Gym.Response;
 
 namespace FitGymApp.Application.Services.Interfaces
 {
@@ -16,5 +17,6 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ApplicationResponse<bool>> DeleteGymAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<Gym>>> FindGymsByFieldsAsync(Dictionary<string, object> filters);
         Task<ApplicationResponse<byte[]>> GenerateGymQrAsync(Guid gymId);
+        Task<ApplicationResponse<GenerateGymQrResponse>> GenerateGymQrWithPlanTypeAsync(Guid gymId);
     }
 }
