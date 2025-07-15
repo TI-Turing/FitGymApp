@@ -4,6 +4,7 @@ using FitGymApp.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitGymApp.Domain.Migrations
 {
     [DbContext(typeof(FitGymAppContext))]
-    partial class FitGymAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250715162103_MakeOwnerUserIdNullableInGym")]
+    partial class MakeOwnerUserIdNullableInGym
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -742,9 +745,6 @@ namespace FitGymApp.Domain.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("QrImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SocialMediaLinks")
                         .HasColumnType("nvarchar(max)");
 
@@ -984,9 +984,6 @@ namespace FitGymApp.Domain.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("InvocationId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Ip")
                         .HasMaxLength(45)
                         .HasColumnType("nvarchar(45)");
@@ -996,7 +993,8 @@ namespace FitGymApp.Domain.Migrations
 
                     b.Property<string>("PastObject")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Table")
                         .IsRequired()

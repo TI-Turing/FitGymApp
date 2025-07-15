@@ -457,6 +457,13 @@ public partial class FitGymAppContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("NIT");
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+
+            // Nueva relación: OwnerUserId como FK a User
+            entity.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(g => g.OwnerUserId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_GymOwnerUser");
         });
 
         modelBuilder.Entity<GymPlanSelected>(entity =>
@@ -555,7 +562,7 @@ public partial class FitGymAppContext : DbContext
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
             entity.Property(e => e.Ip).HasMaxLength(45);
-            entity.Property(e => e.PastObject).HasMaxLength(1000);
+            entity.Property(e => e.PastObject).HasColumnType("nvarchar(max)");
             entity.Property(e => e.Table).HasMaxLength(100);
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 

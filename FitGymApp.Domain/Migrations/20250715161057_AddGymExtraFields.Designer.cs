@@ -4,6 +4,7 @@ using FitGymApp.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitGymApp.Domain.Migrations
 {
     [DbContext(typeof(FitGymAppContext))]
-    partial class FitGymAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250715161057_AddGymExtraFields")]
+    partial class AddGymExtraFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -736,13 +739,10 @@ namespace FitGymApp.Domain.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("NIT");
 
-                    b.Property<Guid?>("OwnerUserId")
+                    b.Property<Guid>("OwnerUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QrImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SocialMediaLinks")
@@ -766,8 +766,6 @@ namespace FitGymApp.Domain.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("GymTypeId");
-
-                    b.HasIndex("OwnerUserId");
 
                     b.ToTable("Gym", (string)null);
                 });
@@ -984,9 +982,6 @@ namespace FitGymApp.Domain.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("InvocationId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Ip")
                         .HasMaxLength(45)
                         .HasColumnType("nvarchar(45)");
@@ -996,7 +991,8 @@ namespace FitGymApp.Domain.Migrations
 
                     b.Property<string>("PastObject")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Table")
                         .IsRequired()
@@ -2305,12 +2301,6 @@ namespace FitGymApp.Domain.Migrations
                         .HasForeignKey("GymTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("FitGymApp.Domain.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("OwnerUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("FK_GymOwnerUser");
 
                     b.Navigation("GymType");
                 });

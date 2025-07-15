@@ -10,6 +10,7 @@ namespace GymFitApp.Repository.Persistence.Seed
         public static async Task SeedAsync(FitGymAppContext context)
         {
             await GymPlanSelectedTypeSeed.SeedAsync(context);
+            await GymTypeSeed.SeedAsync(context);
             // Agrega aquí otros seeds si los tienes
         }
     }

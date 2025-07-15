@@ -13,5 +13,6 @@ namespace FitGymApp.Repository.Services.Interfaces
         Task<bool> UpdateGymAsync(Gym entity);
         Task<bool> DeleteGymAsync(Guid id);
         Task<IEnumerable<Gym>> FindGymsByFieldsAsync(Dictionary<string, object> filters);
+        Task<string> UploadGymLogoAsync(Guid gymId, byte[] image, string? fileName, string? contentType);
     }
 }

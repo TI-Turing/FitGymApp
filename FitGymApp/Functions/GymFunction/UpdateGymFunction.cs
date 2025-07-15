@@ -1,14 +1,16 @@
 using FitGymApp.Domain.DTO.Gym.Request;
 using FitGymApp.Domain.DTO;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using FitGymApp.Application.Services.Interfaces;
 using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using FitGymApp.Utils;
+using Microsoft.AspNetCore.Http;
 
 namespace FitGymApp.Functions.GymFunction;
 
@@ -24,56 +26,61 @@ public class UpdateGymFunction
     }
 
     [Function("Gym_UpdateGymFunction")]
-    public async Task<ApiResponse<Guid>> UpdateAsync([HttpTrigger(AuthorizationLevel.Function, "put", Route = "gym/update")] HttpRequest req)
+    public async Task<HttpResponseData> UpdateAsync(
+        [HttpTrigger(AuthorizationLevel.Function, "put", Route = "gym/update")] HttpRequestData req,
+        FunctionContext executionContext)
     {
-        if (!JwtValidator.ValidateJwt(req, out var error))
+        var logger = executionContext.GetLogger("Gym_UpdateGymFunction");
+        logger.LogInformation("Procesando solicitud para actualizar un Gym.");
+        var invocationId = executionContext.InvocationId;
+
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
-            return new ApiResponse<Guid>
+            var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
+            await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
             {
                 Success = false,
                 Message = error!,
                 Data = default,
                 StatusCode = StatusCodes.Status401Unauthorized
-            };
+            });
+            return unauthorizedResponse;
+        }
+        string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+        var objRequest = JsonConvert.DeserializeObject<UpdateGymRequest>(requestBody);
+        var validationResult = ModelValidator.ValidateModel<UpdateGymRequest, Guid>(objRequest, StatusCodes.Status400BadRequest);
+        if (validationResult is not null)
+        {
+            var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+            await badResponse.WriteAsJsonAsync(validationResult);
+            return badResponse;
         }
 
-        _logger.LogInformation("Procesando solicitud para actualizar un Gym.");
         try
         {
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var objRequest = JsonConvert.DeserializeObject<UpdateGymRequest>(requestBody);
-            var validationResult = ModelValidator.ValidateModel<UpdateGymRequest, Guid>(objRequest, StatusCodes.Status400BadRequest);
-            if (validationResult is not null) return validationResult;
-
-            var result = await _service.UpdateGymAsync(objRequest);
-            if (!result.Success)
+            var result = await _service.UpdateGymAsync(objRequest, userId, invocationId);
+            var response = req.CreateResponse(result.Success ? HttpStatusCode.OK : HttpStatusCode.NotFound);
+            await response.WriteAsJsonAsync(new ApiResponse<Guid>
             {
-                return new ApiResponse<Guid>
-                {
-                    Success = false,
-                    Message = result.Message,
-                    Data = objRequest.Id,
-                    StatusCode = StatusCodes.Status404NotFound
-                };
-            }
-            return new ApiResponse<Guid>
-            {
-                Success = true,
+                Success = result.Success,
                 Message = result.Message,
                 Data = objRequest.Id,
-                StatusCode = StatusCodes.Status200OK
-            };
+                StatusCode = result.Success ? StatusCodes.Status200OK : StatusCodes.Status404NotFound
+            });
+            return response;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al actualizar Gym.");
-            return new ApiResponse<Guid>
+            logger.LogError(ex, "Error al actualizar Gym.");
+            var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+            await errorResponse.WriteAsJsonAsync(new ApiResponse<Guid>
             {
                 Success = false,
                 Message = "Ocurrió un error al procesar la solicitud.",
                 Data = default,
                 StatusCode = StatusCodes.Status400BadRequest
-            };
+            });
+            return errorResponse;
         }
     }
 }

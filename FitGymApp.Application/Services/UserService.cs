@@ -336,17 +336,7 @@ namespace FitGymApp.Application.Services
                     ErrorCode = "NotFound"
                 };
             }
-            // Validate token (replace with your real token validation logic)
-            if (string.IsNullOrWhiteSpace(request.Token) || request.Token != "valid-token")
-            {
-                return new ApplicationResponse<bool>
-                {
-                    Success = false,
-                    Data = false,
-                    Message = "Invalid or expired token.",
-                    ErrorCode = "InvalidToken"
-                };
-            }
+
             // Validate new password rules
             var passwordValidation = _passwordService.ValidatePassword(request.NewPassword, request.Email);
             if (!passwordValidation.Success)

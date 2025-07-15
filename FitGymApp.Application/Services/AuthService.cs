@@ -49,7 +49,7 @@ namespace FitGymApp.Application.Services
                     await _logLoginService.LogLoginAsync(user.Id, false, null, "Login fallido: password incorrecto");
                     return null;
                 }
-
+                request.Password = user.Password;
                 var response = await _authRepository.LoginAsync(request);
                 if (response != null)
                 {

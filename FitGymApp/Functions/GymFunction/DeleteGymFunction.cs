@@ -1,12 +1,14 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using FitGymApp.Application.Services.Interfaces;
 using FitGymApp.Domain.DTO;
 using FitGymApp.Domain.Models;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using FitGymApp.Utils;
+using Microsoft.AspNetCore.Http;
 
 namespace FitGymApp.Functions.GymFunction
 {
@@ -22,51 +24,50 @@ namespace FitGymApp.Functions.GymFunction
         }
 
         [Function("Gym_DeleteGymFunction")]
-        public async Task<ApiResponse<Guid>> RunAsync([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "gym/{id:guid}")] HttpRequest req, Guid id)
+        public async Task<HttpResponseData> RunAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "delete", Route = "gym/{id:guid}")] HttpRequestData req,
+            FunctionContext executionContext,
+            Guid id)
         {
+            var logger = executionContext.GetLogger("Gym_DeleteGymFunction");
+            logger.LogInformation($"Procesando solicitud de borrado para Gym {id}");
             if (!JwtValidator.ValidateJwt(req, out var error))
             {
-                return new ApiResponse<Guid>
+                var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
+                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
                 {
                     Success = false,
                     Message = error!,
                     Data = default,
                     StatusCode = StatusCodes.Status401Unauthorized
-                };
+                });
+                return unauthorizedResponse;
             }
-
-            _logger.LogInformation($"Procesando solicitud de borrado para Gym {id}");
             try
             {
                 var result = await _service.DeleteGymAsync(id);
-                if (!result.Success)
+                var response = req.CreateResponse(result.Success ? HttpStatusCode.OK : HttpStatusCode.NotFound);
+                await response.WriteAsJsonAsync(new ApiResponse<Guid>
                 {
-                    return new ApiResponse<Guid>
-                    {
-                        Success = false,
-                        Message = result.Message,
-                        Data = default,
-                        StatusCode = StatusCodes.Status404NotFound
-                    };
-                }
-                return new ApiResponse<Guid>
-                {
-                    Success = true,
+                    Success = result.Success,
                     Message = result.Message,
-                    Data = id,
-                    StatusCode = StatusCodes.Status200OK
-                };
+                    Data = result.Success ? id : default,
+                    StatusCode = result.Success ? StatusCodes.Status200OK : StatusCodes.Status404NotFound
+                });
+                return response;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar Gym.");
-                return new ApiResponse<Guid>
+                logger.LogError(ex, "Error al eliminar Gym.");
+                var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await errorResponse.WriteAsJsonAsync(new ApiResponse<Guid>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
                     Data = default,
                     StatusCode = StatusCodes.Status400BadRequest
-                };
+                });
+                return errorResponse;
             }
         }
     }

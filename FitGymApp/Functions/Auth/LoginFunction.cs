@@ -5,9 +5,11 @@ using FitGymApp.Domain.DTO.Auth.Response;
 using FitGymApp.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace FitGymApp.Functions.Auth
@@ -24,45 +26,59 @@ namespace FitGymApp.Functions.Auth
         }
 
         [Function("Auth_LoginFunction")]
-        public async Task<ApiResponse<LoginResponse>> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "auth/login")] HttpRequest req)
+        public async Task<HttpResponseData> RunAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "auth/login")] HttpRequestData req,
+            FunctionContext executionContext)
         {
-            _logger.LogInformation("Procesando login de usuario.");
+            var logger = executionContext.GetLogger("Auth_LoginFunction");
+            logger.LogInformation("Procesando login de usuario.");
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var loginRequest = JsonConvert.DeserializeObject<LoginRequest>(requestBody);
                 var validationResult = ModelValidator.ValidateModel<LoginRequest, LoginResponse>(loginRequest, StatusCodes.Status400BadRequest);
-                if (validationResult is not null) return validationResult;
+                if (validationResult is not null)
+                {
+                    var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                    await badResponse.WriteAsJsonAsync(validationResult);
+                    return badResponse;
+                }
 
                 var result = await _authService.LoginAsync(loginRequest);
                 if (result == null)
                 {
-                    return new ApiResponse<LoginResponse>
+                    var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
+                    await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<LoginResponse>
                     {
                         Success = false,
                         Message = "Credenciales incorrectas o usuario inactivo.",
                         Data = null,
                         StatusCode = StatusCodes.Status401Unauthorized
-                    };
+                    });
+                    return unauthorizedResponse;
                 }
-                return new ApiResponse<LoginResponse>
+                var successResponse = req.CreateResponse(HttpStatusCode.OK);
+                await successResponse.WriteAsJsonAsync(new ApiResponse<LoginResponse>
                 {
                     Success = true,
                     Message = "Login exitoso.",
                     Data = result,
                     StatusCode = StatusCodes.Status200OK
-                };
+                });
+                return successResponse;
             }
             catch (System.Exception ex)
             {
-                _logger.LogError(ex, "Error en login.");
-                return new ApiResponse<LoginResponse>
+                logger.LogError(ex, "Error en login.");
+                var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await errorResponse.WriteAsJsonAsync(new ApiResponse<LoginResponse>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
                     Data = null,
                     StatusCode = StatusCodes.Status400BadRequest
-                };
+                });
+                return errorResponse;
             }
         }
     }

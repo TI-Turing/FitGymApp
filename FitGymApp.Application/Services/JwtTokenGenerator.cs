@@ -30,15 +30,37 @@ namespace FitGymApp.Application.Services
                     .SetBasePath(AppContext.BaseDirectory)
                     .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
                     .Build();
-                secretKey = config["Jwt:SecretKey"] ?? config["Values:JwtSecretKey"];
-                issuer = config["Jwt:Issuer"] ?? config["Values:JwtIssuer"];
-                audience = config["Jwt:Audience"] ?? config["Values:JwtAudience"];
+                // Buscar todas las variantes posibles en Values y raíz
+                secretKey = config["Jwt:SecretKey"]
+                    ?? config["Values:Jwt:SecretKey"]
+                    ?? config["JwtSecretKey"]
+                    ?? config["Values:JwtSecretKey"];
+                issuer = config["Jwt:Issuer"]
+                    ?? config["Values:Jwt:Issuer"]
+                    ?? config["JwtIssuer"]
+                    ?? config["Values:JwtIssuer"];
+                audience = config["Jwt:Audience"]
+                    ?? config["Values:Jwt:Audience"]
+                    ?? config["JwtAudience"]
+                    ?? config["Values:JwtAudience"];
             }
             else
             {
-                secretKey = Environment.GetEnvironmentVariable("Jwt__SecretKey") ?? Environment.GetEnvironmentVariable("Jwt:SecretKey") ?? Environment.GetEnvironmentVariable("Values__JwtSecretKey") ?? Environment.GetEnvironmentVariable("Values:JwtSecretKey");
-                issuer = Environment.GetEnvironmentVariable("Jwt__Issuer") ?? Environment.GetEnvironmentVariable("Jwt:Issuer") ?? Environment.GetEnvironmentVariable("Values__JwtIssuer") ?? Environment.GetEnvironmentVariable("Values:JwtIssuer");
-                audience = Environment.GetEnvironmentVariable("Jwt__Audience") ?? Environment.GetEnvironmentVariable("Jwt:Audience") ?? Environment.GetEnvironmentVariable("Values__JwtAudience") ?? Environment.GetEnvironmentVariable("Values:JwtAudience");
+                secretKey = Environment.GetEnvironmentVariable("Jwt__SecretKey")
+                    ?? Environment.GetEnvironmentVariable("Jwt:SecretKey")
+                    ?? Environment.GetEnvironmentVariable("Values__JwtSecretKey")
+                    ?? Environment.GetEnvironmentVariable("Values:JwtSecretKey")
+                    ?? Environment.GetEnvironmentVariable("JwtSecretKey");
+                issuer = Environment.GetEnvironmentVariable("Jwt__Issuer")
+                    ?? Environment.GetEnvironmentVariable("Jwt:Issuer")
+                    ?? Environment.GetEnvironmentVariable("Values__JwtIssuer")
+                    ?? Environment.GetEnvironmentVariable("Values:JwtIssuer")
+                    ?? Environment.GetEnvironmentVariable("JwtIssuer");
+                audience = Environment.GetEnvironmentVariable("Jwt__Audience")
+                    ?? Environment.GetEnvironmentVariable("Jwt:Audience")
+                    ?? Environment.GetEnvironmentVariable("Values__JwtAudience")
+                    ?? Environment.GetEnvironmentVariable("Values:JwtAudience")
+                    ?? Environment.GetEnvironmentVariable("JwtAudience");
             }
 
             _secretKey = secretKey ?? "SuperSecretKeyForJwtToken123!";

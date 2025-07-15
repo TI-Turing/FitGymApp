@@ -50,7 +50,7 @@ namespace FitGymApp.Application.Services
     {
         private readonly ILogChangeRepository _repo;
         public LogChangeService(ILogChangeRepository repo) { _repo = repo; }
-        public async Task<ApplicationResponse<bool>> LogChangeAsync(string table, object pastObject, Guid? userId, string? ip = null)
+        public async Task<ApplicationResponse<bool>> LogChangeAsync(string table, object pastObject, Guid? userId, string? ip = null, string invocationId = "")
         {
             var log = new LogChange
             {
@@ -60,7 +60,8 @@ namespace FitGymApp.Application.Services
                 CreatedAt = DateTime.UtcNow,
                 Ip = ip,
                 UserId = userId ?? Guid.Empty,
-                IsActive = true
+                IsActive = true,
+                InvocationId= invocationId
             };
             return new ApplicationResponse<bool> { Success = await _repo.AddAsync(log) };
         }

@@ -23,5 +23,7 @@ public partial class LogChange
 
     public Guid UserId { get; set; }
 
+    public string? InvocationId { get; set; }
+
     public virtual User User { get; set; } = null!;
 }

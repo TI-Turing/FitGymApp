@@ -4,6 +4,7 @@ using FitGymApp.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitGymApp.Domain.Migrations
 {
     [DbContext(typeof(FitGymAppContext))]
-    partial class FitGymAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250715181158_UpdatePastObjectToMax")]
+    partial class UpdatePastObjectToMax
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -983,9 +986,6 @@ namespace FitGymApp.Domain.Migrations
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime");
-
-                    b.Property<string>("InvocationId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ip")
                         .HasMaxLength(45)

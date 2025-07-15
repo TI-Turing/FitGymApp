@@ -84,7 +84,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateGymAsync(UpdateGymRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateGymAsync(UpdateGymRequest request, Guid? userId, string invocationId = "")
         {
             try
             {
@@ -93,7 +93,7 @@ namespace FitGymApp.Application.Services
                 var updated = await _gymRepository.UpdateGymAsync(entity);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("Gym", before, entity.Id);
+                    await _logChangeService.LogChangeAsync("Gym", before, userId, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
@@ -277,6 +277,50 @@ namespace FitGymApp.Application.Services
                     ErrorCode = "TechnicalError"
                 };
             }
+        }
+
+        private bool ValidateImageSize(byte[] image, int maxBytes = 2 * 1024 * 1024)
+        {
+            return image.Length <= maxBytes;
+        }
+
+        public async Task<ApplicationResponse<string>> UploadGymLogoAsync(UploadGymLogoRequest request)
+        {
+            if (!ValidateImageSize(request.Image))
+            {
+                return new ApplicationResponse<string>
+                {
+                    Success = false,
+                    Message = "La imagen supera el tamaño máximo permitido de 2MB.",
+                    ErrorCode = "ImageTooLarge"
+                };
+            }
+            var gym = await _gymRepository.GetGymByIdAsync(request.GymId);
+            if (gym == null)
+            {
+                return new ApplicationResponse<string>
+                {
+                    Success = false,
+                    Message = "Gimnasio no encontrado.",
+                    ErrorCode = "NotFound"
+                };
+            }
+            var url = await _gymRepository.UploadGymLogoAsync(request.GymId, request.Image, request.FileName, request.ContentType);
+            if (string.IsNullOrEmpty(url))
+            {
+                return new ApplicationResponse<string>
+                {
+                    Success = false,
+                    Message = "No se pudo subir la imagen.",
+                    ErrorCode = "UploadFailed"
+                };
+            }
+            return new ApplicationResponse<string>
+            {
+                Success = true,
+                Message = "Logo actualizado correctamente.",
+                Data = url
+            };
         }
     }
 }
