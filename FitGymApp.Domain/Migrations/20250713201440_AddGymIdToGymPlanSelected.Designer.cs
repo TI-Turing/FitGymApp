@@ -4,6 +4,7 @@ using FitGymApp.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitGymApp.Domain.Migrations
 {
     [DbContext(typeof(FitGymAppContext))]
-    partial class FitGymAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250713201440_AddGymIdToGymPlanSelected")]
+    partial class AddGymIdToGymPlanSelected
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -694,6 +697,9 @@ namespace FitGymApp.Domain.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<Guid>("GymPlanSelectedId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("GymTypeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -722,6 +728,8 @@ namespace FitGymApp.Domain.Migrations
 
                     b.HasIndex("GymTypeId");
 
+                    b.HasIndex(new[] { "GymPlanSelectedId" }, "IX_FK_GymGymPlanSelected");
+
                     b.ToTable("Gym", (string)null);
                 });
 
@@ -739,7 +747,10 @@ namespace FitGymApp.Domain.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime");
 
-                    b.Property<Guid?>("GymId")
+                    b.Property<Guid>("GymId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GymId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("GymPlanSelectedTypeId")
@@ -761,7 +772,7 @@ namespace FitGymApp.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GymId");
+                    b.HasIndex("GymId1");
 
                     b.HasIndex(new[] { "GymPlanSelectedTypeId" }, "IX_FK_GymPlanSelectedTypeGymPlanSelected");
 
@@ -2251,26 +2262,38 @@ namespace FitGymApp.Domain.Migrations
 
             modelBuilder.Entity("FitGymApp.Domain.Models.Gym", b =>
                 {
+                    b.HasOne("FitGymApp.Domain.Models.GymPlanSelected", "GymPlanSelected")
+                        .WithMany("Gyms")
+                        .HasForeignKey("GymPlanSelectedId")
+                        .IsRequired()
+                        .HasConstraintName("FK_GymGymPlanSelected");
+
                     b.HasOne("FitGymApp.Domain.Models.GymType", "GymType")
                         .WithMany("Gyms")
                         .HasForeignKey("GymTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("GymPlanSelected");
+
                     b.Navigation("GymType");
                 });
 
             modelBuilder.Entity("FitGymApp.Domain.Models.GymPlanSelected", b =>
                 {
-                    b.HasOne("FitGymApp.Domain.Models.Gym", null)
-                        .WithMany("GymPlanSelecteds")
-                        .HasForeignKey("GymId");
+                    b.HasOne("FitGymApp.Domain.Models.Gym", "Gym")
+                        .WithMany()
+                        .HasForeignKey("GymId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FitGymApp.Domain.Models.GymPlanSelectedType", "GymPlanSelectedType")
                         .WithMany("GymPlanSelecteds")
                         .HasForeignKey("GymPlanSelectedTypeId")
                         .IsRequired()
                         .HasConstraintName("FK_GymPlanSelectedTypeGymPlanSelected");
+
+                    b.Navigation("Gym");
 
                     b.Navigation("GymPlanSelectedType");
                 });
@@ -2722,8 +2745,6 @@ namespace FitGymApp.Domain.Migrations
 
                     b.Navigation("Branches");
 
-                    b.Navigation("GymPlanSelecteds");
-
                     b.Navigation("Plans");
 
                     b.Navigation("RoutineTemplates");
@@ -2736,6 +2757,8 @@ namespace FitGymApp.Domain.Migrations
             modelBuilder.Entity("FitGymApp.Domain.Models.GymPlanSelected", b =>
                 {
                     b.Navigation("GymPlanSelectedModules");
+
+                    b.Navigation("Gyms");
                 });
 
             modelBuilder.Entity("FitGymApp.Domain.Models.GymPlanSelectedModule", b =>

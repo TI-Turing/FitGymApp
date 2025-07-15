@@ -25,8 +25,6 @@ public partial class Gym
 
     public bool IsActive { get; set; }
 
-    public Guid GymPlanSelectedId { get; set; }
-
     public Guid GymTypeId { get; set; }
 
     public virtual GymType GymType { get; set; } = null!;
@@ -35,7 +33,7 @@ public partial class Gym
 
     public virtual ICollection<Branch> Branches { get; set; } = new List<Branch>();
 
-    public virtual GymPlanSelected GymPlanSelected { get; set; } = null!;
+    public virtual ICollection<GymPlanSelected> GymPlanSelecteds { get; set; } = new List<GymPlanSelected>();
 
     public virtual ICollection<Plan> Plans { get; set; } = new List<Plan>();
 

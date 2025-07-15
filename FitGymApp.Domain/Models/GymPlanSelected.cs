@@ -23,9 +23,9 @@ public partial class GymPlanSelected
 
     public Guid GymPlanSelectedTypeId { get; set; }
 
+    public Guid? GymId { get; set; }
+
     public virtual ICollection<GymPlanSelectedModule> GymPlanSelectedModules { get; set; } = new List<GymPlanSelectedModule>();
 
     public virtual GymPlanSelectedType GymPlanSelectedType { get; set; } = null!;
-
-    public virtual ICollection<Gym> Gyms { get; set; } = new List<Gym>();
 }

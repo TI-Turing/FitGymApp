@@ -58,7 +58,7 @@ public class AddUserFunction
 
             if (!result.Success)
             {
-                var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
                 await errorResponse.WriteAsJsonAsync(new ApiResponse<AddResponse>
                 {
                     Success = false,
@@ -76,7 +76,7 @@ public class AddUserFunction
                 Token = token
             };
 
-            var successResponse = req.CreateResponse(HttpStatusCode.OK);
+            var successResponse = req.CreateResponse(HttpStatusCode.Created);
             await successResponse.WriteAsJsonAsync(new ApiResponse<AddResponse>
             {
                 Success = true,

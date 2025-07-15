@@ -58,6 +58,7 @@ namespace FitGymApp.Application.Services
                     Message = "Error al verificar el password.",
                     ErrorCode = "VerifyError"
                 };
+
             }
         }
 

@@ -447,8 +447,6 @@ public partial class FitGymAppContext : DbContext
         {
             entity.ToTable("Gym");
 
-            entity.HasIndex(e => e.GymPlanSelectedId, "IX_FK_GymGymPlanSelected");
-
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
@@ -459,11 +457,6 @@ public partial class FitGymAppContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("NIT");
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
-
-            entity.HasOne(d => d.GymPlanSelected).WithMany(p => p.Gyms)
-                .HasForeignKey(d => d.GymPlanSelectedId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_GymGymPlanSelected");
         });
 
         modelBuilder.Entity<GymPlanSelected>(entity =>

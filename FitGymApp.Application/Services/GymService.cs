@@ -228,7 +228,7 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "NotFound"
                     };
                 }
-                var gymPlanSelected = gym.GymPlanSelected;
+                var gymPlanSelected = gym.GymPlanSelecteds?.OrderByDescending(gps => gps.CreatedAt).FirstOrDefault();
                 if (gymPlanSelected == null)
                 {
                     return new ApplicationResponse<GenerateGymQrResponse>

@@ -23,7 +23,7 @@ namespace FitGymApp.Repository.Persistence.Seed
                     Description = "Plan Básico - $20.000 COP/mes."
                 });
             }
-            if (!context.GymPlanSelectedTypes.Any(x => x.Name == "Plan Pro (Gestión + Rutinas)"))
+            if (!context.GymPlanSelectedTypes.Any(x => x.Name == "Plan Pro"))
             {
                 context.GymPlanSelectedTypes.Add(new GymPlanSelectedType
                 {
