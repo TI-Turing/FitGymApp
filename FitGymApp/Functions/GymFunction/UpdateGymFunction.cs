@@ -55,10 +55,17 @@ public class UpdateGymFunction
             await badResponse.WriteAsJsonAsync(validationResult);
             return badResponse;
         }
-
+        string? ip = req.Headers.TryGetValues("X-Forwarded-For", out var values) ? values.FirstOrDefault()?.Split(',')[0]?.Trim()
+                : req.Headers.TryGetValues("X-Original-For", out var originalForValues) ? originalForValues.FirstOrDefault()?.Split(':')[0]?.Trim()
+                : req.Headers.TryGetValues("REMOTE_ADDR", out var remoteValues) ? remoteValues.FirstOrDefault()
+                : null;
+        if (objRequest != null)
+        {
+            objRequest.Ip = ip;
+        }
         try
         {
-            var result = await _service.UpdateGymAsync(objRequest, userId, invocationId);
+            var result = await _service.UpdateGymAsync(objRequest, userId, ip, invocationId);
             var response = req.CreateResponse(result.Success ? HttpStatusCode.OK : HttpStatusCode.NotFound);
             await response.WriteAsJsonAsync(new ApiResponse<Guid>
             {

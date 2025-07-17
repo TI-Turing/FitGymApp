@@ -12,8 +12,9 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ApplicationResponse<RoutineTemplate>> CreateRoutineTemplateAsync(AddRoutineTemplateRequest request);
         Task<ApplicationResponse<RoutineTemplate>> GetRoutineTemplateByIdAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<RoutineTemplate>>> GetAllRoutineTemplatesAsync();
-        Task<ApplicationResponse<bool>> UpdateRoutineTemplateAsync(UpdateRoutineTemplateRequest request);
+        Task<ApplicationResponse<bool>> UpdateRoutineTemplateAsync(UpdateRoutineTemplateRequest request, string ip="", string invocationId = "");
         Task<ApplicationResponse<bool>> DeleteRoutineTemplateAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<RoutineTemplate>>> FindRoutineTemplatesByFieldsAsync(Dictionary<string, object> filters);
+        Task<ApplicationResponse<bool>> DeleteRoutineTemplatesByGymIdAsync(Guid gymId);
     }
 }

@@ -30,7 +30,7 @@ namespace FitGymApp.Functions.GymFunction
             Guid id)
         {
             var logger = executionContext.GetLogger("Gym_DeleteGymFunction");
-            logger.LogInformation($"Procesando solicitud de borrado para Gym {id}");
+            logger.LogInformation($"Processing delete request for Gym {id}");
             if (!JwtValidator.ValidateJwt(req, out var error))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
@@ -58,12 +58,12 @@ namespace FitGymApp.Functions.GymFunction
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error al eliminar Gym.");
+                logger.LogError(ex, "Error deleting Gym.");
                 var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
                 await errorResponse.WriteAsJsonAsync(new ApiResponse<Guid>
                 {
                     Success = false,
-                    Message = "Ocurrió un error al procesar la solicitud.",
+                    Message = "An error occurred while processing the request.",
                     Data = default,
                     StatusCode = StatusCodes.Status400BadRequest
                 });

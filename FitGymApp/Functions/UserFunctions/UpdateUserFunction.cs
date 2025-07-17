@@ -60,6 +60,14 @@ public class UpdateUserFunction
                 await badResponse.WriteAsJsonAsync(validationResult);
                 return badResponse;
             }
+            string? ip = req.Headers.TryGetValues("X-Forwarded-For", out var values) ? values.FirstOrDefault()?.Split(',')[0]?.Trim()
+                : req.Headers.TryGetValues("X-Original-For", out var originalForValues) ? originalForValues.FirstOrDefault()?.Split(':')[0]?.Trim()
+                : req.Headers.TryGetValues("REMOTE_ADDR", out var remoteValues) ? remoteValues.FirstOrDefault()
+                : null;
+            if (objRequest != null)
+            {
+                objRequest.Ip = ip;
+            }
             var result = await _userService.UpdateUserAsync(objRequest);
             if (!result.Success)
             {
@@ -105,6 +113,7 @@ public class UpdateUserFunction
     {
         var logger = executionContext.GetLogger("User_UpdateUserGymFunction");
         logger.LogInformation("Procesando solicitud para actualizar GymUserId de usuario.");
+        var invocationId = executionContext.InvocationId;
         try
         {
             if (!JwtValidator.ValidateJwt(req, out var error))
@@ -133,7 +142,13 @@ public class UpdateUserFunction
                 });
                 return badResponse;
             }
-            var result = await _userService.UpdateUserGymAsync(data.UserId, data.GymId);
+            string? ip = req.Headers.TryGetValues("X-Forwarded-For", out var values) ? values.FirstOrDefault()?.Split(',')[0]?.Trim()
+                : req.Headers.TryGetValues("X-Original-For", out var originalForValues) ? originalForValues.FirstOrDefault()?.Split(':')[0]?.Trim()
+                : req.Headers.TryGetValues("REMOTE_ADDR", out var remoteValues) ? remoteValues.FirstOrDefault()
+                : null;
+            
+
+            var result = await _userService.UpdateUserGymAsync(data.UserId, data.GymId, ip, invocationId);
             if (!result.Success)
             {
                 var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);

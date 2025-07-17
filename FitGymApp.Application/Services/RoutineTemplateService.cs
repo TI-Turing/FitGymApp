@@ -7,6 +7,7 @@ using FitGymApp.Domain.Models;
 using FitGymApp.Domain.DTO.RoutineTemplate.Request;
 using FitGymApp.Domain.DTO;
 using FitGymApp.Repository.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace FitGymApp.Application.Services
 {
@@ -15,16 +16,19 @@ namespace FitGymApp.Application.Services
         private readonly IRoutineTemplateRepository _routineTemplateRepository;
         private readonly ILogChangeService _logChangeService;
         private readonly ILogErrorService _logErrorService;
+        private readonly ILogger<RoutineTemplateService> _logger;
 
-        public RoutineTemplateService(IRoutineTemplateRepository routineTemplateRepository, ILogChangeService logChangeService, ILogErrorService logErrorService)
+        public RoutineTemplateService(IRoutineTemplateRepository routineTemplateRepository, ILogChangeService logChangeService, ILogErrorService logErrorService, ILogger<RoutineTemplateService> logger)
         {
             _routineTemplateRepository = routineTemplateRepository;
             _logChangeService = logChangeService;
             _logErrorService = logErrorService;
+            _logger = logger;
         }
 
         public async Task<ApplicationResponse<RoutineTemplate>> CreateRoutineTemplateAsync(AddRoutineTemplateRequest request)
         {
+            _logger.LogInformation("Starting CreateRoutineTemplateAsync method.");
             try
             {
                 var entity = new RoutineTemplate
@@ -38,6 +42,7 @@ namespace FitGymApp.Application.Services
                     RoutineAssignedId = request.RoutineAssignedId
                 };
                 var created = await _routineTemplateRepository.CreateRoutineTemplateAsync(entity);
+                _logger.LogInformation("Routine template created successfully with ID: {RoutineTemplateId}", created.Id);
                 return new ApplicationResponse<RoutineTemplate>
                 {
                     Success = true,
@@ -47,6 +52,7 @@ namespace FitGymApp.Application.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while creating a routine template.");
                 await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<RoutineTemplate>
                 {
@@ -59,38 +65,84 @@ namespace FitGymApp.Application.Services
 
         public async Task<ApplicationResponse<RoutineTemplate>> GetRoutineTemplateByIdAsync(Guid id)
         {
-            var entity = await _routineTemplateRepository.GetRoutineTemplateByIdAsync(id);
-            if (entity == null)
+            _logger.LogInformation("Starting GetRoutineTemplateByIdAsync method for RoutineTemplateId: {RoutineTemplateId}", id);
+            try
             {
+                var entity = await _routineTemplateRepository.GetRoutineTemplateByIdAsync(id);
+                if (entity == null)
+                {
+                    _logger.LogWarning("Routine template not found for RoutineTemplateId: {RoutineTemplateId}", id);
+                    return new ApplicationResponse<RoutineTemplate>
+                    {
+                        Success = false,
+                        Message = "Plantilla de rutina no encontrada.",
+                        ErrorCode = "NotFound"
+                    };
+                }
+                _logger.LogInformation("Routine template retrieved successfully for RoutineTemplateId: {RoutineTemplateId}", id);
+                return new ApplicationResponse<RoutineTemplate>
+                {
+                    Success = true,
+                    Data = entity
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving routine template with RoutineTemplateId: {RoutineTemplateId}", id);
+                await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<RoutineTemplate>
                 {
                     Success = false,
-                    Message = "Plantilla de rutina no encontrada.",
-                    ErrorCode = "NotFound"
+                    Message = "Error técnico al obtener la plantilla de rutina.",
+                    ErrorCode = "TechnicalError"
                 };
             }
-            return new ApplicationResponse<RoutineTemplate>
-            {
-                Success = true,
-                Data = entity
-            };
         }
 
         public async Task<ApplicationResponse<IEnumerable<RoutineTemplate>>> GetAllRoutineTemplatesAsync()
         {
-            var entities = await _routineTemplateRepository.GetAllRoutineTemplatesAsync();
-            return new ApplicationResponse<IEnumerable<RoutineTemplate>>
+            _logger.LogInformation("Starting GetAllRoutineTemplatesAsync method.");
+            try
             {
-                Success = true,
-                Data = entities
-            };
+                var entities = await _routineTemplateRepository.GetAllRoutineTemplatesAsync();
+                _logger.LogInformation("Retrieved {RoutineTemplateCount} routine templates successfully.", entities.Count());
+                return new ApplicationResponse<IEnumerable<RoutineTemplate>>
+                {
+                    Success = true,
+                    Data = entities
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving all routine templates.");
+                await _logErrorService.LogErrorAsync(ex);
+                return new ApplicationResponse<IEnumerable<RoutineTemplate>>
+                {
+                    Success = false,
+                    Message = "Error técnico al obtener las plantillas de rutina.",
+                    ErrorCode = "TechnicalError"
+                };
+            }
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateRoutineTemplateAsync(UpdateRoutineTemplateRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateRoutineTemplateAsync(UpdateRoutineTemplateRequest request, string ip = "", string invocationId = "")
         {
+            _logger.LogInformation("Starting UpdateRoutineTemplateAsync method for RoutineTemplateId: {RoutineTemplateId}", request.Id);
             try
             {
                 var before = await _routineTemplateRepository.GetRoutineTemplateByIdAsync(request.Id);
+                if (before == null)
+                {
+                    _logger.LogWarning("Routine template not found for RoutineTemplateId: {RoutineTemplateId}", request.Id);
+                    return new ApplicationResponse<bool>
+                    {
+                        Success = false,
+                        Data = false,
+                        Message = "Plantilla de rutina no encontrada.",
+                        ErrorCode = "NotFound"
+                    };
+                }
+
                 var entity = new RoutineTemplate
                 {
                     Id = request.Id,
@@ -105,7 +157,8 @@ namespace FitGymApp.Application.Services
                 var updated = await _routineTemplateRepository.UpdateRoutineTemplateAsync(entity);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("RoutineTemplate", before, entity.Id);
+                    _logger.LogInformation("Routine template updated successfully for RoutineTemplateId: {RoutineTemplateId}", request.Id);
+                    await _logChangeService.LogChangeAsync("RoutineTemplate", before, entity.Id, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
@@ -115,17 +168,19 @@ namespace FitGymApp.Application.Services
                 }
                 else
                 {
+                    _logger.LogWarning("Could not update routine template for RoutineTemplateId: {RoutineTemplateId}", request.Id);
                     return new ApplicationResponse<bool>
                     {
                         Success = false,
                         Data = false,
-                        Message = "No se pudo actualizar la plantilla de rutina (no encontrada o inactiva).",
-                        ErrorCode = "NotFound"
+                        Message = "No se pudo actualizar la plantilla de rutina.",
+                        ErrorCode = "UpdateFailed"
                     };
                 }
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while updating routine template with RoutineTemplateId: {RoutineTemplateId}", request.Id);
                 await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<bool>
                 {
@@ -139,11 +194,13 @@ namespace FitGymApp.Application.Services
 
         public async Task<ApplicationResponse<bool>> DeleteRoutineTemplateAsync(Guid id)
         {
+            _logger.LogInformation("Starting DeleteRoutineTemplateAsync method for RoutineTemplateId: {RoutineTemplateId}", id);
             try
             {
                 var deleted = await _routineTemplateRepository.DeleteRoutineTemplateAsync(id);
                 if (deleted)
                 {
+                    _logger.LogInformation("Routine template deleted successfully for RoutineTemplateId: {RoutineTemplateId}", id);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
@@ -153,6 +210,7 @@ namespace FitGymApp.Application.Services
                 }
                 else
                 {
+                    _logger.LogWarning("Routine template not found or already deleted for RoutineTemplateId: {RoutineTemplateId}", id);
                     return new ApplicationResponse<bool>
                     {
                         Success = false,
@@ -164,6 +222,7 @@ namespace FitGymApp.Application.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while deleting routine template with RoutineTemplateId: {RoutineTemplateId}", id);
                 await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<bool>
                 {
@@ -177,12 +236,61 @@ namespace FitGymApp.Application.Services
 
         public async Task<ApplicationResponse<IEnumerable<RoutineTemplate>>> FindRoutineTemplatesByFieldsAsync(Dictionary<string, object> filters)
         {
-            var entities = await _routineTemplateRepository.FindRoutineTemplatesByFieldsAsync(filters);
-            return new ApplicationResponse<IEnumerable<RoutineTemplate>>
+            _logger.LogInformation("Starting FindRoutineTemplatesByFieldsAsync method with filters: {Filters}", filters);
+            try
             {
-                Success = true,
-                Data = entities
-            };
+                var entities = await _routineTemplateRepository.FindRoutineTemplatesByFieldsAsync(filters);
+                _logger.LogInformation("Retrieved {RoutineTemplateCount} routine templates successfully with filters.", entities.Count());
+                return new ApplicationResponse<IEnumerable<RoutineTemplate>>
+                {
+                    Success = true,
+                    Data = entities
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while finding routine templates with filters: {Filters}", filters);
+                await _logErrorService.LogErrorAsync(ex);
+                return new ApplicationResponse<IEnumerable<RoutineTemplate>>
+                {
+                    Success = false,
+                    Message = "Error técnico al buscar las plantillas de rutina.",
+                    ErrorCode = "TechnicalError"
+                };
+            }
+        }
+
+        public async Task<ApplicationResponse<bool>> DeleteRoutineTemplatesByGymIdAsync(Guid gymId)
+        {
+            _logger.LogInformation("Starting DeleteRoutineTemplatesByGymIdAsync method for GymId: {GymId}", gymId);
+            try
+            {
+                var filters = new Dictionary<string, object> { { "GymId", gymId } };
+                var templates = await FindRoutineTemplatesByFieldsAsync(filters);
+                foreach (var template in templates.Data)
+                {
+                    await _routineTemplateRepository.DeleteRoutineTemplateAsync(template.Id);
+                }
+                _logger.LogInformation("Deleted {RoutineTemplateCount} routine templates successfully for GymId: {GymId}", templates.Data.Count(), gymId);
+                return new ApplicationResponse<bool>
+                {
+                    Success = true,
+                    Data = true,
+                    Message = "Routine templates deleted successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting routine templates for GymId: {GymId}", gymId);
+                await _logErrorService.LogErrorAsync(ex);
+                return new ApplicationResponse<bool>
+                {
+                    Success = false,
+                    Data = false,
+                    Message = "Error while deleting routine templates by GymId.",
+                    ErrorCode = "TechnicalError"
+                };
+            }
         }
     }
 }

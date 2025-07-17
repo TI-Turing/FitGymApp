@@ -73,6 +73,8 @@ public partial class User
 
     public Guid? UserEmployeeUserUserId { get; set; }
 
+    public Guid? GymId { get; set; }
+
     public virtual ICollection<Bill> BillUserSellers { get; set; } = new List<Bill>();
 
     public virtual ICollection<Bill> BillUsers { get; set; } = new List<Bill>();

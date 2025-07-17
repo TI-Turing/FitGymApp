@@ -26,4 +26,7 @@
     <ProjectReference Include="..\FitGymApp.Application\FitGymApp.Application.csproj" />
     <ProjectReference Include="..\FitGymApp.Domain\FitGymApp.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Functions\AutomaticProcess\" />
+  </ItemGroup>
 </Project>

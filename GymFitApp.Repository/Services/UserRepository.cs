@@ -84,5 +84,30 @@ namespace FitGymApp.Repository.Services
             var lambda = Expression.Lambda<Func<User, bool>>(predicate, parameter);
             return await _context.Users.Where(lambda).ToListAsync();
         }
+
+        public async Task<bool> BulkUpdateFieldAsync(IEnumerable<Guid> userIds, string fieldName, object? value)
+        {
+            try
+            {
+                var usersToUpdate = await _context.Users.Where(u => userIds.Contains(u.Id)).ToListAsync();
+
+                foreach (var user in usersToUpdate)
+                {
+                    var property = typeof(User).GetProperty(fieldName);
+                    if (property != null && property.CanWrite)
+                    {
+                        property.SetValue(user, value);
+                        user.UpdatedAt = DateTime.UtcNow; // Ensure UpdatedAt is set
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

@@ -17,5 +17,6 @@ namespace FitGymApp.Application.Services.Interfaces
     public interface ILogChangeService
     {
         Task<ApplicationResponse<bool>> LogChangeAsync(string table, object pastObject, Guid? userId, string? ip = null, string invocationId="");
+        Task<ApplicationResponse<bool>> LogChangeAsync(string table, IEnumerable<object> pastObjects, Guid? userId, string? ip = null, string invocationId = "");
     }
 }

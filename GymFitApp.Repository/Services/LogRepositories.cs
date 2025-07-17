@@ -3,6 +3,8 @@ using FitGymApp.Repository.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FitGymApp.Repository.Services
 {
@@ -33,6 +35,11 @@ namespace FitGymApp.Repository.Services
         public async Task<bool> AddAsync(LogChange log)
         {
             _context.LogChanges.Add(log);
+            return await _context.SaveChangesAsync() > 0;
+        }
+        public async Task<bool> AddRangeAsync(IEnumerable<LogChange> logs)
+        {
+            await _context.LogChanges.AddRangeAsync(logs);
             return await _context.SaveChangesAsync() > 0;
         }
     }

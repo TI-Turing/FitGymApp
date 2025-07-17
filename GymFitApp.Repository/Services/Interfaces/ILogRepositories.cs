@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using FitGymApp.Domain.Models;
+using System.Collections.Generic;
 
 namespace FitGymApp.Repository.Services.Interfaces
 {
@@ -14,5 +15,6 @@ namespace FitGymApp.Repository.Services.Interfaces
     public interface ILogChangeRepository
     {
         Task<bool> AddAsync(LogChange log);
+        Task<bool> AddRangeAsync(IEnumerable<LogChange> logs);
     }
 }

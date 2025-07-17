@@ -49,7 +49,14 @@ namespace FitGymApp.Application.Services
     public class LogChangeService : ILogChangeService
     {
         private readonly ILogChangeRepository _repo;
-        public LogChangeService(ILogChangeRepository repo) { _repo = repo; }
+        private readonly ILogErrorService _logErrorService;
+
+        public LogChangeService(ILogChangeRepository repo, ILogErrorService logErrorService)
+        {
+            _repo = repo;
+            _logErrorService = logErrorService;
+        }
+
         public async Task<ApplicationResponse<bool>> LogChangeAsync(string table, object pastObject, Guid? userId, string? ip = null, string invocationId = "")
         {
             var log = new LogChange
@@ -61,9 +68,34 @@ namespace FitGymApp.Application.Services
                 Ip = ip,
                 UserId = userId ?? Guid.Empty,
                 IsActive = true,
-                InvocationId= invocationId
+                InvocationId = invocationId
             };
             return new ApplicationResponse<bool> { Success = await _repo.AddAsync(log) };
+        }
+
+        public async Task<ApplicationResponse<bool>> LogChangeAsync(string table, IEnumerable<object> pastObjects, Guid? userId, string? ip = null, string invocationId = "")
+        {
+            var logChanges = pastObjects.Select(pastObject => new LogChange
+            {
+                Id = Guid.NewGuid(),
+                Table = table,
+                PastObject = JsonSerializer.Serialize(pastObject),
+                CreatedAt = DateTime.UtcNow,
+                UserId = userId ?? Guid.Empty,
+                Ip = ip,
+                InvocationId = invocationId,
+                IsActive = true
+            }).ToList();
+
+            var success = await _repo.AddRangeAsync(logChanges);
+
+            return new ApplicationResponse<bool>
+            {
+                Success = success,
+                Data = success,
+                Message = success ? "Log changes inserted successfully." : "Failed to insert log changes."
+            };
+
         }
     }
 }

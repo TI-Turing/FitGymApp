@@ -13,5 +13,6 @@ namespace FitGymApp.Repository.Services.Interfaces
         Task<bool> UpdateUserAsync(User user);
         Task<bool> DeleteUserAsync(Guid id);
         Task<IEnumerable<User>> FindUsersByFieldsAsync(Dictionary<string, object> filters);
+        Task<bool> BulkUpdateFieldAsync(IEnumerable<Guid> userIds, string fieldName, object? value);
     }
 }

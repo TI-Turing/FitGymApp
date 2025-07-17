@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FitGymApp.Domain.DTO.User.Request
 {
-    public class UpdateRequest
+    public class UpdateRequest : ApiRequest
     {
         public Guid Id { get; set; }
         public Guid IdEps { get; set; }
@@ -26,7 +26,6 @@ namespace FitGymApp.Domain.DTO.User.Request
         public string? EmergencyName { get; set; }
         public string? EmergencyPhone { get; set; }
         public string? PhysicalExceptions { get; set; }
-        public bool IsActive { get; set; } = true;
         public Guid UserTypeId { get; set; }
         // No incluir Password aquí, nunca debe actualizarse por este método
     }

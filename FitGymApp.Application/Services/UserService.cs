@@ -7,6 +7,7 @@ using FitGymApp.Domain.Models;
 using FitGymApp.Domain.DTO.User.Request;
 using FitGymApp.Domain.DTO;
 using FitGymApp.Repository.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace FitGymApp.Application.Services
 {
@@ -16,60 +17,69 @@ namespace FitGymApp.Application.Services
         private readonly IPasswordService _passwordService;
         private readonly ILogChangeService _logChangeService;
         private readonly ILogErrorService _logErrorService;
+        private readonly ILogger<UserService> _logger;
 
-        public UserService(IUserRepository userRepository, IPasswordService passwordService, ILogChangeService logChangeService, ILogErrorService logErrorService)
+        public UserService(IUserRepository userRepository, IPasswordService passwordService, ILogChangeService logChangeService, ILogErrorService logErrorService, ILogger<UserService> logger)
         {
             _userRepository = userRepository;
             _passwordService = passwordService;
             _logChangeService = logChangeService;
             _logErrorService = logErrorService;
+            _logger = logger;
         }
 
         public async Task<ApplicationResponse<User>> CreateUserAsync(AddRequest request)
         {
-            // Validate password rules before creating user
-            if (_passwordService is FitGymApp.Application.Services.PasswordService passwordServiceImpl)
+            _logger.LogInformation("Starting CreateUserAsync method.");
+            try
             {
-                var passwordValidation = passwordServiceImpl.ValidatePassword(request.Password, request.Email);
-                if (!passwordValidation.Success)
+                // Validate password rules before creating user
+                if (_passwordService is FitGymApp.Application.Services.PasswordService passwordServiceImpl)
                 {
+                    var passwordValidation = passwordServiceImpl.ValidatePassword(request.Password, request.Email);
+                    if (!passwordValidation.Success)
+                    {
+                        _logger.LogWarning("Password validation failed for email: {Email}", request.Email);
+                        return new ApplicationResponse<User>
+                        {
+                            Success = false,
+                            Message = passwordValidation.Message,
+                            ErrorCode = passwordValidation.ErrorCode
+                        };
+                    }
+                }
+
+                var existingUsers = await _userRepository.FindUsersByFieldsAsync(new Dictionary<string, object> { { "Email", request.Email } });
+                if (existingUsers != null && existingUsers.Any())
+                {
+                    _logger.LogWarning("Email already registered: {Email}", request.Email);
                     return new ApplicationResponse<User>
                     {
                         Success = false,
-                        Message = passwordValidation.Message,
-                        ErrorCode = passwordValidation.ErrorCode
+                        Message = "The email is already registered.",
+                        ErrorCode = "EmailExists"
                     };
                 }
-            }
 
-            var existingUsers = await _userRepository.FindUsersByFieldsAsync(new Dictionary<string, object> { { "Email", request.Email } });
-            if (existingUsers != null && existingUsers.Any())
-            {
-                return new ApplicationResponse<User>
+                var hashResult = await _passwordService.HashPasswordAsync(request.Password);
+                if (!hashResult.Success)
                 {
-                    Success = false,
-                    Message = "The email is already registered.",
-                    ErrorCode = "EmailExists"
-                };
-            }
-            var hashResult = await _passwordService.HashPasswordAsync(request.Password);
-            if (!hashResult.Success)
-            {
-                return new ApplicationResponse<User>
-                {
-                    Success = false,
-                    Message = hashResult.Message ?? "Technical error while hashing the password.",
-                    ErrorCode = hashResult.ErrorCode ?? "HashError"
-                };
-            }
-            try
-            {
+                    _logger.LogError("Password hashing failed for email: {Email}", request.Email);
+                    return new ApplicationResponse<User>
+                    {
+                        Success = false,
+                        Message = hashResult.Message ?? "Technical error while hashing the password.",
+                        ErrorCode = hashResult.ErrorCode ?? "HashError"
+                    };
+                }
+
                 var user = new User
                 {
                     Email = request.Email,
                     Password = hashResult.Data,
                 };
                 var created = await _userRepository.CreateUserAsync(user);
+                _logger.LogInformation("User created successfully with ID: {UserId}", created.Id);
                 return new ApplicationResponse<User>
                 {
                     Success = true,
@@ -79,6 +89,7 @@ namespace FitGymApp.Application.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while creating a user.");
                 await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<User>
                 {
@@ -91,40 +102,75 @@ namespace FitGymApp.Application.Services
 
         public async Task<ApplicationResponse<User>> GetUserByIdAsync(Guid id)
         {
-            var user = await _userRepository.GetUserByIdAsync(id);
-            if (user == null)
+            _logger.LogInformation("Starting GetUserByIdAsync method for UserId: {UserId}", id);
+            try
             {
+                var user = await _userRepository.GetUserByIdAsync(id);
+                if (user == null)
+                {
+                    _logger.LogWarning("User not found for UserId: {UserId}", id);
+                    return new ApplicationResponse<User>
+                    {
+                        Success = false,
+                        Message = "User not found.",
+                        ErrorCode = "NotFound"
+                    };
+                }
+                _logger.LogInformation("User retrieved successfully for UserId: {UserId}", id);
+                return new ApplicationResponse<User>
+                {
+                    Success = true,
+                    Data = user
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving user with UserId: {UserId}", id);
+                await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<User>
                 {
                     Success = false,
-                    Message = "User not found.",
-                    ErrorCode = "NotFound"
+                    Message = "Technical error while retrieving the user.",
+                    ErrorCode = "TechnicalError"
                 };
             }
-            return new ApplicationResponse<User>
-            {
-                Success = true,
-                Data = user
-            };
         }
 
         public async Task<ApplicationResponse<IEnumerable<User>>> GetAllUsersAsync()
         {
-            var users = await _userRepository.GetAllUsersAsync();
-            return new ApplicationResponse<IEnumerable<User>>
+            _logger.LogInformation("Starting GetAllUsersAsync method.");
+            try
             {
-                Success = true,
-                Data = users
-            };
+                var users = await _userRepository.GetAllUsersAsync();
+                _logger.LogInformation("Retrieved {UserCount} users successfully.", users.Count());
+                return new ApplicationResponse<IEnumerable<User>>
+                {
+                    Success = true,
+                    Data = users
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving all users.");
+                await _logErrorService.LogErrorAsync(ex);
+                return new ApplicationResponse<IEnumerable<User>>
+                {
+                    Success = false,
+                    Message = "Technical error while retrieving users.",
+                    ErrorCode = "TechnicalError"
+                };
+            }
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateUserAsync(UpdateRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateUserAsync(UpdateRequest request, string ip ="", string invocationId = "")
         {
+            _logger.LogInformation("Starting UpdateUserAsync method for UserId: {UserId}", request.Id);
             try
             {
                 var userBefore = await _userRepository.GetUserByIdAsync(request.Id);
                 if (userBefore == null)
                 {
+                    _logger.LogWarning("User not found for UserId: {UserId}", request.Id);
                     return new ApplicationResponse<bool>
                     {
                         Success = false,
@@ -139,6 +185,7 @@ namespace FitGymApp.Application.Services
                 var passwordProp = updateRequestType.GetProperty("Password");
                 if (passwordProp != null)
                 {
+                    _logger.LogWarning("Password update is not allowed for UserId: {UserId}", request.Id);
                     return new ApplicationResponse<bool>
                     {
                         Success = false,
@@ -189,7 +236,8 @@ namespace FitGymApp.Application.Services
                 var updated = await _userRepository.UpdateUserAsync(user);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("User", userBefore, user.Id);
+                    _logger.LogInformation("User updated successfully for UserId: {UserId}", request.Id);
+                    await _logChangeService.LogChangeAsync("User", userBefore, user.Id, "", invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
@@ -199,6 +247,7 @@ namespace FitGymApp.Application.Services
                 }
                 else
                 {
+                    _logger.LogWarning("Could not update the user for UserId: {UserId}", request.Id);
                     return new ApplicationResponse<bool>
                     {
                         Success = false,
@@ -210,6 +259,7 @@ namespace FitGymApp.Application.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while updating user with UserId: {UserId}", request.Id);
                 await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<bool>
                 {
@@ -221,14 +271,15 @@ namespace FitGymApp.Application.Services
             }
         }
 
-        // Nuevo método para actualizar GymUserId
-        public async Task<ApplicationResponse<bool>> UpdateUserGymAsync(Guid userId, Guid gymId)
+        public async Task<ApplicationResponse<bool>> UpdateUserGymAsync(Guid userId, Guid gymId, string ip = "", string invocationId = "")
         {
+            _logger.LogInformation("Starting UpdateUserGymAsync method for UserId: {UserId} and GymId: {GymId}", userId, gymId);
             try
             {
                 var user = await _userRepository.GetUserByIdAsync(userId);
                 if (user == null)
                 {
+                    _logger.LogWarning("User not found for UserId: {UserId}", userId);
                     return new ApplicationResponse<bool>
                     {
                         Success = false,
@@ -237,37 +288,41 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "NotFound"
                     };
                 }
+
                 user.GymUserId = gymId;
                 var updated = await _userRepository.UpdateUserAsync(user);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("User.GymUserId", user, user.Id);
+                    _logger.LogInformation("GymUserId updated successfully for UserId: {UserId}", userId);
+                    await _logChangeService.LogChangeAsync("User.GymUserId", user, user.Id, "", invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
                         Data = true,
-                        Message = "GymUserId actualizado correctamente."
+                        Message = "GymUserId updated successfully."
                     };
                 }
                 else
                 {
+                    _logger.LogWarning("Could not update GymUserId for UserId: {UserId}", userId);
                     return new ApplicationResponse<bool>
                     {
                         Success = false,
                         Data = false,
-                        Message = "No se pudo actualizar el usuario.",
+                        Message = "Could not update GymUserId.",
                         ErrorCode = "UpdateFailed"
                     };
                 }
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while updating GymUserId for UserId: {UserId}", userId);
                 await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<bool>
                 {
                     Success = false,
                     Data = false,
-                    Message = "Error técnico al actualizar GymUserId.",
+                    Message = "Technical error while updating GymUserId.",
                     ErrorCode = "TechnicalError"
                 };
             }
@@ -275,11 +330,13 @@ namespace FitGymApp.Application.Services
 
         public async Task<ApplicationResponse<bool>> DeleteUserAsync(Guid id)
         {
+            _logger.LogInformation("Starting DeleteUserAsync method for UserId: {UserId}", id);
             try
             {
                 var deleted = await _userRepository.DeleteUserAsync(id);
                 if (deleted)
                 {
+                    _logger.LogInformation("User deleted successfully for UserId: {UserId}", id);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
@@ -289,6 +346,7 @@ namespace FitGymApp.Application.Services
                 }
                 else
                 {
+                    _logger.LogWarning("User not found or already deleted for UserId: {UserId}", id);
                     return new ApplicationResponse<bool>
                     {
                         Success = false,
@@ -300,6 +358,7 @@ namespace FitGymApp.Application.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while deleting user with UserId: {UserId}", id);
                 await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<bool>
                 {
@@ -321,7 +380,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdatePasswordAsync(PasswordUserRequest request)
+        public async Task<ApplicationResponse<bool>> UpdatePasswordAsync(PasswordUserRequest request, string invocationId = "")
         {
             // Validate user existence
             var users = await _userRepository.FindUsersByFieldsAsync(new Dictionary<string, object> { { "Email", request.Email } });
@@ -380,6 +439,56 @@ namespace FitGymApp.Application.Services
                     Data = false,
                     Message = "Could not update the password.",
                     ErrorCode = "UpdateFailed"
+                };
+            }
+        }
+
+        public async Task<ApplicationResponse<bool>> UpdateUsersGymToNullAsync(Guid gymId, string ip="", string invocationId = "")
+        {
+            _logger.LogInformation("Starting UpdateUsersGymToNullAsync method for GymId: {GymId}", gymId);
+            try
+            {
+                var userFilters = new Dictionary<string, object> { { "GymId", gymId } };
+                var users = await _userRepository.FindUsersByFieldsAsync(userFilters);
+
+                if (users.Any())
+                {
+                    var userIds = users.Select(user => user.Id).ToList();
+                    var updateResult = await _userRepository.BulkUpdateFieldAsync(userIds, "GymId", null);
+
+                    if (!updateResult)
+                    {
+                        _logger.LogWarning("Failed to update GymId to null for users in GymId: {GymId}", gymId);
+                        return new ApplicationResponse<bool>
+                        {
+                            Success = false,
+                            Data = false,
+                            Message = "Failed to update users' GymId to null.",
+                            ErrorCode = "UpdateFailed"
+                        };
+                    }
+
+                    _logger.LogInformation("GymId set to null for {UserCount} users in GymId: {GymId}", users.Count(), gymId);
+                    await _logChangeService.LogChangeAsync("User.GymId", users, null, "", invocationId);
+                }
+
+                return new ApplicationResponse<bool>
+                {
+                    Success = true,
+                    Data = true,
+                    Message = "Users' GymId updated to null successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating users' GymId to null for GymId: {GymId}", gymId);
+                await _logErrorService.LogErrorAsync(ex);
+                return new ApplicationResponse<bool>
+                {
+                    Success = false,
+                    Data = false,
+                    Message = "Technical error while updating users' GymId to null.",
+                    ErrorCode = "TechnicalError"
                 };
             }
         }

@@ -10,6 +10,8 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json;
+using FitGymApp.Repository.Services;
 
 namespace FitGymApp.Repository.Services
 {
@@ -86,7 +88,7 @@ namespace FitGymApp.Repository.Services
                 var property = typeof(Gym).GetProperty(filter.Key);
                 if (property == null) continue;
                 var left = Expression.Property(parameter, property);
-                var right = Expression.Constant(Convert.ChangeType(filter.Value, property.PropertyType));
+                var right = Expression.Constant(ValueConverter.ConvertValueToType(filter.Value, property.PropertyType));
                 var equals = Expression.Equal(left, right);
                 predicate = Expression.AndAlso(predicate, equals);
             }
