@@ -30,7 +30,7 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
-          projectKey: FitGymApp
-          organization: TI-Turing
+          projectKey: TI-Turing_FitGymApp
+          organization: ti-turing
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
