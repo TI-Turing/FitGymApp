@@ -74,10 +74,13 @@ namespace FitGymApp.Repository.Services
             {
                 var property = typeof(GymPlanSelected).GetProperty(filter.Key);
                 if (property == null) continue;
+
                 var left = Expression.Property(parameter, property);
-                var right = Expression.Constant(Convert.ChangeType(filter.Value, property.PropertyType));
-                var equals = Expression.Equal(left, right);
-                predicate = Expression.AndAlso(predicate, equals);
+                if (property.PropertyType == typeof(Guid?))
+                    left = Expression.Property(left, "Value");
+
+                var right = Expression.Constant(ValueConverter.ConvertValueToType(filter.Value, property.PropertyType));
+                predicate = Expression.AndAlso(predicate, Expression.Equal(left, right));
             }
             var lambda = Expression.Lambda<Func<GymPlanSelected, bool>>(predicate, parameter);
             return await _context.GymPlanSelecteds.Where(lambda).ToListAsync();

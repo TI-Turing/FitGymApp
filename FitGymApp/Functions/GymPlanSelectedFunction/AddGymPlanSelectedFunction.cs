@@ -59,13 +59,13 @@ public class AddGymPlanSelectedFunction
             var result = await _service.CreateGymPlanSelectedAsync(objRequest);
             if (!result.Success)
             {
-                var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                var errorResponse = req.CreateResponse(HttpStatusCode.UnprocessableEntity);
                 await errorResponse.WriteAsJsonAsync(new ApiResponse<Guid>
                 {
                     Success = false,
                     Message = result.Message,
                     Data = default,
-                    StatusCode = StatusCodes.Status400BadRequest
+                    StatusCode = StatusCodes.Status422UnprocessableEntity
                 });
                 return errorResponse;
             }
@@ -82,13 +82,13 @@ public class AddGymPlanSelectedFunction
         catch (Exception ex)
         {
             logger.LogError(ex, "Error al agregar GymPlanSelected.");
-            var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+            var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
             await errorResponse.WriteAsJsonAsync(new ApiResponse<Guid>
             {
                 Success = false,
-                Message = "Ocurrió un error al procesar la solicitud.",
+                Message = "Ocurrió un error inesperado al procesar la solicitud.",
                 Data = default,
-                StatusCode = StatusCodes.Status400BadRequest
+                StatusCode = StatusCodes.Status500InternalServerError
             });
             return errorResponse;
         }

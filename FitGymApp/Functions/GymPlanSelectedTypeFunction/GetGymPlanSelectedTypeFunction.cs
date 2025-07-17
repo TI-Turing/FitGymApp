@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using FitGymApp.Application.Services.Interfaces;
@@ -26,17 +27,17 @@ namespace FitGymApp.Functions.GymPlanSelectedTypeFunction
         }
 
         [Function("GymPlanSelectedType_GetByIdFunction")]
-        public async Task<ApiResponse<GymPlanSelectedType>> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "gymplanselectedtype/{id:guid}")] HttpRequest req, Guid id)
+        public async Task<IActionResult> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "gymplanselectedtype/{id:guid}")] HttpRequest req, Guid id)
         {
             if (!JwtValidator.ValidateJwt(req, out var error))
             {
-                return new ApiResponse<GymPlanSelectedType>
+                return new JsonResult(new ApiResponse<GymPlanSelectedType>
                 {
                     Success = false,
                     Message = error!,
                     Data = null,
                     StatusCode = StatusCodes.Status401Unauthorized
-                };
+                });
             }
             _logger.LogInformation($"Consultando GymPlanSelectedType por Id: {id}");
             try
@@ -44,85 +45,85 @@ namespace FitGymApp.Functions.GymPlanSelectedTypeFunction
                 var result = await _service.GetGymPlanSelectedTypeByIdAsync(id);
                 if (!result.Success)
                 {
-                    return new ApiResponse<GymPlanSelectedType>
+                    return new JsonResult(new ApiResponse<GymPlanSelectedType>
                     {
                         Success = false,
                         Message = result.Message,
                         Data = null,
                         StatusCode = StatusCodes.Status404NotFound
-                    };
+                    });
                 }
-                return new ApiResponse<GymPlanSelectedType>
+                return new JsonResult(new ApiResponse<GymPlanSelectedType>
                 {
                     Success = true,
                     Message = result.Message,
                     Data = result.Data,
                     StatusCode = StatusCodes.Status200OK
-                };
+                });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al consultar GymPlanSelectedType por Id.");
-                return new ApiResponse<GymPlanSelectedType>
+                return new JsonResult(new ApiResponse<GymPlanSelectedType>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
                     Data = null,
                     StatusCode = StatusCodes.Status400BadRequest
-                };
+                });
             }
         }
 
         [Function("GymPlanSelectedType_GetAllFunction")]
-        public async Task<ApiResponse<IEnumerable<GymPlanSelectedType>>> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "gymplanselectedtypes")] HttpRequest req)
+        public async Task<IActionResult> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "gymplanselectedtypes")] HttpRequest req)
         {
             if (!JwtValidator.ValidateJwt(req, out var error))
             {
-                return new ApiResponse<IEnumerable<GymPlanSelectedType>>
+                return new JsonResult(new ApiResponse<IEnumerable<GymPlanSelectedType>>
                 {
                     Success = false,
                     Message = error!,
                     Data = null,
                     StatusCode = StatusCodes.Status401Unauthorized
-                };
+                });
             }
             _logger.LogInformation("Consultando todos los GymPlanSelectedTypes activos.");
             try
             {
                 var result = await _service.GetAllGymPlanSelectedTypesAsync();
-                return new ApiResponse<IEnumerable<GymPlanSelectedType>>
+                return new JsonResult(new ApiResponse<IEnumerable<GymPlanSelectedType>>
                 {
                     Success = result.Success,
                     Message = result.Message,
                     Data = result.Data,
                     StatusCode = StatusCodes.Status200OK
-                };
+                });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al consultar todos los GymPlanSelectedTypes.");
-                return new ApiResponse<IEnumerable<GymPlanSelectedType>>
+                return new JsonResult(new ApiResponse<IEnumerable<GymPlanSelectedType>>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
                     Data = null,
                     StatusCode = StatusCodes.Status400BadRequest
-                };
+                });
             }
         }
 
         [Function("GymPlanSelectedType_FindByFieldsFunction")]
-        public async Task<ApiResponse<IEnumerable<GymPlanSelectedType>>> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "gymplanselectedtypes/find")] HttpRequest req)
+        public async Task<IActionResult> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "gymplanselectedtypes/find")] HttpRequest req)
         {
             if (!JwtValidator.ValidateJwt(req, out var error))
             {
-                return new ApiResponse<IEnumerable<GymPlanSelectedType>>
+                return new JsonResult(new ApiResponse<IEnumerable<GymPlanSelectedType>>
                 {
                     Success = false,
                     Message = error!,
                     Data = null,
                     StatusCode = StatusCodes.Status401Unauthorized
-                };
+                });
             }
             _logger.LogInformation("Consultando GymPlanSelectedTypes por filtros dinámicos.");
             try
@@ -131,33 +132,33 @@ namespace FitGymApp.Functions.GymPlanSelectedTypeFunction
                 var filters = JsonSerializer.Deserialize<Dictionary<string, object>>(requestBody);
                 if (filters == null || filters.Count == 0)
                 {
-                    return new ApiResponse<IEnumerable<GymPlanSelectedType>>
+                    return new JsonResult(new ApiResponse<IEnumerable<GymPlanSelectedType>>
                     {
                         Success = false,
                         Message = "No se proporcionaron filtros válidos.",
                         Data = null,
                         StatusCode = StatusCodes.Status400BadRequest
-                    };
+                    });
                 }
                 var result = await _service.FindGymPlanSelectedTypesByFieldsAsync(filters);
-                return new ApiResponse<IEnumerable<GymPlanSelectedType>>
+                return new JsonResult(new ApiResponse<IEnumerable<GymPlanSelectedType>>
                 {
                     Success = result.Success,
                     Message = result.Message,
                     Data = result.Data,
                     StatusCode = StatusCodes.Status200OK
-                };
+                });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al consultar GymPlanSelectedTypes por filtros.");
-                return new ApiResponse<IEnumerable<GymPlanSelectedType>>
+                return new JsonResult(new ApiResponse<IEnumerable<GymPlanSelectedType>>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
                     Data = null,
                     StatusCode = StatusCodes.Status400BadRequest
-                };
+                });
             }
         }
     }

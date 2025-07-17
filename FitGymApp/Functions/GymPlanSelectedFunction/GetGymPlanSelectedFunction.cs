@@ -73,11 +73,11 @@ namespace FitGymApp.Functions.GymPlanSelectedFunction
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error al consultar GymPlanSelected por Id.");
-                var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
                 await errorResponse.WriteAsJsonAsync(new ApplicationResponse<GymPlanSelected>
                 {
                     Success = false,
-                    Message = "Ocurrió un error al procesar la solicitud.",
+                    Message = "Ocurrió un error inesperado al procesar la solicitud.",
                     Data = null
                 });
                 return errorResponse;

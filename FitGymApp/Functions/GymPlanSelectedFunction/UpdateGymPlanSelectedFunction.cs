@@ -81,13 +81,13 @@ public class UpdateGymPlanSelectedFunction
         catch (Exception ex)
         {
             logger.LogError(ex, "Error al actualizar GymPlanSelected.");
-            var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+            var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
             await errorResponse.WriteAsJsonAsync(new ApiResponse<Guid>
             {
                 Success = false,
-                Message = "Ocurrió un error al procesar la solicitud.",
+                Message = "Ocurrió un error inesperado al procesar la solicitud.",
                 Data = default,
-                StatusCode = StatusCodes.Status400BadRequest
+                StatusCode = StatusCodes.Status500InternalServerError
             });
             return errorResponse;
         }

@@ -37,6 +37,12 @@ namespace FitGymApp.Repository.Services
                         var str = jsonElement.GetString();
                         return !string.IsNullOrEmpty(str) ? str[0] : default(char);
                     }
+                    if (targetType == typeof(uint) || targetType == typeof(uint?))
+                        return jsonElement.ValueKind == JsonValueKind.Number ? jsonElement.GetUInt32() : uint.Parse(jsonElement.GetString() ?? "0");
+                    if (targetType == typeof(ulong) || targetType == typeof(ulong?))
+                        return jsonElement.ValueKind == JsonValueKind.Number ? jsonElement.GetUInt64() : ulong.Parse(jsonElement.GetString() ?? "0");
+                    if (targetType == typeof(ushort) || targetType == typeof(ushort?))
+                        return jsonElement.ValueKind == JsonValueKind.Number ? jsonElement.GetUInt16() : ushort.Parse(jsonElement.GetString() ?? "0");
 
                     // Fallback: intenta convertir usando ToString y Convert.ChangeType
                     return Convert.ChangeType(jsonElement.ToString(), targetType);
@@ -47,6 +53,28 @@ namespace FitGymApp.Repository.Services
                         return null;
                     if (targetType.IsEnum)
                         return Enum.Parse(targetType, value.ToString()!);
+                    if (targetType == typeof(Guid) || targetType == typeof(Guid?))
+                        return Guid.Parse(value.ToString() ?? Guid.Empty.ToString());
+                    if (targetType == typeof(DateTime) || targetType == typeof(DateTime?))
+                        return DateTime.Parse(value.ToString() ?? DateTime.MinValue.ToString());
+                    if (targetType == typeof(uint) || targetType == typeof(uint?))
+                        return uint.Parse(value.ToString() ?? "0");
+                    if (targetType == typeof(ulong) || targetType == typeof(ulong?))
+                        return ulong.Parse(value.ToString() ?? "0");
+                    if (targetType == typeof(ushort) || targetType == typeof(ushort?))
+                        return ushort.Parse(value.ToString() ?? "0");
+                    if (targetType == typeof(byte) || targetType == typeof(byte?))
+                        return byte.Parse(value.ToString() ?? "0");
+                    if (targetType == typeof(char) || targetType == typeof(char?))
+                    {
+                        var str = value.ToString();
+                        return !string.IsNullOrEmpty(str) ? str[0] : default(char);
+                    }
+                    if (targetType == typeof(bool) || targetType == typeof(bool?))
+                    {
+                        var str = value.ToString()?.ToLower();
+                        return str == "true" || str == "1";
+                    }
                     return Convert.ChangeType(value, targetType);
                 }
             }

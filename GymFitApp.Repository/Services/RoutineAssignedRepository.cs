@@ -75,7 +75,7 @@ namespace FitGymApp.Repository.Services
                 var property = typeof(RoutineAssigned).GetProperty(filter.Key);
                 if (property == null) continue;
                 var left = Expression.Property(parameter, property);
-                var right = Expression.Constant(Convert.ChangeType(filter.Value, property.PropertyType));
+                var right = Expression.Constant(ValueConverter.ConvertValueToType(filter.Value, property.PropertyType));
                 var equals = Expression.Equal(left, right);
                 predicate = Expression.AndAlso(predicate, equals);
             }

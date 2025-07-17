@@ -8,6 +8,7 @@ using FitGymApp.Domain.DTO.GymPlanSelected.Request;
 using FitGymApp.Domain.DTO;
 using FitGymApp.Repository.Services.Interfaces;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 
 namespace FitGymApp.Application.Services
 {
@@ -17,21 +18,38 @@ namespace FitGymApp.Application.Services
         private readonly ILogChangeService _logChangeService;
         private readonly ILogErrorService _logErrorService;
         private readonly IMapper _mapper;
+        private readonly ILogger<GymPlanSelectedService> _logger;
 
-        public GymPlanSelectedService(IGymPlanSelectedRepository gymPlanSelectedRepository, ILogChangeService logChangeService, ILogErrorService logErrorService, IMapper mapper)
+        public GymPlanSelectedService(IGymPlanSelectedRepository gymPlanSelectedRepository, ILogChangeService logChangeService, ILogErrorService logErrorService, IMapper mapper, ILogger<GymPlanSelectedService> logger)
         {
             _gymPlanSelectedRepository = gymPlanSelectedRepository;
             _logChangeService = logChangeService;
             _logErrorService = logErrorService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<ApplicationResponse<GymPlanSelected>> CreateGymPlanSelectedAsync(AddGymPlanSelectedRequest request)
         {
+            _logger.LogInformation("Starting CreateGymPlanSelectedAsync method.");
             try
             {
+                // Validate if the gym already has an active plan
+                var validationResponse = await ValidateGymPlanSelectedCreationAsync(request.GymId);
+                if (!validationResponse.Success)
+                {
+                    _logger.LogWarning("Validation failed for GymId: {GymId}. Reason: {Message}", request.GymId, validationResponse.Message);
+                    return new ApplicationResponse<GymPlanSelected>
+                    {
+                        Success = false,
+                        Message = validationResponse.Message,
+                        ErrorCode = "ValidationFailed"
+                    };
+                }
+
                 var entity = _mapper.Map<GymPlanSelected>(request);
                 var created = await _gymPlanSelectedRepository.CreateGymPlanSelectedAsync(entity);
+                _logger.LogInformation("GymPlanSelected created successfully with ID: {GymPlanSelectedId}", created.Id);
                 return new ApplicationResponse<GymPlanSelected>
                 {
                     Success = true,
@@ -41,6 +59,7 @@ namespace FitGymApp.Application.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while creating a GymPlanSelected.");
                 await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<GymPlanSelected>
                 {
@@ -53,43 +72,90 @@ namespace FitGymApp.Application.Services
 
         public async Task<ApplicationResponse<GymPlanSelected>> GetGymPlanSelectedByIdAsync(Guid id)
         {
-            var entity = await _gymPlanSelectedRepository.GetGymPlanSelectedByIdAsync(id);
-            if (entity == null)
+            _logger.LogInformation("Starting GetGymPlanSelectedByIdAsync method for GymPlanSelectedId: {GymPlanSelectedId}", id);
+            try
             {
+                var entity = await _gymPlanSelectedRepository.GetGymPlanSelectedByIdAsync(id);
+                if (entity == null)
+                {
+                    _logger.LogWarning("GymPlanSelected not found for GymPlanSelectedId: {GymPlanSelectedId}", id);
+                    return new ApplicationResponse<GymPlanSelected>
+                    {
+                        Success = false,
+                        Message = "Plan seleccionado de gimnasio no encontrado.",
+                        ErrorCode = "NotFound"
+                    };
+                }
+                _logger.LogInformation("GymPlanSelected retrieved successfully for GymPlanSelectedId: {GymPlanSelectedId}", id);
+                return new ApplicationResponse<GymPlanSelected>
+                {
+                    Success = true,
+                    Data = entity
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving GymPlanSelected with GymPlanSelectedId: {GymPlanSelectedId}", id);
+                await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<GymPlanSelected>
                 {
                     Success = false,
-                    Message = "Plan seleccionado de gimnasio no encontrado.",
-                    ErrorCode = "NotFound"
+                    Message = "Error técnico al obtener el plan seleccionado de gimnasio.",
+                    ErrorCode = "TechnicalError"
                 };
             }
-            return new ApplicationResponse<GymPlanSelected>
-            {
-                Success = true,
-                Data = entity
-            };
         }
 
         public async Task<ApplicationResponse<IEnumerable<GymPlanSelected>>> GetAllGymPlanSelectedsAsync()
         {
-            var entities = await _gymPlanSelectedRepository.GetAllGymPlanSelectedsAsync();
-            return new ApplicationResponse<IEnumerable<GymPlanSelected>>
+            _logger.LogInformation("Starting GetAllGymPlanSelectedsAsync method.");
+            try
             {
-                Success = true,
-                Data = entities
-            };
+                var entities = await _gymPlanSelectedRepository.GetAllGymPlanSelectedsAsync();
+                _logger.LogInformation("Retrieved {GymPlanSelectedCount} GymPlanSelecteds successfully.", entities.Count());
+                return new ApplicationResponse<IEnumerable<GymPlanSelected>>
+                {
+                    Success = true,
+                    Data = entities
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving all GymPlanSelecteds.");
+                await _logErrorService.LogErrorAsync(ex);
+                return new ApplicationResponse<IEnumerable<GymPlanSelected>>
+                {
+                    Success = false,
+                    Message = "Error técnico al obtener los planes seleccionados de gimnasio.",
+                    ErrorCode = "TechnicalError"
+                };
+            }
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateGymPlanSelectedAsync(UpdateGymPlanSelectedRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateGymPlanSelectedAsync(UpdateGymPlanSelectedRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
+            _logger.LogInformation("Starting UpdateGymPlanSelectedAsync method for GymPlanSelectedId: {GymPlanSelectedId}", request.Id);
             try
             {
                 var before = await _gymPlanSelectedRepository.GetGymPlanSelectedByIdAsync(request.Id);
+                if (before == null)
+                {
+                    _logger.LogWarning("GymPlanSelected not found for GymPlanSelectedId: {GymPlanSelectedId}", request.Id);
+                    return new ApplicationResponse<bool>
+                    {
+                        Success = false,
+                        Data = false,
+                        Message = "Plan seleccionado de gimnasio no encontrado.",
+                        ErrorCode = "NotFound"
+                    };
+                }
+
                 var entity = _mapper.Map<GymPlanSelected>(request);
                 var updated = await _gymPlanSelectedRepository.UpdateGymPlanSelectedAsync(entity);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("GymPlanSelected", before, entity.Id);
+                    _logger.LogInformation("GymPlanSelected updated successfully for GymPlanSelectedId: {GymPlanSelectedId}", request.Id);
+                    await _logChangeService.LogChangeAsync("GymPlanSelected", before, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
@@ -99,17 +165,19 @@ namespace FitGymApp.Application.Services
                 }
                 else
                 {
+                    _logger.LogWarning("Could not update GymPlanSelected for GymPlanSelectedId: {GymPlanSelectedId}", request.Id);
                     return new ApplicationResponse<bool>
                     {
                         Success = false,
                         Data = false,
-                        Message = "No se pudo actualizar el plan seleccionado de gimnasio (no encontrado o inactivo).",
-                        ErrorCode = "NotFound"
+                        Message = "No se pudo actualizar el plan seleccionado de gimnasio.",
+                        ErrorCode = "UpdateFailed"
                     };
                 }
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while updating GymPlanSelected with GymPlanSelectedId: {GymPlanSelectedId}", request.Id);
                 await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<bool>
                 {
@@ -121,13 +189,20 @@ namespace FitGymApp.Application.Services
             }
         }
 
+        public async Task<ApplicationResponse<bool>> UpdateGymPlanSelectedAsync(UpdateGymPlanSelectedRequest request)
+        {
+            return await UpdateGymPlanSelectedAsync(request, null, string.Empty, string.Empty);
+        }
+
         public async Task<ApplicationResponse<bool>> DeleteGymPlanSelectedAsync(Guid id)
         {
+            _logger.LogInformation("Starting DeleteGymPlanSelectedAsync method for GymPlanSelectedId: {GymPlanSelectedId}", id);
             try
             {
                 var deleted = await _gymPlanSelectedRepository.DeleteGymPlanSelectedAsync(id);
                 if (deleted)
                 {
+                    _logger.LogInformation("GymPlanSelected deleted successfully for GymPlanSelectedId: {GymPlanSelectedId}", id);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
@@ -137,6 +212,7 @@ namespace FitGymApp.Application.Services
                 }
                 else
                 {
+                    _logger.LogWarning("GymPlanSelected not found or already deleted for GymPlanSelectedId: {GymPlanSelectedId}", id);
                     return new ApplicationResponse<bool>
                     {
                         Success = false,
@@ -148,6 +224,7 @@ namespace FitGymApp.Application.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while deleting GymPlanSelected with GymPlanSelectedId: {GymPlanSelectedId}", id);
                 await _logErrorService.LogErrorAsync(ex);
                 return new ApplicationResponse<bool>
                 {
@@ -161,12 +238,74 @@ namespace FitGymApp.Application.Services
 
         public async Task<ApplicationResponse<IEnumerable<GymPlanSelected>>> FindGymPlanSelectedsByFieldsAsync(Dictionary<string, object> filters)
         {
-            var entities = await _gymPlanSelectedRepository.FindGymPlanSelectedsByFieldsAsync(filters);
-            return new ApplicationResponse<IEnumerable<GymPlanSelected>>
+            _logger.LogInformation("Starting FindGymPlanSelectedsByFieldsAsync method with filters: {Filters}", filters);
+            try
             {
-                Success = true,
-                Data = entities
-            };
+                var entities = await _gymPlanSelectedRepository.FindGymPlanSelectedsByFieldsAsync(filters);
+                _logger.LogInformation("Retrieved {GymPlanSelectedCount} GymPlanSelecteds successfully with filters.", entities.Count());
+                return new ApplicationResponse<IEnumerable<GymPlanSelected>>
+                {
+                    Success = true,
+                    Data = entities
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while finding GymPlanSelecteds with filters: {Filters}", filters);
+                await _logErrorService.LogErrorAsync(ex);
+                return new ApplicationResponse<IEnumerable<GymPlanSelected>>
+                {
+                    Success = false,
+                    Message = "Error técnico al buscar los planes seleccionados de gimnasio.",
+                    ErrorCode = "TechnicalError"
+                };
+            }
+        }
+
+        public async Task<ApplicationResponse<bool>> ValidateGymPlanSelectedCreationAsync(Guid gymId)
+        {
+            _logger.LogInformation("Starting ValidateGymPlanSelectedCreationAsync method for GymId: {GymId}", gymId);
+            try
+            {
+                var filters = new Dictionary<string, object>
+                {
+                    { "GymId", gymId },
+                    { "IsActive", true }
+                };
+
+                var existingPlans = await FindGymPlanSelectedsByFieldsAsync(filters);
+
+                if (existingPlans.Data != null && existingPlans.Data.Any())
+                {
+                    _logger.LogWarning("Validation failed: Gym already has an active plan for GymId: {GymId}", gymId);
+                    return new ApplicationResponse<bool>
+                    {
+                        Success = false,
+                        Data = false,
+                        Message = "El gimnasio ya tiene un plan activo."
+                    };
+                }
+
+                _logger.LogInformation("Validation successful for GymId: {GymId}", gymId);
+                return new ApplicationResponse<bool>
+                {
+                    Success = true,
+                    Data = true,
+                    Message = "Validación exitosa."
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during validation for GymId: {GymId}", gymId);
+                await _logErrorService.LogErrorAsync(ex);
+                return new ApplicationResponse<bool>
+                {
+                    Success = false,
+                    Data = false,
+                    Message = "Error técnico durante la validación.",
+                    ErrorCode = "TechnicalError"
+                };
+            }
         }
     }
 }

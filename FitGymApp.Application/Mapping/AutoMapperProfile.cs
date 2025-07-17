@@ -1,14 +1,15 @@
 using AutoMapper;
-using FitGymApp.Domain.DTO.RoutineExercise.Request;
-using FitGymApp.Domain.Models;
-using FitGymApp.Domain.DTO.FitUser.Request;
-using FitGymApp.Domain.DTO.Exercise.Request;
 using FitGymApp.Domain.DTO.AccessMethodType.Request;
 using FitGymApp.Domain.DTO.Bill.Request;
 using FitGymApp.Domain.DTO.Branch.Request;
 using FitGymApp.Domain.DTO.Brand.Request;
-using FitGymApp.Domain.DTO.Notification.Request;
+using FitGymApp.Domain.DTO.Exercise.Request;
+using FitGymApp.Domain.DTO.FitUser.Request;
 using FitGymApp.Domain.DTO.Gym.Request;
+using FitGymApp.Domain.DTO.GymPlanSelected.Request;
+using FitGymApp.Domain.DTO.Notification.Request;
+using FitGymApp.Domain.DTO.RoutineExercise.Request;
+using FitGymApp.Domain.Models;
 
 public class AutoMapperProfile : Profile
 {
@@ -36,6 +37,7 @@ public class AutoMapperProfile : Profile
         CreateMap<UpdateNotificationRequest, Notification>();
         CreateMap<AddGymRequest, Gym>();
         CreateMap<UpdateGymRequest, Gym>();
+        CreateMap<AddGymPlanSelectedRequest, GymPlanSelected>();
 
     }
 }
