@@ -4,6 +4,7 @@ using FitGymApp.Domain.Models;
 using FitGymApp.Repository.Services.Interfaces;
 using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace FitGymApp.Application.Services
@@ -63,7 +64,7 @@ namespace FitGymApp.Application.Services
             {
                 Id = Guid.NewGuid(),
                 Table = table,
-                PastObject = JsonSerializer.Serialize(pastObject),
+                PastObject = JsonSerializer.Serialize(pastObject, new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve }),
                 CreatedAt = DateTime.UtcNow,
                 Ip = ip,
                 UserId = userId ?? Guid.Empty,
@@ -79,7 +80,7 @@ namespace FitGymApp.Application.Services
             {
                 Id = Guid.NewGuid(),
                 Table = table,
-                PastObject = JsonSerializer.Serialize(pastObject),
+                PastObject = JsonSerializer.Serialize(pastObject, new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve }),
                 CreatedAt = DateTime.UtcNow,
                 UserId = userId ?? Guid.Empty,
                 Ip = ip,

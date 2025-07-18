@@ -5,7 +5,7 @@ namespace FitGymApp.Domain.DTO.Gym.Response
 {
     public class GenerateGymQrResponse
     {
-        public byte[] QrCode { get; set; } = Array.Empty<byte>();
+        public string QrCode { get; set; } = string.Empty;
         public FitGymApp.Domain.Models.GymPlanSelectedType GymPlanSelectedType { get; set; } = null!;
     }
 }

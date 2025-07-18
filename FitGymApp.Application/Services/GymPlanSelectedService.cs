@@ -19,14 +19,16 @@ namespace FitGymApp.Application.Services
         private readonly ILogErrorService _logErrorService;
         private readonly IMapper _mapper;
         private readonly ILogger<GymPlanSelectedService> _logger;
+        private readonly IGymRepository _gymRepository;
 
-        public GymPlanSelectedService(IGymPlanSelectedRepository gymPlanSelectedRepository, ILogChangeService logChangeService, ILogErrorService logErrorService, IMapper mapper, ILogger<GymPlanSelectedService> logger)
+        public GymPlanSelectedService(IGymPlanSelectedRepository gymPlanSelectedRepository, ILogChangeService logChangeService, ILogErrorService logErrorService, IMapper mapper, ILogger<GymPlanSelectedService> logger, IGymRepository gymRepository)
         {
             _gymPlanSelectedRepository = gymPlanSelectedRepository;
             _logChangeService = logChangeService;
             _logErrorService = logErrorService;
             _mapper = mapper;
             _logger = logger;
+            _gymRepository = gymRepository;
         }
 
         public async Task<ApplicationResponse<GymPlanSelected>> CreateGymPlanSelectedAsync(AddGymPlanSelectedRequest request)
@@ -267,6 +269,20 @@ namespace FitGymApp.Application.Services
             _logger.LogInformation("Starting ValidateGymPlanSelectedCreationAsync method for GymId: {GymId}", gymId);
             try
             {
+                // Check if the gym is inactive
+                var gymResponse = await _gymRepository.GetGymByIdAsync(gymId);
+                if (gymResponse == null || !gymResponse.IsActive)
+                {
+                    _logger.LogWarning("Validation failed: Gym is inactive or does not exist for GymId: {GymId}", gymId);
+                    return new ApplicationResponse<bool>
+                    {
+                        Success = false,
+                        Data = false,
+                        Message = "El gimnasio está inactivo o no existe."
+                    };
+                }
+
+                // Check if the gym already has an active plan
                 var filters = new Dictionary<string, object>
                 {
                     { "GymId", gymId },

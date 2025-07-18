@@ -10,7 +10,10 @@
     "Jwt:Audience": "Gymmetry",
 
     "BasicConfig:MinPasswordLength": "8",
-    "BasicConfig:MaxPasswordLength": "50"
+    "BasicConfig:MaxPasswordLength": "50",
+
+    "BlobStorage:ConnectionString": "YourBlobStorageConnectionString",
+    "LocalLogoPath": "C:\\LocalLogos\\default_logo.png"
   },
   "ConnectionStrings": {
     "DefaultConnection": "Server=.;Database=FitGymApp;Integrated Security=True;TrustServerCertificate=True;Encrypt=True;"

@@ -18,14 +18,16 @@ namespace FitGymApp.Application.Services
         private readonly ILogChangeService _logChangeService;
         private readonly ILogErrorService _logErrorService;
         private readonly ILogger<UserService> _logger;
+        private readonly IGymRepository _gymRepository;
 
-        public UserService(IUserRepository userRepository, IPasswordService passwordService, ILogChangeService logChangeService, ILogErrorService logErrorService, ILogger<UserService> logger)
+        public UserService(IUserRepository userRepository, IPasswordService passwordService, ILogChangeService logChangeService, ILogErrorService logErrorService, ILogger<UserService> logger, IGymRepository gymRepository)
         {
             _userRepository = userRepository;
             _passwordService = passwordService;
             _logChangeService = logChangeService;
             _logErrorService = logErrorService;
             _logger = logger;
+            _gymRepository = gymRepository;
         }
 
         public async Task<ApplicationResponse<User>> CreateUserAsync(AddRequest request)
@@ -271,30 +273,78 @@ namespace FitGymApp.Application.Services
             }
         }
 
+        private async Task<ApplicationResponse<bool>> ValidateUpdateUserGymRulesAsync(Guid userId, Guid gymId)
+        {
+            // Check if the user exists and is active
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null || user.IsActive != true)
+            {
+                _logger.LogWarning("User is either not found or inactive for UserId: {UserId}", userId);
+                return new ApplicationResponse<bool>
+                {
+                    Success = false,
+                    Data = false,
+                    Message = "User is either not found or inactive.",
+                    ErrorCode = "UserInactiveOrNotFound"
+                };
+            }
+
+            // Check if the gym exists and is active
+            var gym = await _gymRepository.GetGymByIdAsync(gymId);
+            if (gym == null || gym.IsActive != true)
+            {
+                _logger.LogWarning("Gym is either not found or inactive for GymId: {GymId}", gymId);
+                return new ApplicationResponse<bool>
+                {
+                    Success = false,
+                    Data = false,
+                    Message = "Gym is either not found or inactive.",
+                    ErrorCode = "GymInactiveOrNotFound"
+                };
+            }
+
+            // Check if the gym has an active GymPlanSelected
+            var activeGymPlanSelected = gym.GymPlanSelecteds?.Any(plan => plan.IsActive);
+            if (activeGymPlanSelected != true)
+            {
+                _logger.LogWarning("Gym does not have an active GymPlanSelected for GymId: {GymId}", gymId);
+                return new ApplicationResponse<bool>
+                {
+                    Success = false,
+                    Data = false,
+                    Message = "Gym does not have an active GymPlanSelected.",
+                    ErrorCode = "NoActiveGymPlanSelected"
+                };
+            }
+
+            return new ApplicationResponse<bool>
+            {
+                Success = true,
+                Data = true
+            };
+        }
+
         public async Task<ApplicationResponse<bool>> UpdateUserGymAsync(Guid userId, Guid gymId, string ip = "", string invocationId = "")
         {
             _logger.LogInformation("Starting UpdateUserGymAsync method for UserId: {UserId} and GymId: {GymId}", userId, gymId);
+
+            // Validate rules
+            var validationResponse = await ValidateUpdateUserGymRulesAsync(userId, gymId);
+            if (!validationResponse.Success)
+            {
+                return validationResponse;
+            }
+
             try
             {
                 var user = await _userRepository.GetUserByIdAsync(userId);
-                if (user == null)
-                {
-                    _logger.LogWarning("User not found for UserId: {UserId}", userId);
-                    return new ApplicationResponse<bool>
-                    {
-                        Success = false,
-                        Data = false,
-                        Message = "User not found.",
-                        ErrorCode = "NotFound"
-                    };
-                }
-
                 user.GymUserId = gymId;
                 var updated = await _userRepository.UpdateUserAsync(user);
                 if (updated)
                 {
+                    //TODO: Generar orden de pago.
                     _logger.LogInformation("GymUserId updated successfully for UserId: {UserId}", userId);
-                    await _logChangeService.LogChangeAsync("User.GymUserId", user, user.Id, "", invocationId);
+                    await _logChangeService.LogChangeAsync("User.GymUserId", user, user.Id, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,

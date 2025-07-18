@@ -1,18 +1,19 @@
+using AutoMapper;
+using FitGymApp.Application.Services.Interfaces;
+using FitGymApp.Domain.DTO;
+using FitGymApp.Domain.DTO.Gym.Request;
+using FitGymApp.Domain.DTO.Gym.Response;
+using FitGymApp.Domain.Models;
+using FitGymApp.Repository.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+using QRCoder;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.Models;
-using FitGymApp.Domain.DTO.Gym.Request;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Repository.Services.Interfaces;
-using AutoMapper;
-using QRCoder;
-using System.Drawing;
-using System.IO;
-using FitGymApp.Domain.DTO.Gym.Response;
-using Microsoft.Extensions.Logging;
 
 namespace FitGymApp.Application.Services
 {
@@ -353,9 +354,16 @@ namespace FitGymApp.Application.Services
             }
         }
 
-        public async Task<ApplicationResponse<GenerateGymQrResponse>> GenerateGymQrWithPlanTypeAsync(Guid gymId)
+        public async Task<ApplicationResponse<GenerateGymQrResponse>> GenerateGymQrWithPlanTypeAsync(Guid gymId, string baseUrl)
         {
             _logger.LogInformation("Starting GenerateGymQrWithPlanTypeAsync method for GymId: {GymId}", gymId);
+
+            // Ensure the baseUrl does not end with a trailing slash
+            if (baseUrl.EndsWith("/"))
+            {
+                baseUrl = baseUrl.TrimEnd('/');
+            }
+
             try
             {
                 var gym = await _gymRepository.GetGymByIdAsync(gymId);
@@ -394,14 +402,44 @@ namespace FitGymApp.Application.Services
                     };
                 }
 
+                var qrContent = $"{baseUrl}/{gymId}"; // Combine base URL and GymId
+
                 using (var qrGenerator = new QRCodeGenerator())
-                using (var qrCodeData = qrGenerator.CreateQrCode(gymId.ToString(), QRCodeGenerator.ECCLevel.Q))
-                using (var qrCode = new PngByteQRCode(qrCodeData))
+                using (var qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q))
                 {
-                    byte[] qrCodeImage = qrCode.GetGraphic(20);
+                    byte[] qrCodeImage;
+
+                    // Attempt to fetch logo from blob storage or local path
+                    string? logoPath = null;
+                    try
+                    {
+                        logoPath = await _gymRepository.GetLogoFromBlobStorageAsync(gymId);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to fetch logo from blob storage for GymId: {GymId}", gymId);
+                    }
+
+                    if (string.IsNullOrEmpty(logoPath))
+                    {
+                        logoPath = Environment.GetEnvironmentVariable("LocalLogoPath");
+                    }
+
+                    if (!string.IsNullOrEmpty(logoPath) && File.Exists(logoPath))
+                    {
+                        using (var logo = (Bitmap)Image.FromFile(logoPath))
+                        {
+                            qrCodeImage = new PngByteQRCode(qrCodeData).GetGraphic(20, Color.Black, Color.White);
+                        }
+                    }
+                    else
+                    {
+                        qrCodeImage = new PngByteQRCode(qrCodeData).GetGraphic(20);
+                    }
+
                     var response = new GenerateGymQrResponse
                     {
-                        QrCode = qrCodeImage,
+                        QrCode = Convert.ToBase64String(qrCodeImage),   
                         GymPlanSelectedType = gymPlanSelectedType
                     };
                     _logger.LogInformation("QR code and plan type generated successfully for GymId: {GymId}", gymId);
@@ -425,6 +463,7 @@ namespace FitGymApp.Application.Services
                 };
             }
         }
+
 
         private bool ValidateImageSize(byte[] image, int maxBytes = 2 * 1024 * 1024)
         {

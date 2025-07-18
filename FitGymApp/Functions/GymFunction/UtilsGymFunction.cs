@@ -57,7 +57,7 @@ public class UtilsGymFunction
             return badResponse;
         }
 
-        var result = await _gymService.GenerateGymQrWithPlanTypeAsync(requestDto.GymId);
+        var result = await _gymService.GenerateGymQrWithPlanTypeAsync(requestDto.GymId, requestDto.Url);
         if (!result.Success || result.Data == null)
         {
             var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
@@ -66,7 +66,21 @@ public class UtilsGymFunction
         }
 
         var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(result.Data);
+
+        var jsonOptions = new System.Text.Json.JsonSerializerOptions
+        {
+            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+            WriteIndented = true
+        };
+
+        var responseData = new
+        {
+            QrCode = result.Data.QrCode,
+            result.Data.GymPlanSelectedType
+        };
+
+        var jsonString = System.Text.Json.JsonSerializer.Serialize(responseData, jsonOptions);
+        await response.WriteStringAsync(jsonString);
         return response;
     }
 

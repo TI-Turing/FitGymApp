@@ -128,5 +128,28 @@ namespace FitGymApp.Repository.Services
             }
             return url;
         }
+
+        public async Task<string?> GetLogoFromBlobStorageAsync(Guid gymId)
+        {
+            string connectionString = _configuration["BlobStorage:ConnectionString"];
+            string containerName = "gym-logos";
+            string blobName = $"{gymId}_logo.png";
+
+            var blobServiceClient = new BlobServiceClient(connectionString);
+            var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            var blobClient = containerClient.GetBlobClient(blobName);
+
+            if (await blobClient.ExistsAsync())
+            {
+                return blobClient.Uri.ToString();
+            }
+
+            return null;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }
