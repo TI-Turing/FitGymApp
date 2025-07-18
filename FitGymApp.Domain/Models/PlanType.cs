@@ -19,5 +19,11 @@ public partial class PlanType
 
     public bool IsActive { get; set; }
 
+    public decimal? Price { get; set; }
+
+    public decimal? UsdPrice { get; set; }
+
+    public string? Description { get; set; }
+
     public virtual ICollection<Plan> Plans { get; set; } = new List<Plan>();
 }

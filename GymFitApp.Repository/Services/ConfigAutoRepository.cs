@@ -16,7 +16,13 @@ namespace FitGymApp.Repository.Services
 
         public async Task UpdateUsdPricesAsync(decimal usdToCopRate)
         {
-            var plans = await _context.GymPlanSelectedTypes.Where(p => p.Price != null).ToListAsync();
+            var gymPlanSelectedTypes = await _context.GymPlanSelectedTypes.Where(p => p.Price != null).ToListAsync();
+            foreach (var gymPlanSelectedType in gymPlanSelectedTypes)
+            {
+                gymPlanSelectedType.UsdPrice = gymPlanSelectedType.Price / usdToCopRate;
+            }
+
+            var plans = await _context.PlanTypes.Where(p => p.Price != null).ToListAsync();
             foreach (var plan in plans)
             {
                 plan.UsdPrice = plan.Price / usdToCopRate;
