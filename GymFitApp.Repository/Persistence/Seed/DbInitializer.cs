@@ -12,7 +12,7 @@ namespace GymFitApp.Repository.Persistence.Seed
             await GymPlanSelectedTypeSeed.SeedAsync(context);
             await GymTypeSeed.SeedAsync(context);
             await PlanTypeSeed.SeedAsync(context);
-            // Agrega aquí otros seeds si los tienes
+            
         }
     }
 }
