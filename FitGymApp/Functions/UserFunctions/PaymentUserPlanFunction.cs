@@ -1,49 +1,66 @@
 using System;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Extensions.Logging;
 using FitGymApp.Application.Services.Interfaces;
+using FitGymApp.Domain.DTO;
 using FitGymApp.Domain.DTO.User.Request;
+using FitGymApp.Utils;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace FitGymApp.Functions.UserFunctions
 {
     public class PaymentUserPlanFunction
     {
+        private readonly ILogger<PaymentUserPlanFunction> _logger;
         private readonly IPaymentService _paymentService;
 
-        public PaymentUserPlanFunction(IPaymentService paymentService)
+        public PaymentUserPlanFunction(ILogger<PaymentUserPlanFunction> logger, IPaymentService paymentService)
         {
+            _logger = logger;
             _paymentService = paymentService;
         }
 
-        [FunctionName("ProcessUserPlanPayment")]
-        public async Task Run([QueueTrigger("user-plan-payments")] PaymentRequestDto paymentRequest, ILogger log)
+        [Function("User_ProcessUserPlanPayment")]
+        public async Task<HttpResponseData> ProcessPaymentAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "user/payment")] HttpRequestData req,
+            FunctionContext executionContext)
         {
-            log.LogInformation("Processing payment for UserId: {UserId}", paymentRequest.UserId);
+            var logger = executionContext.GetLogger("User_ProcessUserPlanPayment");
+            logger.LogInformation("Processing user plan payment request.");
 
-            try
+            if (!JwtValidator.ValidateJwt(req, out var error))
             {
-                var validationResponse = await _paymentService.ValidatePaymentAsync(paymentRequest);
-                if (!validationResponse.Success)
+                var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
+                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<bool>
                 {
-                    log.LogWarning("Payment validation failed for UserId: {UserId}. Reason: {Reason}", paymentRequest.UserId, validationResponse.Message);
-                    return;
-                }
+                    Success = false,
+                    Message = error!,
+                    Data = default,
+                    StatusCode = StatusCodes.Status401Unauthorized
+                });
+                return unauthorizedResponse;
+            }
 
-                var paymentResponse = await _paymentService.ProcessPaymentAsync(paymentRequest);
-                if (paymentResponse.Success)
-                {
-                    log.LogInformation("Payment processed successfully for UserId: {UserId}", paymentRequest.UserId);
-                }
-                else
-                {
-                    log.LogWarning("Payment failed for UserId: {UserId}. Reason: {Reason}", paymentRequest.UserId, paymentResponse.Message);
-                }
-            }
-            catch (Exception ex)
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var paymentRequest = JsonConvert.DeserializeObject<PaymentRequestDto>(requestBody);
+
+            var validationResponse = await _paymentService.ValidatePaymentAsync(paymentRequest);
+            if (!validationResponse.Success)
             {
-                log.LogError(ex, "An error occurred while processing payment for UserId: {UserId}", paymentRequest.UserId);
+                var badRequestResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await badRequestResponse.WriteAsJsonAsync(validationResponse);
+                return badRequestResponse;
             }
+
+            var paymentResponse = await _paymentService.ProcessPaymentAsync(paymentRequest);
+            var response = req.CreateResponse(paymentResponse.Success ? HttpStatusCode.OK : HttpStatusCode.BadRequest);
+            await response.WriteAsJsonAsync(paymentResponse);
+            return response;
         }
     }
 }
