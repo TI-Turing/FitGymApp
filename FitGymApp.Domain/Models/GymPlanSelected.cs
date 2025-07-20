@@ -28,4 +28,5 @@ public partial class GymPlanSelected
     public virtual ICollection<GymPlanSelectedModule> GymPlanSelectedModules { get; set; } = new List<GymPlanSelectedModule>();
 
     public virtual GymPlanSelectedType GymPlanSelectedType { get; set; } = null!;
+    public virtual PaymentAttempt? PaymentAttempt { get; set; }
 }

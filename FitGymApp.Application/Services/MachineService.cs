@@ -30,10 +30,25 @@ namespace FitGymApp.Application.Services
                 var entity = new Machine
                 {
                     Name = request.Name,
-                    MachineCategoryId = request.MachineCategoryId,
                     Ip = request.Ip
                 };
+
                 var created = await _machineRepository.CreateMachineAsync(entity);
+
+                // Add MachineCategory relationships if provided
+                if (request.MachineCategoryIds != null && request.MachineCategoryIds.Any())
+                {
+                    foreach (var categoryId in request.MachineCategoryIds)
+                    {
+                        var machineCategory = new MachineCategory
+                        {
+                            MachineId = created.Id,
+                            MachineCategoryTypeId = categoryId
+                        };
+                        await _machineRepository.AddMachineCategoryAsync(machineCategory);
+                    }
+                }
+
                 return new ApplicationResponse<Machine>
                 {
                     Success = true,
@@ -82,6 +97,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
+        // Updated the UpdateMachineAsync method to handle the many-to-many relationship.
         public async Task<ApplicationResponse<bool>> UpdateMachineAsync(UpdateMachineRequest request)
         {
             try
@@ -91,13 +107,28 @@ namespace FitGymApp.Application.Services
                 {
                     Id = request.Id,
                     Name = request.Name,
-                    MachineCategoryId = request.MachineCategoryId,
                     Ip = request.Ip,
                     IsActive = request.IsActive
                 };
+
                 var updated = await _machineRepository.UpdateMachineAsync(entity);
                 if (updated)
                 {
+                    // Update MachineCategory relationships if provided
+                    if (request.MachineCategoryIds != null && request.MachineCategoryIds.Any())
+                    {
+                        await _machineRepository.ClearMachineCategoriesAsync(request.Id);
+                        foreach (var categoryId in request.MachineCategoryIds)
+                        {
+                            var machineCategory = new MachineCategory
+                            {
+                                MachineId = request.Id,
+                                MachineCategoryTypeId = categoryId
+                            };
+                            await _machineRepository.AddMachineCategoryAsync(machineCategory);
+                        }
+                    }
+
                     await _logChangeService.LogChangeAsync("Machine", before, entity.Id);
                     return new ApplicationResponse<bool>
                     {
@@ -176,6 +207,59 @@ namespace FitGymApp.Application.Services
                 Success = true,
                 Data = entities
             };
+        }
+
+        public async Task<ApplicationResponse<bool>> CreateMachinesAsync(IEnumerable<AddMachineRequest> requests)
+        {
+            try
+            {
+                var machines = requests.Select(request => new Machine
+                {
+                    Name = request.Name,
+                    Status = request.Status,
+                    Observations = request.Observations,
+                    BrandId = request.BrandId,
+                    Ip = request.Ip,
+                    IsActive = true
+                }).ToList();
+
+                var createdMachines = machines;
+                await _machineRepository.CreateMachinesAsync(machines);
+
+                // Add MachineCategory relationships if provided
+                foreach (var request in requests)
+                {
+                    if (request.MachineCategoryIds != null && request.MachineCategoryIds.Any())
+                    {
+                        foreach (var categoryId in request.MachineCategoryIds)
+                        {
+                            var machineCategory = new MachineCategory
+                            {
+                                MachineId = createdMachines.First(m => m.Name == request.Name).Id,
+                                MachineCategoryTypeId = categoryId
+                            };
+                            await _machineRepository.AddMachineCategoryAsync(machineCategory);
+                        }
+                    }
+                }
+
+                return new ApplicationResponse<bool>
+                {
+                    Success = true,
+                    Message = "Máquinas creadas correctamente.",
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                await _logErrorService.LogErrorAsync(ex);
+                return new ApplicationResponse<bool>
+                {
+                    Success = false,
+                    Message = "Error técnico al crear las máquinas.",
+                    ErrorCode = "TechnicalError"
+                };
+            }
         }
     }
 }

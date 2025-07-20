@@ -17,5 +17,8 @@
   },
   "ConnectionStrings": {
     "DefaultConnection": "Server=.;Database=FitGymApp;Integrated Security=True;TrustServerCertificate=True;Encrypt=True;"
+  },
+  "Host": {
+    "CORS": "*"
   }
 }

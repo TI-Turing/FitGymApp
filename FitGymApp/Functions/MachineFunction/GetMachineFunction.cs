@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using FitGymApp.Application.Services.Interfaces;
 using FitGymApp.Domain.DTO;
@@ -25,17 +26,20 @@ namespace FitGymApp.Functions.MachineFunction
         }
 
         [Function("Machine_GetMachineByIdFunction")]
-        public async Task<ApiResponse<Machine>> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "machine/{id:guid}")] HttpRequest req, Guid id)
+        public async Task<HttpResponseData> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "machine/{id:guid}")] HttpRequestData req, Guid id)
         {
+            var response = req.CreateResponse();
             if (!JwtValidator.ValidateJwt(req, out var error))
             {
-                return new ApiResponse<Machine>
+                response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
+                await response.WriteAsJsonAsync(new ApiResponse<Machine>
                 {
                     Success = false,
                     Message = error!,
                     Data = null,
                     StatusCode = StatusCodes.Status401Unauthorized
-                };
+                });
+                return response;
             }
             _logger.LogInformation($"Consultando Machine por Id: {id}");
             try
@@ -43,120 +47,143 @@ namespace FitGymApp.Functions.MachineFunction
                 var result = await _service.GetMachineByIdAsync(id);
                 if (!result.Success)
                 {
-                    return new ApiResponse<Machine>
+                    response.StatusCode = System.Net.HttpStatusCode.NotFound;
+                    await response.WriteAsJsonAsync(new ApiResponse<Machine>
                     {
                         Success = false,
                         Message = result.Message,
                         Data = null,
                         StatusCode = StatusCodes.Status404NotFound
-                    };
+                    });
+                    return response;
                 }
-                return new ApiResponse<Machine>
+
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                await response.WriteAsJsonAsync(new ApiResponse<Machine>
                 {
                     Success = true,
                     Message = result.Message,
                     Data = result.Data,
                     StatusCode = StatusCodes.Status200OK
-                };
+                });
+                return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al consultar Machine por Id.");
-                return new ApiResponse<Machine>
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                await response.WriteAsJsonAsync(new ApiResponse<Machine>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
                     Data = null,
                     StatusCode = StatusCodes.Status400BadRequest
-                };
+                });
+                return response;
             }
         }
 
         [Function("Machine_GetAllMachinesFunction")]
-        public async Task<ApiResponse<IEnumerable<Machine>>> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "machines")] HttpRequest req)
+        public async Task<HttpResponseData> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "machines")] HttpRequestData req)
         {
+            var response = req.CreateResponse();
             if (!JwtValidator.ValidateJwt(req, out var error))
             {
-                return new ApiResponse<IEnumerable<Machine>>
+                response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Machine>>
                 {
                     Success = false,
                     Message = error!,
                     Data = null,
                     StatusCode = StatusCodes.Status401Unauthorized
-                };
+                });
+                return response;
             }
             _logger.LogInformation("Consultando todas las Machines activas.");
             try
             {
                 var result = await _service.GetAllMachinesAsync();
-                return new ApiResponse<IEnumerable<Machine>>
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Machine>>
                 {
                     Success = result.Success,
                     Message = result.Message,
                     Data = result.Data,
                     StatusCode = StatusCodes.Status200OK
-                };
+                });
+                return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al consultar todas las Machines.");
-                return new ApiResponse<IEnumerable<Machine>>
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Machine>>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
                     Data = null,
                     StatusCode = StatusCodes.Status400BadRequest
-                };
+                });
+                return response;
             }
         }
 
         [Function("Machine_FindMachinesByFieldsFunction")]
-        public async Task<ApiResponse<IEnumerable<Machine>>> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "machines/find")] HttpRequest req)
+        public async Task<HttpResponseData> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "machines/find")] HttpRequestData req)
         {
+            var response = req.CreateResponse();
             if (!JwtValidator.ValidateJwt(req, out var error))
             {
-                return new ApiResponse<IEnumerable<Machine>>
+                response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Machine>>
                 {
                     Success = false,
                     Message = error!,
                     Data = null,
                     StatusCode = StatusCodes.Status401Unauthorized
-                };
+                });
+                return response;
             }
             _logger.LogInformation("Consultando Machines por filtros dinámicos.");
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                var filters = JsonSerializer.Deserialize<Dictionary<string, object>>(requestBody);
+                var filters = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(requestBody);
                 if (filters == null || filters.Count == 0)
                 {
-                    return new ApiResponse<IEnumerable<Machine>>
+                    response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                    await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Machine>>
                     {
                         Success = false,
                         Message = "No se proporcionaron filtros válidos.",
                         Data = null,
                         StatusCode = StatusCodes.Status400BadRequest
-                    };
+                    });
+                    return response;
                 }
                 var result = await _service.FindMachinesByFieldsAsync(filters);
-                return new ApiResponse<IEnumerable<Machine>>
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Machine>>
                 {
                     Success = result.Success,
                     Message = result.Message,
                     Data = result.Data,
                     StatusCode = StatusCodes.Status200OK
-                };
+                });
+                return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al consultar Machines por filtros.");
-                return new ApiResponse<IEnumerable<Machine>>
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Machine>>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
                     Data = null,
                     StatusCode = StatusCodes.Status400BadRequest
-                };
+                });
+                return response;
             }
         }
     }

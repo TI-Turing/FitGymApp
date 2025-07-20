@@ -122,4 +122,6 @@ public partial class User
     public virtual Gym? GymUser { get; set; }
 
     public virtual UserType? UserType { get; set; }
+
+    public virtual ICollection<PaymentAttempt> PaymentAttempts { get; set; } = new List<PaymentAttempt>();
 }

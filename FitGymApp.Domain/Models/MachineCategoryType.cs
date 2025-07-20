@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace FitGymApp.Domain.Models;
 
-public partial class MachineCategory
+public partial class MachineCategoryType
 {
     public Guid Id { get; set; }
+
+    public string Name { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
 
@@ -17,9 +19,5 @@ public partial class MachineCategory
 
     public bool IsActive { get; set; }
 
-    public Guid MachineId { get; set; }
-    public Guid MachineCategoryTypeId { get; set; }
-
-    public virtual Machine Machine { get; set; } = null!;
-    public virtual MachineCategoryType MachineCategoryType { get; set; } = null!;
+    public virtual ICollection<MachineCategory> MachineCategories { get; set; } = new List<MachineCategory>();
 }

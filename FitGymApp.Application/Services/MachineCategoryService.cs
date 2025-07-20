@@ -29,7 +29,7 @@ namespace FitGymApp.Application.Services
             {
                 var entity = new MachineCategory
                 {
-                    Name = request.Name,
+                    //Name = request.Name,
                     Ip = request.Ip
                 };
                 var created = await _machineCategoryRepository.CreateMachineCategoryAsync(entity);
@@ -89,7 +89,7 @@ namespace FitGymApp.Application.Services
                 var entity = new MachineCategory
                 {
                     Id = request.Id,
-                    Name = request.Name,
+                    //Name = request.Name,
                     Ip = request.Ip,
                     IsActive = request.IsActive
                 };

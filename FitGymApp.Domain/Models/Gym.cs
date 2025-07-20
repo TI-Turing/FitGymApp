@@ -57,5 +57,6 @@ public partial class Gym
     public virtual ICollection<User> UserGyms { get; set; } = new List<User>();
 
     public virtual ICollection<User> UserUserGymAssigneds { get; set; } = new List<User>();
-    
+
+    public virtual ICollection<PaymentAttempt> PaymentAttempts { get; set; } = new List<PaymentAttempt>();
 }

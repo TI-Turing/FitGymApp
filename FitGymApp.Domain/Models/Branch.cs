@@ -15,8 +15,6 @@ public partial class Branch
 
     public Guid GymId { get; set; }
 
-    public Guid BranchDailyBranchId { get; set; }
-
     public Guid AccessMethodId { get; set; }
 
     public DateTime CreatedAt { get; set; }
@@ -29,9 +27,9 @@ public partial class Branch
 
     public bool IsActive { get; set; }
 
-    public virtual AccessMethodType AccessMethod { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-    public virtual Daily BranchDailyBranch { get; set; } = null!;
+    public virtual AccessMethodType AccessMethod { get; set; } = null!;
 
     public virtual ICollection<DailyHistory> DailyHistories { get; set; } = new List<DailyHistory>();
 

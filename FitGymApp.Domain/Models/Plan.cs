@@ -30,4 +30,6 @@ public partial class Plan
     public virtual PlanType PlanType { get; set; } = null!;
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
+
+    public virtual PaymentAttempt? PaymentAttempt { get; set; }
 }

@@ -17,6 +17,8 @@ public partial class AccessMethodType
 
     public string? Ip { get; set; }
 
+    public string? Description { get; set; }
+
     public bool IsActive { get; set; }
 
     public virtual ICollection<Branch> Branches { get; set; } = new List<Branch>();

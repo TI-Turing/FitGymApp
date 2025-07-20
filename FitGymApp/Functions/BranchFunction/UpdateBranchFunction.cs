@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FitGymApp.Utils;
+using Microsoft.Azure.Functions.Worker.Http;
 
 namespace FitGymApp.Functions.BranchFunction;
 
@@ -27,17 +28,20 @@ public class UpdateBranchFunction
     }
 
     [Function("Branch_UpdateBranchFunction")]
-    public async Task<ApiResponse<Guid>> UpdateAsync([HttpTrigger(AuthorizationLevel.Function, "put", Route = "branch/update")] HttpRequest req)
+    public async Task<HttpResponseData> UpdateAsync([HttpTrigger(AuthorizationLevel.Function, "put", Route = "branch/update")] HttpRequestData req)
     {
+        var response = req.CreateResponse();
         if (!JwtValidator.ValidateJwt(req, out var error))
         {
-            return new ApiResponse<Guid>
+            response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
+            await response.WriteAsJsonAsync(new ApiResponse<Guid>
             {
                 Success = false,
                 Message = error!,
                 Data = default,
                 StatusCode = StatusCodes.Status401Unauthorized
-            };
+            });
+            return response;
         }
 
         _logger.LogInformation("Procesando solicitud para actualizar un Branch.");
@@ -46,37 +50,49 @@ public class UpdateBranchFunction
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var objRequest = JsonConvert.DeserializeObject<UpdateBranchRequest>(requestBody);
             var validationResult = ModelValidator.ValidateModel<UpdateBranchRequest, Guid>(objRequest, StatusCodes.Status400BadRequest);
-            if (validationResult is not null) return validationResult;
+            if (validationResult is not null)
+            {
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                await response.WriteAsJsonAsync(validationResult);
+                return response;
+            }
 
             var result = await _service.UpdateBranchAsync(objRequest);
             if (!result.Success)
             {
-                return new ApiResponse<Guid>
+                response.StatusCode = System.Net.HttpStatusCode.NotFound;
+                await response.WriteAsJsonAsync(new ApiResponse<Guid>
                 {
                     Success = false,
                     Message = result.Message,
                     Data = objRequest.Id,
                     StatusCode = StatusCodes.Status404NotFound
-                };
+                });
+                return response;
             }
-            return new ApiResponse<Guid>
+
+            response.StatusCode = System.Net.HttpStatusCode.OK;
+            await response.WriteAsJsonAsync(new ApiResponse<Guid>
             {
                 Success = true,
                 Message = result.Message,
                 Data = objRequest.Id,
                 StatusCode = StatusCodes.Status200OK
-            };
+            });
+            return response;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error al actualizar Branch.");
-            return new ApiResponse<Guid>
+            response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+            await response.WriteAsJsonAsync(new ApiResponse<Guid>
             {
                 Success = false,
                 Message = "Ocurrió un error al procesar la solicitud.",
                 Data = default,
                 StatusCode = StatusCodes.Status400BadRequest
-            };
+            });
+            return response;
         }
     }
 }

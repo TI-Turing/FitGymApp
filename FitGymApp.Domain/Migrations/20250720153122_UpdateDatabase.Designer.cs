@@ -4,6 +4,7 @@ using FitGymApp.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitGymApp.Domain.Migrations
 {
     [DbContext(typeof(FitGymAppContext))]
-    partial class FitGymAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250720153122_UpdateDatabase")]
+    partial class UpdateDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace FitGymApp.Domain.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ExerciseMachine", b =>
-                {
-                    b.Property<Guid>("MachineExerciseMachinesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MachinesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("MachineExerciseMachinesId", "MachinesId");
-
-                    b.HasIndex("MachinesId");
-
-                    b.ToTable("ExerciseMachine");
-                });
 
             modelBuilder.Entity("FitGymApp.Domain.Models.AccessMethodType", b =>
                 {
@@ -47,9 +35,6 @@ namespace FitGymApp.Domain.Migrations
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ip")
                         .HasMaxLength(45)
@@ -135,14 +120,15 @@ namespace FitGymApp.Domain.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<Guid>("BranchDailyBranchId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("BranchDaily_BranchId");
+
                     b.Property<Guid>("CityId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DailyId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -156,10 +142,6 @@ namespace FitGymApp.Domain.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("RegionId")
                         .HasColumnType("uniqueidentifier");
 
@@ -168,9 +150,9 @@ namespace FitGymApp.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DailyId");
-
                     b.HasIndex(new[] { "AccessMethodId" }, "IX_FK_BranchAccessMethod");
+
+                    b.HasIndex(new[] { "BranchDailyBranchId" }, "IX_FK_BranchDaily");
 
                     b.HasIndex(new[] { "GymId" }, "IX_FK_GymBranch");
 
@@ -1158,7 +1140,8 @@ namespace FitGymApp.Domain.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("BrandId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("Brand_Id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
@@ -1167,10 +1150,15 @@ namespace FitGymApp.Domain.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("Ip")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
+
+                    b.Property<Guid>("MachineCategoryId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("MachineCategory_Id");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1191,7 +1179,9 @@ namespace FitGymApp.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BrandId");
+                    b.HasIndex(new[] { "BrandId" }, "IX_FK_BrandMachine");
+
+                    b.HasIndex(new[] { "MachineCategoryId" }, "IX_FK_MachineCategoryMachine");
 
                     b.ToTable("Machine", (string)null);
                 });
@@ -1208,42 +1198,8 @@ namespace FitGymApp.Domain.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("Ip")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("MachineCategoryTypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MachineId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MachineCategoryTypeId");
-
-                    b.HasIndex("MachineId");
-
-                    b.ToTable("MachineCategory", (string)null);
-                });
-
-            modelBuilder.Entity("FitGymApp.Domain.Models.MachineCategoryType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Ip")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1258,7 +1214,7 @@ namespace FitGymApp.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MachineCategoryType", (string)null);
+                    b.ToTable("MachineCategory", (string)null);
                 });
 
             modelBuilder.Entity("FitGymApp.Domain.Models.Module", b =>
@@ -2247,19 +2203,21 @@ namespace FitGymApp.Domain.Migrations
                     b.ToTable("UserType", (string)null);
                 });
 
-            modelBuilder.Entity("ExerciseMachine", b =>
+            modelBuilder.Entity("MachineExercise", b =>
                 {
-                    b.HasOne("FitGymApp.Domain.Models.Exercise", null)
-                        .WithMany()
-                        .HasForeignKey("MachineExerciseMachinesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<Guid>("MachineId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("Machine_Id");
 
-                    b.HasOne("FitGymApp.Domain.Models.Machine", null)
-                        .WithMany()
-                        .HasForeignKey("MachinesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<Guid>("MachineExerciseMachineId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("MachineExercise_Machine_Id");
+
+                    b.HasKey("MachineId", "MachineExerciseMachineId");
+
+                    b.HasIndex(new[] { "MachineExerciseMachineId" }, "IX_FK_MachineExercise_Exercise");
+
+                    b.ToTable("MachineExercise", (string)null);
                 });
 
             modelBuilder.Entity("FitGymApp.Domain.Models.Bill", b =>
@@ -2305,9 +2263,11 @@ namespace FitGymApp.Domain.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_BranchAccessMethod");
 
-                    b.HasOne("FitGymApp.Domain.Models.Daily", null)
+                    b.HasOne("FitGymApp.Domain.Models.Daily", "BranchDailyBranch")
                         .WithMany("Branches")
-                        .HasForeignKey("DailyId");
+                        .HasForeignKey("BranchDailyBranchId")
+                        .IsRequired()
+                        .HasConstraintName("FK_BranchDaily");
 
                     b.HasOne("FitGymApp.Domain.Models.Gym", "Gym")
                         .WithMany("Branches")
@@ -2316,6 +2276,8 @@ namespace FitGymApp.Domain.Migrations
                         .HasConstraintName("FK_GymBranch");
 
                     b.Navigation("AccessMethod");
+
+                    b.Navigation("BranchDailyBranch");
 
                     b.Navigation("Gym");
                 });
@@ -2556,29 +2518,18 @@ namespace FitGymApp.Domain.Migrations
                     b.HasOne("FitGymApp.Domain.Models.Brand", "Brand")
                         .WithMany("Machines")
                         .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_BrandMachine");
+
+                    b.HasOne("FitGymApp.Domain.Models.MachineCategory", "MachineCategory")
+                        .WithMany("Machines")
+                        .HasForeignKey("MachineCategoryId")
+                        .IsRequired()
+                        .HasConstraintName("FK_MachineCategoryMachine");
 
                     b.Navigation("Brand");
-                });
 
-            modelBuilder.Entity("FitGymApp.Domain.Models.MachineCategory", b =>
-                {
-                    b.HasOne("FitGymApp.Domain.Models.MachineCategoryType", "MachineCategoryType")
-                        .WithMany("MachineCategories")
-                        .HasForeignKey("MachineCategoryTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FitGymApp.Domain.Models.Machine", "Machine")
-                        .WithMany("MachineCategories")
-                        .HasForeignKey("MachineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Machine");
-
-                    b.Navigation("MachineCategoryType");
+                    b.Navigation("MachineCategory");
                 });
 
             modelBuilder.Entity("FitGymApp.Domain.Models.Module", b =>
@@ -2866,6 +2817,21 @@ namespace FitGymApp.Domain.Migrations
                     b.Navigation("UserType");
                 });
 
+            modelBuilder.Entity("MachineExercise", b =>
+                {
+                    b.HasOne("FitGymApp.Domain.Models.Exercise", null)
+                        .WithMany()
+                        .HasForeignKey("MachineExerciseMachineId")
+                        .IsRequired()
+                        .HasConstraintName("FK_MachineExercise_Exercise");
+
+                    b.HasOne("FitGymApp.Domain.Models.Machine", null)
+                        .WithMany()
+                        .HasForeignKey("MachineId")
+                        .IsRequired()
+                        .HasConstraintName("FK_MachineExercise_Machine");
+                });
+
             modelBuilder.Entity("FitGymApp.Domain.Models.AccessMethodType", b =>
                 {
                     b.Navigation("Branches");
@@ -2982,14 +2948,9 @@ namespace FitGymApp.Domain.Migrations
                     b.Navigation("Gyms");
                 });
 
-            modelBuilder.Entity("FitGymApp.Domain.Models.Machine", b =>
+            modelBuilder.Entity("FitGymApp.Domain.Models.MachineCategory", b =>
                 {
-                    b.Navigation("MachineCategories");
-                });
-
-            modelBuilder.Entity("FitGymApp.Domain.Models.MachineCategoryType", b =>
-                {
-                    b.Navigation("MachineCategories");
+                    b.Navigation("Machines");
                 });
 
             modelBuilder.Entity("FitGymApp.Domain.Models.Module", b =>

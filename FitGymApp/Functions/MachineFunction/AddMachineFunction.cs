@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using FitGymApp.Domain.DTO.Machine.Request;
 using Newtonsoft.Json;
@@ -26,17 +27,20 @@ public class AddMachineFunction
     }
 
     [Function("Machine_AddMachineFunction")]
-    public async Task<ApiResponse<Guid>> AddAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "machine/add")] HttpRequest req)
+    public async Task<HttpResponseData> AddAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "machine/add")] HttpRequestData req)
     {
+        var response = req.CreateResponse();
         if (!JwtValidator.ValidateJwt(req, out var error))
         {
-            return new ApiResponse<Guid>
+            response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
+            await response.WriteAsJsonAsync(new ApiResponse<Guid>
             {
                 Success = false,
                 Message = error!,
                 Data = default,
                 StatusCode = StatusCodes.Status401Unauthorized
-            };
+            });
+            return response;
         }
 
         _logger.LogInformation("Procesando solicitud para agregar una Machine.");
@@ -46,37 +50,92 @@ public class AddMachineFunction
             var objRequest = JsonConvert.DeserializeObject<AddMachineRequest>(requestBody);
 
             var validationResult = ModelValidator.ValidateModel<AddMachineRequest, Guid>(objRequest, StatusCodes.Status400BadRequest);
-            if (validationResult is not null) return validationResult;
+            if (validationResult is not null)
+            {
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                await response.WriteAsJsonAsync(validationResult);
+                return response;
+            }
 
             var result = await _service.CreateMachineAsync(objRequest);
             if (!result.Success)
             {
-                return new ApiResponse<Guid>
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                await response.WriteAsJsonAsync(new ApiResponse<Guid>
                 {
                     Success = false,
                     Message = result.Message,
                     Data = default,
                     StatusCode = StatusCodes.Status400BadRequest
-                };
+                });
+                return response;
             }
-            return new ApiResponse<Guid>
+
+            response.StatusCode = System.Net.HttpStatusCode.OK;
+            await response.WriteAsJsonAsync(new ApiResponse<Guid>
             {
                 Success = true,
                 Message = result.Message,
                 Data = result.Data != null ? result.Data.Id : default,
                 StatusCode = StatusCodes.Status200OK
-            };
+            });
+            return response;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error al agregar Machine.");
-            return new ApiResponse<Guid>
+            response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+            await response.WriteAsJsonAsync(new ApiResponse<Guid>
             {
                 Success = false,
                 Message = "Ocurrió un error al procesar la solicitud.",
                 Data = default,
                 StatusCode = StatusCodes.Status400BadRequest
-            };
+            });
+            return response;
+        }
+    }
+
+    [Function("Machine_AddMachinesFunction")]
+    public async Task<HttpResponseData> AddMachinesAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "machines/add")] HttpRequestData req)
+    {
+        var response = req.CreateResponse();
+        if (!JwtValidator.ValidateJwt(req, out var error))
+        {
+            response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
+            await response.WriteAsJsonAsync(new ApiResponse<bool>
+            {
+                Success = false,
+                Message = error!,
+                Data = false,
+                StatusCode = StatusCodes.Status401Unauthorized
+            });
+            return response;
+        }
+
+        _logger.LogInformation("Procesando solicitud para agregar múltiples máquinas.");
+        try
+        {
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var requests = JsonConvert.DeserializeObject<IEnumerable<AddMachineRequest>>(requestBody);
+
+            var result = await _service.CreateMachinesAsync(requests);
+            response.StatusCode = result.Success ? System.Net.HttpStatusCode.OK : System.Net.HttpStatusCode.BadRequest;
+            await response.WriteAsJsonAsync(result);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al agregar múltiples máquinas.");
+            response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+            await response.WriteAsJsonAsync(new ApiResponse<bool>
+            {
+                Success = false,
+                Message = "Ocurrió un error al procesar la solicitud.",
+                Data = false,
+                StatusCode = StatusCodes.Status400BadRequest
+            });
+            return response;
         }
     }
 }

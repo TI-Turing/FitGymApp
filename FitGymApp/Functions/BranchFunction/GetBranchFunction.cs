@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using FitGymApp.Application.Services.Interfaces;
 using FitGymApp.Domain.DTO;
@@ -26,17 +27,20 @@ namespace FitGymApp.Functions.BranchFunction
         }
 
         [Function("Branch_GetBranchByIdFunction")]
-        public async Task<ApiResponse<Branch>> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "branch/{id:guid}")] HttpRequest req, Guid id)
+        public async Task<HttpResponseData> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "branch/{id:guid}")] HttpRequestData req, Guid id)
         {
+            var response = req.CreateResponse();
             if (!JwtValidator.ValidateJwt(req, out var error))
             {
-                return new ApiResponse<Branch>
+                response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
+                await response.WriteAsJsonAsync(new ApiResponse<Branch>
                 {
                     Success = false,
                     Message = error!,
                     Data = null,
                     StatusCode = StatusCodes.Status401Unauthorized
-                };
+                });
+                return response;
             }
             _logger.LogInformation($"Consultando Branch por Id: {id}");
             try
@@ -44,85 +48,102 @@ namespace FitGymApp.Functions.BranchFunction
                 var result = await _service.GetBranchByIdAsync(id);
                 if (!result.Success)
                 {
-                    return new ApiResponse<Branch>
+                    response.StatusCode = System.Net.HttpStatusCode.NotFound;
+                    await response.WriteAsJsonAsync(new ApiResponse<Branch>
                     {
                         Success = false,
                         Message = result.Message,
                         Data = null,
                         StatusCode = StatusCodes.Status404NotFound
-                    };
+                    });
+                    return response;
                 }
-                return new ApiResponse<Branch>
+
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                await response.WriteAsJsonAsync(new ApiResponse<Branch>
                 {
                     Success = true,
                     Message = result.Message,
                     Data = result.Data,
                     StatusCode = StatusCodes.Status200OK
-                };
+                });
+                return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al consultar Branch por Id.");
-                return new ApiResponse<Branch>
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                await response.WriteAsJsonAsync(new ApiResponse<Branch>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
                     Data = null,
                     StatusCode = StatusCodes.Status400BadRequest
-                };
+                });
+                return response;
             }
         }
 
         [Function("Branch_GetAllBranchesFunction")]
-        public async Task<ApiResponse<IEnumerable<Branch>>> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "branches")] HttpRequest req)
+        public async Task<HttpResponseData> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "branches")] HttpRequestData req)
         {
+            var response = req.CreateResponse();
             if (!JwtValidator.ValidateJwt(req, out var error))
             {
-                return new ApiResponse<IEnumerable<Branch>>
+                response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Branch>>
                 {
                     Success = false,
                     Message = error!,
                     Data = null,
                     StatusCode = StatusCodes.Status401Unauthorized
-                };
+                });
+                return response;
             }
             _logger.LogInformation("Consultando todos los Branches activos.");
             try
             {
                 var result = await _service.GetAllBranchesAsync();
-                return new ApiResponse<IEnumerable<Branch>>
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Branch>>
                 {
                     Success = result.Success,
                     Message = result.Message,
                     Data = result.Data,
                     StatusCode = StatusCodes.Status200OK
-                };
+                });
+                return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al consultar todos los Branches.");
-                return new ApiResponse<IEnumerable<Branch>>
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Branch>>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
                     Data = null,
                     StatusCode = StatusCodes.Status400BadRequest
-                };
+                });
+                return response;
             }
         }
 
         [Function("Branch_FindBranchesByFieldsFunction")]
-        public async Task<ApiResponse<IEnumerable<Branch>>> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "branches/find")] HttpRequest req)
+        public async Task<HttpResponseData> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "branches/find")] HttpRequestData req)
         {
+            var response = req.CreateResponse();
             if (!JwtValidator.ValidateJwt(req, out var error))
             {
-                return new ApiResponse<IEnumerable<Branch>>
+                response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Branch>>
                 {
                     Success = false,
                     Message = error!,
                     Data = null,
                     StatusCode = StatusCodes.Status401Unauthorized
-                };
+                });
+                return response;
             }
             _logger.LogInformation("Consultando Branches por filtros dinámicos.");
             try
@@ -131,33 +152,39 @@ namespace FitGymApp.Functions.BranchFunction
                 var filters = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(requestBody);
                 if (filters == null || filters.Count == 0)
                 {
-                    return new ApiResponse<IEnumerable<Branch>>
+                    response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                    await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Branch>>
                     {
                         Success = false,
                         Message = "No se proporcionaron filtros válidos.",
                         Data = null,
                         StatusCode = StatusCodes.Status400BadRequest
-                    };
+                    });
+                    return response;
                 }
                 var result = await _service.FindBranchesByFieldsAsync(filters);
-                return new ApiResponse<IEnumerable<Branch>>
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Branch>>
                 {
                     Success = result.Success,
                     Message = result.Message,
                     Data = result.Data,
                     StatusCode = StatusCodes.Status200OK
-                };
+                });
+                return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al consultar Branches por filtros.");
-                return new ApiResponse<IEnumerable<Branch>>
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Branch>>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
                     Data = null,
                     StatusCode = StatusCodes.Status400BadRequest
-                };
+                });
+                return response;
             }
         }
     }

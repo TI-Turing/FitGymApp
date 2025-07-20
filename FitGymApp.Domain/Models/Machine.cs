@@ -23,13 +23,11 @@ public partial class Machine
 
     public bool IsActive { get; set; }
 
-    public Guid MachineCategoryId { get; set; }
-
     public Guid BrandId { get; set; }
 
     public virtual Brand Brand { get; set; } = null!;
 
-    public virtual MachineCategory MachineCategory { get; set; } = null!;
+    public virtual ICollection<MachineCategory> MachineCategories { get; set; } = null!;
 
     public virtual ICollection<Exercise> MachineExerciseMachines { get; set; } = new List<Exercise>();
 }

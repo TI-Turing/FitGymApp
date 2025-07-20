@@ -82,5 +82,30 @@ namespace FitGymApp.Repository.Services
             var lambda = Expression.Lambda<Func<Machine, bool>>(predicate, parameter);
             return await _context.Machines.Where(lambda).ToListAsync();
         }
+
+        public async Task CreateMachinesAsync(IEnumerable<Machine> machines)
+        {
+            foreach (var machine in machines)
+            {
+                machine.Id = Guid.NewGuid();
+                machine.CreatedAt = DateTime.UtcNow;
+                machine.IsActive = true;
+            }
+            await _context.Machines.AddRangeAsync(machines);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddMachineCategoryAsync(MachineCategory machineCategory)
+        {
+            _context.MachineCategories.Add(machineCategory);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task ClearMachineCategoriesAsync(Guid machineId)
+        {
+            var categories = _context.MachineCategories.Where(mc => mc.MachineId == machineId);
+            _context.MachineCategories.RemoveRange(categories);
+            await _context.SaveChangesAsync();
+        }
     }
 }

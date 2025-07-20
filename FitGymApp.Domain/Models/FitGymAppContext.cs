@@ -166,23 +166,15 @@ public partial class FitGymAppContext : DbContext
 
             entity.HasIndex(e => e.AccessMethodId, "IX_FK_BranchAccessMethod");
 
-            entity.HasIndex(e => e.BranchDailyBranchId, "IX_FK_BranchDaily");
-
             entity.HasIndex(e => e.GymId, "IX_FK_GymBranch");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Address).HasMaxLength(255);
-            entity.Property(e => e.BranchDailyBranchId).HasColumnName("BranchDaily_BranchId");
 
             entity.HasOne(d => d.AccessMethod).WithMany(p => p.Branches)
                 .HasForeignKey(d => d.AccessMethodId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_BranchAccessMethod");
-
-            entity.HasOne(d => d.BranchDailyBranch).WithMany(p => p.Branches)
-                .HasForeignKey(d => d.BranchDailyBranchId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_BranchDaily");
 
             entity.HasOne(d => d.Gym).WithMany(p => p.Branches)
                 .HasForeignKey(d => d.GymId)
@@ -644,62 +636,50 @@ public partial class FitGymAppContext : DbContext
         {
             entity.ToTable("Machine");
 
-            entity.HasIndex(e => e.BrandId, "IX_FK_BrandMachine");
-
-            entity.HasIndex(e => e.MachineCategoryId, "IX_FK_MachineCategoryMachine");
+            entity.HasKey(e => e.Id);
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.BrandId).HasColumnName("Brand_Id");
-            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
-            entity.Property(e => e.Ip).HasMaxLength(45);
-            entity.Property(e => e.MachineCategoryId).HasColumnName("MachineCategory_Id");
             entity.Property(e => e.Name).HasMaxLength(100);
-            entity.Property(e => e.Observations).HasMaxLength(500);
             entity.Property(e => e.Status).HasMaxLength(50);
+            entity.Property(e => e.Observations).HasMaxLength(500);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
 
-            entity.HasOne(d => d.Brand).WithMany(p => p.Machines)
-                .HasForeignKey(d => d.BrandId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_BrandMachine");
-
-            entity.HasOne(d => d.MachineCategory).WithMany(p => p.Machines)
-                .HasForeignKey(d => d.MachineCategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MachineCategoryMachine");
-
-            entity.HasMany(d => d.MachineExerciseMachines).WithMany(p => p.Machines)
-                .UsingEntity<Dictionary<string, object>>(
-                    "MachineExercise",
-                    r => r.HasOne<Exercise>().WithMany()
-                        .HasForeignKey("MachineExerciseMachineId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_MachineExercise_Exercise"),
-                    l => l.HasOne<Machine>().WithMany()
-                        .HasForeignKey("MachineId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_MachineExercise_Machine"),
-                    j =>
-                    {
-                        j.HasKey("MachineId", "MachineExerciseMachineId");
-                        j.ToTable("MachineExercise");
-                        j.HasIndex(new[] { "MachineExerciseMachineId" }, "IX_FK_MachineExercise_Exercise");
-                        j.IndexerProperty<Guid>("MachineId").HasColumnName("Machine_Id");
-                        j.IndexerProperty<Guid>("MachineExerciseMachineId").HasColumnName("MachineExercise_Machine_Id");
-                    });
+            entity.HasMany(e => e.MachineCategories)
+                .WithOne(e => e.Machine)
+                .HasForeignKey(e => e.MachineId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<MachineCategory>(entity =>
         {
             entity.ToTable("MachineCategory");
 
+            entity.HasKey(e => e.Id);
+
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
-            entity.Property(e => e.Ip).HasMaxLength(45);
-            entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+
+            entity.HasOne(e => e.MachineCategoryType)
+                .WithMany(e => e.MachineCategories)
+                .HasForeignKey(e => e.MachineCategoryTypeId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<MachineCategoryType>(entity =>
+        {
+            entity.ToTable("MachineCategoryType");
+
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<Module>(entity =>
