@@ -82,7 +82,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateUninstallOptionAsync(UpdateUninstallOptionRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateUninstallOptionAsync(UpdateUninstallOptionRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {

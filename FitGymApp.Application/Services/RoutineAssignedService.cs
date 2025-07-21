@@ -83,7 +83,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateRoutineAssignedAsync(UpdateRoutineAssignedRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateRoutineAssignedAsync(UpdateRoutineAssignedRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {

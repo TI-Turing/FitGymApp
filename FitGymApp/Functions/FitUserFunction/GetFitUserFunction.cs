@@ -28,7 +28,7 @@ namespace FitGymApp.Functions.FitUserFunction
         [Function("FitUser_GetFitUserByIdFunction")]
         public async Task<ApiResponse<FitUser>> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "fituser/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<FitUser>
                 {
@@ -76,7 +76,7 @@ namespace FitGymApp.Functions.FitUserFunction
         [Function("FitUser_GetAllFitUsersFunction")]
         public async Task<ApiResponse<IEnumerable<FitUser>>> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "fitusers")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<FitUser>>
                 {
@@ -114,7 +114,7 @@ namespace FitGymApp.Functions.FitUserFunction
         [Function("FitUser_FindFitUsersByFieldsFunction")]
         public async Task<ApiResponse<IEnumerable<FitUser>>> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "fitusers/find")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<FitUser>>
                 {

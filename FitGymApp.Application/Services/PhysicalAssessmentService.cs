@@ -104,7 +104,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdatePhysicalAssessmentAsync(UpdatePhysicalAssessmentRequest request)
+        public async Task<ApplicationResponse<bool>> UpdatePhysicalAssessmentAsync(UpdatePhysicalAssessmentRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {

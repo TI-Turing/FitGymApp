@@ -23,7 +23,7 @@ namespace FitGymApp.Functions.LogUninstallFunction
         [Function("LogUninstall_DeleteLogUninstallFunction")]
         public async Task<ApiResponse<Guid>> RunAsync([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "loguninstall/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<Guid>
                 {

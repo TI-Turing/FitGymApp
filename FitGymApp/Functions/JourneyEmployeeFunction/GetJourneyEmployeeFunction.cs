@@ -36,7 +36,7 @@ namespace FitGymApp.Functions.JourneyEmployeeFunction
         {
             var logger = executionContext.GetLogger("JourneyEmployee_GetJourneyEmployeeByIdFunction");
             logger.LogInformation($"Consultando JourneyEmployee por Id: {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<JourneyEmployee>
@@ -95,7 +95,7 @@ namespace FitGymApp.Functions.JourneyEmployeeFunction
         {
             var logger = executionContext.GetLogger("JourneyEmployee_GetAllJourneyEmployeesFunction");
             logger.LogInformation("Consultando todos los JourneyEmployees activos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<JourneyEmployee>>
@@ -142,7 +142,7 @@ namespace FitGymApp.Functions.JourneyEmployeeFunction
         {
             var logger = executionContext.GetLogger("JourneyEmployee_FindJourneyEmployeesByFieldsFunction");
             logger.LogInformation("Consultando JourneyEmployees por filtros dinámicos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<JourneyEmployee>>

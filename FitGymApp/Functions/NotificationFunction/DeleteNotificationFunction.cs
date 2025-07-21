@@ -31,7 +31,7 @@ namespace FitGymApp.Functions.NotificationFunction
         {
             var logger = executionContext.GetLogger("Notification_DeleteNotificationFunction");
             logger.LogInformation($"Procesando solicitud de borrado para Notification {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>

@@ -30,7 +30,7 @@ public class AddDailyFunction
     [Function("Daily_AddDailyFunction")]
     public async Task<ApiResponse<Guid>> AddAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "daily/add")] HttpRequest req)
     {
-        if (!JwtValidator.ValidateJwt(req, out var error))
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
             return new ApiResponse<Guid>
             {

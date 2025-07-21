@@ -34,7 +34,7 @@ public class UtilsGymFunction
     {
         var logger = executionContext.GetLogger("Gym_GenerateQrFunction");
         logger.LogInformation($"Procesando solicitud para generar QR de Gym");
-        if (!JwtValidator.ValidateJwt(req, out var error))
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
             var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
             await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
@@ -91,7 +91,7 @@ public class UtilsGymFunction
     {
         var logger = executionContext.GetLogger("Gym_UploadLogoFunction");
         logger.LogInformation("Procesando solicitud para subir logo de Gym");
-        if (!JwtValidator.ValidateJwt(req, out var error))
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
             var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
             await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<string>

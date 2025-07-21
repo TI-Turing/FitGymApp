@@ -28,7 +28,7 @@ namespace FitGymApp.Functions.DailyFunction
         [Function("Daily_GetDailyByIdFunction")]
         public async Task<ApiResponse<Daily>> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "daily/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<Daily>
                 {
@@ -76,7 +76,7 @@ namespace FitGymApp.Functions.DailyFunction
         [Function("Daily_GetAllDailiesFunction")]
         public async Task<ApiResponse<IEnumerable<Daily>>> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "dailies")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<Daily>>
                 {
@@ -114,7 +114,7 @@ namespace FitGymApp.Functions.DailyFunction
         [Function("Daily_FindDailiesByFieldsFunction")]
         public async Task<ApiResponse<IEnumerable<Daily>>> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "dailies/find")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<Daily>>
                 {

@@ -32,7 +32,7 @@ public class AddBranchFunction
     public async Task<HttpResponseData> AddAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "branch/add")] HttpRequestData req)
     {
         var response = req.CreateResponse();
-        if (!JwtValidator.ValidateJwt(req, out var error))
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
             response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
             await response.WriteAsJsonAsync(new ApiResponse<Guid>

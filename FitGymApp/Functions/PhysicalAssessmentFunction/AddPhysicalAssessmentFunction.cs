@@ -8,6 +8,7 @@ using FitGymApp.Application.Services.Interfaces;
 using FitGymApp.Domain.Models;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FitGymApp.Utils;
@@ -33,9 +34,10 @@ namespace FitGymApp.Functions.PhysicalAssessmentFunction
         {
             var logger = executionContext.GetLogger("PhysicalAssessment_AddPhysicalAssessmentFunction");
             logger.LogInformation("Procesando solicitud para agregar un PhysicalAssessment.");
+            var invocationId = executionContext.InvocationId;
             try
             {
-                if (!JwtValidator.ValidateJwt(req, out var error))
+                if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
                 {
                     var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                     await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
@@ -55,6 +57,14 @@ namespace FitGymApp.Functions.PhysicalAssessmentFunction
                     var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
                     await badResponse.WriteAsJsonAsync(validationResult);
                     return badResponse;
+                }
+                string? ip = req.Headers.TryGetValues("X-Forwarded-For", out var values) ? values.FirstOrDefault()?.Split(',')[0]?.Trim()
+                    : req.Headers.TryGetValues("X-Original-For", out var originalForValues) ? originalForValues.FirstOrDefault()?.Split(':')[0]?.Trim()
+                    : req.Headers.TryGetValues("REMOTE_ADDR", out var remoteValues) ? remoteValues.FirstOrDefault()
+                    : null;
+                if (objRequest != null)
+                {
+                    objRequest.Ip = ip;
                 }
                 var result = await _service.CreatePhysicalAssessmentAsync(objRequest);
                 if (!result.Success)

@@ -25,7 +25,7 @@ namespace FitGymApp.Functions.MachineFunction
         public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "machine/{id:guid}")] HttpRequestData req, Guid id)
         {
             var response = req.CreateResponse();
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
                 await response.WriteAsJsonAsync(new ApiResponse<Guid>

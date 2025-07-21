@@ -6,6 +6,7 @@ using FitGymApp.Application.Services.Interfaces;
 using FitGymApp.Domain.DTO;
 using FitGymApp.Domain.Models;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FitGymApp.Utils;
 using System.Net;
@@ -33,22 +34,27 @@ namespace FitGymApp.Functions.PhysicalAssessmentFunction
         {
             var logger = executionContext.GetLogger("PhysicalAssessment_DeletePhysicalAssessmentFunction");
             logger.LogInformation($"Procesando solicitud de borrado para PhysicalAssessment {id}");
-
-            if (!JwtValidator.ValidateJwt(req, out var error))
-            {
-                var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
-                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
-                {
-                    Success = false,
-                    Message = error!,
-                    Data = default,
-                    StatusCode = StatusCodes.Status401Unauthorized
-                });
-                return unauthorizedResponse;
-            }
+            var invocationId = executionContext.InvocationId;
 
             try
             {
+                if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
+                {
+                    var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
+                    await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
+                    {
+                        Success = false,
+                        Message = error!,
+                        Data = default,
+                        StatusCode = StatusCodes.Status401Unauthorized
+                    });
+                    return unauthorizedResponse;
+                }
+                string? ip = req.Headers.TryGetValues("X-Forwarded-For", out var values) ? values.FirstOrDefault()?.Split(',')[0]?.Trim()
+                    : req.Headers.TryGetValues("X-Original-For", out var originalForValues) ? originalForValues.FirstOrDefault()?.Split(':')[0]?.Trim()
+                    : req.Headers.TryGetValues("REMOTE_ADDR", out var remoteValues) ? remoteValues.FirstOrDefault()
+                    : null;
+
                 var result = await _service.DeletePhysicalAssessmentAsync(id);
                 if (!result.Success)
                 {

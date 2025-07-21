@@ -87,7 +87,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateNotificationOptionAsync(UpdateNotificationOptionRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateNotificationOptionAsync(UpdateNotificationOptionRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {

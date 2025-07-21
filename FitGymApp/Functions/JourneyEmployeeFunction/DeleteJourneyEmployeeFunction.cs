@@ -31,7 +31,7 @@ namespace FitGymApp.Functions.JourneyEmployeeFunction
             var logger = executionContext.GetLogger("JourneyEmployee_DeleteJourneyEmployeeFunction");
             logger.LogInformation($"Procesando solicitud de borrado para JourneyEmployee {id}");
 
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>

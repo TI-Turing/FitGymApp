@@ -33,7 +33,7 @@ namespace FitGymApp.Functions.PermissionFunction
         {
             var logger = executionContext.GetLogger("Permission_GetPermissionByIdFunction");
             logger.LogInformation($"Consultando Permission por Id: {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Permission>
@@ -92,7 +92,7 @@ namespace FitGymApp.Functions.PermissionFunction
         {
             var logger = executionContext.GetLogger("Permission_GetAllPermissionsFunction");
             logger.LogInformation("Consultando todos los Permissions activos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Permission>>
@@ -139,7 +139,7 @@ namespace FitGymApp.Functions.PermissionFunction
         {
             var logger = executionContext.GetLogger("Permission_FindPermissionsByFieldsFunction");
             logger.LogInformation("Consultando Permissions por filtros dinámicos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Permission>>

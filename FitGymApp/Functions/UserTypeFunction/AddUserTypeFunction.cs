@@ -38,7 +38,7 @@ public class AddUserTypeFunction
         logger.LogInformation("Procesando solicitud para agregar un UserType.");
         try
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>

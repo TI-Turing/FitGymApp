@@ -14,6 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FitGymApp.Utils;
+using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace FitGymApp.Functions.UserTypeFunction;
 
@@ -35,9 +36,10 @@ public class UpdateUserTypeFunction
     {
         var logger = executionContext.GetLogger("UserType_UpdateUserTypeFunction");
         logger.LogInformation("Procesando solicitud para actualizar un UserType.");
+        var invocationId = executionContext.InvocationId;
         try
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
@@ -58,7 +60,15 @@ public class UpdateUserTypeFunction
                 await badResponse.WriteAsJsonAsync(validationResult);
                 return badResponse;
             }
-            var result = await _service.UpdateUserTypeAsync(objRequest);
+            string? ip = req.Headers.TryGetValues("X-Forwarded-For", out var values) ? values.FirstOrDefault()?.Split(',')[0]?.Trim()
+                : req.Headers.TryGetValues("X-Original-For", out var originalForValues) ? originalForValues.FirstOrDefault()?.Split(':')[0]?.Trim()
+                : req.Headers.TryGetValues("REMOTE_ADDR", out var remoteValues) ? remoteValues.FirstOrDefault()
+                : null;
+            if (objRequest != null)
+            {
+                objRequest.Ip = ip;
+            }
+            var result = await _service.UpdateUserTypeAsync(objRequest, userId, ip, invocationId);
             if (!result.Success)
             {
                 var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);

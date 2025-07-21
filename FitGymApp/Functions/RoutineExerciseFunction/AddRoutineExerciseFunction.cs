@@ -36,9 +36,10 @@ public class AddRoutineExerciseFunction
     {
         var logger = executionContext.GetLogger("RoutineExercise_AddRoutineExerciseFunction");
         logger.LogInformation("Procesando solicitud para agregar un RoutineExercise.");
+        var invocationId = executionContext.InvocationId;
         try
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
@@ -58,6 +59,14 @@ public class AddRoutineExerciseFunction
                 var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
                 await badResponse.WriteAsJsonAsync(validationResult);
                 return badResponse;
+            }
+            string? ip = req.Headers.TryGetValues("X-Forwarded-For", out var values) ? values.FirstOrDefault()?.Split(',')[0]?.Trim()
+                : req.Headers.TryGetValues("X-Original-For", out var originalForValues) ? originalForValues.FirstOrDefault()?.Split(':')[0]?.Trim()
+                : req.Headers.TryGetValues("REMOTE_ADDR", out var remoteValues) ? remoteValues.FirstOrDefault()
+                : null;
+            if (objRequest != null)
+            {
+                objRequest.Ip = ip;
             }
             var result = await _service.CreateRoutineExerciseAsync(objRequest);
             if (!result.Success)

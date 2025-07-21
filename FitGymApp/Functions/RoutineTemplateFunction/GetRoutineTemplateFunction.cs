@@ -36,7 +36,7 @@ namespace FitGymApp.Functions.RoutineTemplateFunction
         {
             var logger = executionContext.GetLogger("RoutineTemplate_GetRoutineTemplateFunction");
             logger.LogInformation($"Consultando RoutineTemplate por Id: {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<RoutineTemplate>
@@ -95,7 +95,7 @@ namespace FitGymApp.Functions.RoutineTemplateFunction
         {
             var logger = executionContext.GetLogger("RoutineTemplate_GetAllRoutineTemplatesFunction");
             logger.LogInformation("Consultando todos los RoutineTemplates activos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<RoutineTemplate>>
@@ -142,7 +142,7 @@ namespace FitGymApp.Functions.RoutineTemplateFunction
         {
             var logger = executionContext.GetLogger("RoutineTemplate_FindRoutineTemplatesByFieldsFunction");
             logger.LogInformation("Consultando RoutineTemplates por filtros dinámicos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<RoutineTemplate>>

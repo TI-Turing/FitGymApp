@@ -28,7 +28,7 @@ namespace FitGymApp.Functions.BrandFunction
         [Function("Brand_GetBrandByIdFunction")]
         public async Task<ApiResponse<Brand>> GetBrandByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "brand/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<Brand>
                 {
@@ -76,7 +76,7 @@ namespace FitGymApp.Functions.BrandFunction
         [Function("Brand_GetAllBrandsFunction")]
         public async Task<ApiResponse<IEnumerable<Brand>>> GetAllBrandsAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "brands")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<Brand>>
                 {
@@ -114,7 +114,7 @@ namespace FitGymApp.Functions.BrandFunction
         [Function("Brand_FindBrandsByFieldsFunction")]
         public async Task<ApiResponse<IEnumerable<Brand>>> FindBrandsByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "brands/find")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<Brand>>
                 {

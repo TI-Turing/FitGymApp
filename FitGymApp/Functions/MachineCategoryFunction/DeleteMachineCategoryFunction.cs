@@ -24,7 +24,7 @@ namespace FitGymApp.Functions.MachineCategoryFunction
         [Function("MachineCategory_DeleteMachineCategoryFunction")]
         public async Task<ApiResponse<Guid>> RunAsync([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "machinecategory/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<Guid>
                 {

@@ -28,7 +28,7 @@ namespace FitGymApp.Functions.LogUninstallFunction
         [Function("LogUninstall_GetLogUninstallByIdFunction")]
         public async Task<ApiResponse<LogUninstall>> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "loguninstall/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<LogUninstall>
                 {
@@ -76,7 +76,7 @@ namespace FitGymApp.Functions.LogUninstallFunction
         [Function("LogUninstall_GetAllLogUninstallsFunction")]
         public async Task<ApiResponse<IEnumerable<LogUninstall>>> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "loguninstalls")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<LogUninstall>>
                 {
@@ -114,7 +114,7 @@ namespace FitGymApp.Functions.LogUninstallFunction
         [Function("LogUninstall_FindLogUninstallsByFieldsFunction")]
         public async Task<ApiResponse<IEnumerable<LogUninstall>>> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "loguninstalls/find")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<LogUninstall>>
                 {

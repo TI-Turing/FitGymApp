@@ -38,7 +38,7 @@ public class AddRoutineTemplateFunction
         logger.LogInformation("Procesando solicitud para agregar un RoutineTemplate.");
         try
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>

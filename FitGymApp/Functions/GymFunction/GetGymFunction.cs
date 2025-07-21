@@ -35,7 +35,7 @@ namespace FitGymApp.Functions.GymFunction
         {
             var logger = executionContext.GetLogger("Gym_GetGymByIdFunction");
             logger.LogInformation($"Consultando Gym por Id: {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
@@ -82,7 +82,7 @@ namespace FitGymApp.Functions.GymFunction
         {
             var logger = executionContext.GetLogger("Gym_GetAllGymsFunction");
             logger.LogInformation("Consultando todos los Gyms activos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
@@ -129,7 +129,7 @@ namespace FitGymApp.Functions.GymFunction
         {
             var logger = executionContext.GetLogger("Gym_FindGymsByFieldsFunction");
             logger.LogInformation("Consultando Gyms por filtros dinámicos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>

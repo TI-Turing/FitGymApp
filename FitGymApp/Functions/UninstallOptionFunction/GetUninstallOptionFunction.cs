@@ -36,7 +36,7 @@ namespace FitGymApp.Functions.UninstallOptionFunction
         {
             var logger = executionContext.GetLogger("UninstallOption_GetUninstallOptionFunction");
             logger.LogInformation($"Consultando UninstallOption por Id: {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<UninstallOption>
@@ -95,7 +95,7 @@ namespace FitGymApp.Functions.UninstallOptionFunction
         {
             var logger = executionContext.GetLogger("UninstallOption_GetAllUninstallOptionsFunction");
             logger.LogInformation("Consultando todos los UninstallOptions activos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<UninstallOption>>
@@ -142,7 +142,7 @@ namespace FitGymApp.Functions.UninstallOptionFunction
         {
             var logger = executionContext.GetLogger("UninstallOption_FindUninstallOptionsByFieldsFunction");
             logger.LogInformation("Consultando UninstallOptions por filtros dinámicos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<UninstallOption>>

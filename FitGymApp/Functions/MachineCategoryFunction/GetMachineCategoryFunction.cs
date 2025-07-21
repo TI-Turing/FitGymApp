@@ -28,7 +28,7 @@ namespace FitGymApp.Functions.MachineCategoryFunction
         [Function("MachineCategory_GetMachineCategoryByIdFunction")]
         public async Task<ApiResponse<MachineCategory>> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "machinecategory/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<MachineCategory>
                 {
@@ -76,7 +76,7 @@ namespace FitGymApp.Functions.MachineCategoryFunction
         [Function("MachineCategory_GetAllMachineCategoriesFunction")]
         public async Task<ApiResponse<IEnumerable<MachineCategory>>> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "machinecategories")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<MachineCategory>>
                 {
@@ -114,7 +114,7 @@ namespace FitGymApp.Functions.MachineCategoryFunction
         [Function("MachineCategory_FindMachineCategoriesByFieldsFunction")]
         public async Task<ApiResponse<IEnumerable<MachineCategory>>> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "machinecategories/find")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<MachineCategory>>
                 {

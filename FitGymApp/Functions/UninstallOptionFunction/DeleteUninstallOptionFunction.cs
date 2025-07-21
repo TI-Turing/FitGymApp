@@ -29,7 +29,7 @@ namespace FitGymApp.Functions.UninstallOptionFunction
         {
             var logger = executionContext.GetLogger("UninstallOption_DeleteUninstallOptionFunction");
             logger.LogInformation($"Procesando solicitud de borrado para UninstallOption {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>

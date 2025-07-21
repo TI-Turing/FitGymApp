@@ -30,7 +30,7 @@ public class AddMachineFunction
     public async Task<HttpResponseData> AddAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "machine/add")] HttpRequestData req)
     {
         var response = req.CreateResponse();
-        if (!JwtValidator.ValidateJwt(req, out var error))
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
             response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
             await response.WriteAsJsonAsync(new ApiResponse<Guid>
@@ -100,7 +100,7 @@ public class AddMachineFunction
     public async Task<HttpResponseData> AddMachinesAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "machines/add")] HttpRequestData req)
     {
         var response = req.CreateResponse();
-        if (!JwtValidator.ValidateJwt(req, out var error))
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
             response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
             await response.WriteAsJsonAsync(new ApiResponse<bool>

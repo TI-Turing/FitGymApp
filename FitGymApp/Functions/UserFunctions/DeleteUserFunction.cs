@@ -36,7 +36,7 @@ namespace FitGymApp.Functions.UserFunctions
         {
             var logger = executionContext.GetLogger("User_DeleteUserFunction");
             logger.LogInformation($"Procesando solicitud de borrado para usuario {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>

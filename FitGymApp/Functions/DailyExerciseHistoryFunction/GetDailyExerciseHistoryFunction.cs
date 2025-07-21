@@ -28,7 +28,7 @@ namespace FitGymApp.Functions.DailyExerciseHistoryFunction
         [Function("DailyExerciseHistory_GetDailyExerciseHistoryByIdFunction")]
         public async Task<ApiResponse<DailyExerciseHistory>> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "dailyexercisehistory/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<DailyExerciseHistory>
                 {
@@ -76,7 +76,7 @@ namespace FitGymApp.Functions.DailyExerciseHistoryFunction
         [Function("DailyExerciseHistory_GetAllDailyExerciseHistoriesFunction")]
         public async Task<ApiResponse<IEnumerable<DailyExerciseHistory>>> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "dailyexercisehistories")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<DailyExerciseHistory>>
                 {
@@ -114,7 +114,7 @@ namespace FitGymApp.Functions.DailyExerciseHistoryFunction
         [Function("DailyExerciseHistory_FindDailyExerciseHistoriesByFieldsFunction")]
         public async Task<ApiResponse<IEnumerable<DailyExerciseHistory>>> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "dailyexercisehistories/find")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<DailyExerciseHistory>>
                 {

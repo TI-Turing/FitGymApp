@@ -36,7 +36,7 @@ namespace FitGymApp.Functions.PhysicalAssessmentFunction
         {
             var logger = executionContext.GetLogger("PhysicalAssessment_GetPhysicalAssessmentByIdFunction");
             logger.LogInformation($"Consultando PhysicalAssessment por Id: {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<PhysicalAssessment>
@@ -95,7 +95,7 @@ namespace FitGymApp.Functions.PhysicalAssessmentFunction
         {
             var logger = executionContext.GetLogger("PhysicalAssessment_GetAllPhysicalAssessmentsFunction");
             logger.LogInformation("Consultando todos los PhysicalAssessments activos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<PhysicalAssessment>>
@@ -142,7 +142,7 @@ namespace FitGymApp.Functions.PhysicalAssessmentFunction
         {
             var logger = executionContext.GetLogger("PhysicalAssessment_FindPhysicalAssessmentsByFieldsFunction");
             logger.LogInformation("Consultando PhysicalAssessments por filtros dinámicos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<PhysicalAssessment>>

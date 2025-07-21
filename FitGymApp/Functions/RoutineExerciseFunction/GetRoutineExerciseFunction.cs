@@ -36,7 +36,7 @@ namespace FitGymApp.Functions.RoutineExerciseFunction
         {
             var logger = executionContext.GetLogger("RoutineExercise_GetRoutineExerciseFunction");
             logger.LogInformation($"Consultando RoutineExercise por Id: {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<RoutineExercise>
@@ -95,7 +95,7 @@ namespace FitGymApp.Functions.RoutineExerciseFunction
         {
             var logger = executionContext.GetLogger("RoutineExercise_GetAllRoutineExercisesFunction");
             logger.LogInformation("Consultando todos los RoutineExercises activos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<RoutineExercise>>
@@ -142,7 +142,7 @@ namespace FitGymApp.Functions.RoutineExerciseFunction
         {
             var logger = executionContext.GetLogger("RoutineExercise_FindRoutineExercisesByFieldsFunction");
             logger.LogInformation("Consultando RoutineExercises por filtros dinámicos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<RoutineExercise>>

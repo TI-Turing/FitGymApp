@@ -29,7 +29,7 @@ namespace FitGymApp.Functions.GymPlanSelectedTypeFunction
         [Function("GymPlanSelectedType_GetByIdFunction")]
         public async Task<IActionResult> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "gymplanselectedtype/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new JsonResult(new ApiResponse<GymPlanSelectedType>
                 {
@@ -77,7 +77,7 @@ namespace FitGymApp.Functions.GymPlanSelectedTypeFunction
         [Function("GymPlanSelectedType_GetAllFunction")]
         public async Task<IActionResult> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "gymplanselectedtypes")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new JsonResult(new ApiResponse<IEnumerable<GymPlanSelectedType>>
                 {
@@ -115,7 +115,7 @@ namespace FitGymApp.Functions.GymPlanSelectedTypeFunction
         [Function("GymPlanSelectedType_FindByFieldsFunction")]
         public async Task<IActionResult> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "gymplanselectedtypes/find")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new JsonResult(new ApiResponse<IEnumerable<GymPlanSelectedType>>
                 {

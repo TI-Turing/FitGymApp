@@ -1,19 +1,20 @@
+using FitGymApp.Application.Services.Interfaces;
+using FitGymApp.Domain.DTO;
+using FitGymApp.Domain.DTO.PlanType.Request;
+using FitGymApp.Domain.Models;
+using FitGymApp.Utils;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using FitGymApp.Domain.DTO.PlanType.Request;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using System.Linq;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
-using FitGymApp.Utils;
+using System.IO;
+using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace FitGymApp.Functions.PlanTypeFunction;
@@ -36,9 +37,10 @@ public class UpdatePlanTypeFunction
     {
         var logger = executionContext.GetLogger("PlanType_UpdatePlanTypeFunction");
         logger.LogInformation("Procesando solicitud para actualizar un PlanType.");
+        var invocationId = executionContext.InvocationId;
         try
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
@@ -59,7 +61,15 @@ public class UpdatePlanTypeFunction
                 await badResponse.WriteAsJsonAsync(validationResult);
                 return badResponse;
             }
-            var result = await _service.UpdatePlanTypeAsync(objRequest);
+            string? ip = req.Headers.TryGetValues("X-Forwarded-For", out var values) ? values.FirstOrDefault()?.Split(',')[0]?.Trim()
+                : req.Headers.TryGetValues("X-Original-For", out var originalForValues) ? originalForValues.FirstOrDefault()?.Split(':')[0]?.Trim()
+                : req.Headers.TryGetValues("REMOTE_ADDR", out var remoteValues) ? remoteValues.FirstOrDefault()
+                : null;
+            if (objRequest != null)
+            {
+                objRequest.Ip = ip;
+            }
+            var result = await _service.UpdatePlanTypeAsync(objRequest, userId, ip, invocationId);
             if (!result.Success)
             {
                 var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);

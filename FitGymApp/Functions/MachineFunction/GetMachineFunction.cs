@@ -29,7 +29,7 @@ namespace FitGymApp.Functions.MachineFunction
         public async Task<HttpResponseData> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "machine/{id:guid}")] HttpRequestData req, Guid id)
         {
             var response = req.CreateResponse();
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
                 await response.WriteAsJsonAsync(new ApiResponse<Machine>
@@ -87,7 +87,7 @@ namespace FitGymApp.Functions.MachineFunction
         public async Task<HttpResponseData> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "machines")] HttpRequestData req)
         {
             var response = req.CreateResponse();
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
                 await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Machine>>
@@ -132,7 +132,7 @@ namespace FitGymApp.Functions.MachineFunction
         public async Task<HttpResponseData> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "machines/find")] HttpRequestData req)
         {
             var response = req.CreateResponse();
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
                 await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Machine>>

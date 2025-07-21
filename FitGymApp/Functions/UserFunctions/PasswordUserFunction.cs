@@ -31,7 +31,7 @@ public class PasswordUserFunction
     {
         var logger = executionContext.GetLogger("User_PasswordUserFunction");
         logger.LogInformation("Processing user password change request.");
-        if (!JwtValidator.ValidateJwt(req, out var error))
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
             var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
             await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<bool>

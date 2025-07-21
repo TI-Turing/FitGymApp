@@ -36,7 +36,7 @@ namespace FitGymApp.Functions.NotificationFunction
         {
             var logger = executionContext.GetLogger("Notification_GetNotificationByIdFunction");
             logger.LogInformation($"Consultando Notification por Id: {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Notification>
@@ -95,7 +95,7 @@ namespace FitGymApp.Functions.NotificationFunction
         {
             var logger = executionContext.GetLogger("Notification_GetAllNotificationsFunction");
             logger.LogInformation("Consultando todos los Notifications activos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Notification>>
@@ -142,7 +142,7 @@ namespace FitGymApp.Functions.NotificationFunction
         {
             var logger = executionContext.GetLogger("Notification_FindNotificationsByFieldsFunction");
             logger.LogInformation("Consultando Notifications por filtros dinámicos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Notification>>

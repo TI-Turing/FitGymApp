@@ -29,7 +29,7 @@ namespace FitGymApp.Functions.RoutineTemplateFunction
         {
             var logger = executionContext.GetLogger("RoutineTemplate_DeleteRoutineTemplateFunction");
             logger.LogInformation($"Procesando solicitud de borrado para RoutineTemplate {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>

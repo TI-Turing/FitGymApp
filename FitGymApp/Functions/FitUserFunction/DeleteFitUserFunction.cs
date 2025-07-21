@@ -24,7 +24,7 @@ namespace FitGymApp.Functions.FitUserFunction
         [Function("FitUser_DeleteFitUserFunction")]
         public async Task<ApiResponse<Guid>> RunAsync([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "fituser/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<Guid>
                 {

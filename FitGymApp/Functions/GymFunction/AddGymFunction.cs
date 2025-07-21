@@ -38,7 +38,7 @@ public class AddGymFunction
         var logger = executionContext.GetLogger("AddGymFunction");
         logger.LogInformation("Procesando solicitud para agregar un Gym.");
 
-        if (!JwtValidator.ValidateJwt(req, out var error))
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
             var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
             await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>

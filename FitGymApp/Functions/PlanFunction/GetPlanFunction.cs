@@ -37,7 +37,7 @@ namespace FitGymApp.Functions.PlanFunction
         {
             var logger = executionContext.GetLogger("Plan_GetPlanFunction");
             logger.LogInformation($"Consultando Plan por Id: {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Plan>
@@ -96,7 +96,7 @@ namespace FitGymApp.Functions.PlanFunction
         {
             var logger = executionContext.GetLogger("Plan_GetAllPlansFunction");
             logger.LogInformation("Consultando todos los Plans activos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Plan>>
@@ -143,7 +143,7 @@ namespace FitGymApp.Functions.PlanFunction
         {
             var logger = executionContext.GetLogger("Plan_FindPlansByFieldsFunction");
             logger.LogInformation("Consultando Plans por filtros dinámicos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Plan>>

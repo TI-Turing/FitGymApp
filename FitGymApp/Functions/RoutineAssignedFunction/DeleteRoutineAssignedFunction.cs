@@ -31,7 +31,7 @@ namespace FitGymApp.Functions.RoutineAssignedFunction
         {
             var logger = executionContext.GetLogger("RoutineAssigned_DeleteRoutineAssignedFunction");
             logger.LogInformation($"Procesando solicitud de borrado para RoutineAssigned {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>

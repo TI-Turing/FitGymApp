@@ -30,7 +30,7 @@ namespace FitGymApp.Functions.BranchFunction
         public async Task<HttpResponseData> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "branch/{id:guid}")] HttpRequestData req, Guid id)
         {
             var response = req.CreateResponse();
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
                 await response.WriteAsJsonAsync(new ApiResponse<Branch>
@@ -88,7 +88,7 @@ namespace FitGymApp.Functions.BranchFunction
         public async Task<HttpResponseData> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "branches")] HttpRequestData req)
         {
             var response = req.CreateResponse();
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
                 await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Branch>>
@@ -133,7 +133,7 @@ namespace FitGymApp.Functions.BranchFunction
         public async Task<HttpResponseData> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "branches/find")] HttpRequestData req)
         {
             var response = req.CreateResponse();
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 response.StatusCode = System.Net.HttpStatusCode.Unauthorized;
                 await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Branch>>

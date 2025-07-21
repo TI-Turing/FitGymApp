@@ -83,7 +83,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateGymPlanSelectedTypeAsync(UpdateGymPlanSelectedTypeRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateGymPlanSelectedTypeAsync(UpdateGymPlanSelectedTypeRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {

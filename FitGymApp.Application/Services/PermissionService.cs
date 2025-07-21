@@ -87,7 +87,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdatePermissionAsync(UpdatePermissionRequest request)
+        public async Task<ApplicationResponse<bool>> UpdatePermissionAsync(UpdatePermissionRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {

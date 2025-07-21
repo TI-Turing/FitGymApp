@@ -27,7 +27,7 @@ public class GetAccessMethodTypeFunction
     [Function("AccessMethodType_GetAccessMethodTypeByIdFunction")]
     public async Task<ApiResponse<AccessMethodType>> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "accessmethodtype/{id:guid}")] HttpRequest req, Guid id)
     {
-        if (!JwtValidator.ValidateJwt(req, out var error))
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
             return new ApiResponse<AccessMethodType>
             {
@@ -75,7 +75,7 @@ public class GetAccessMethodTypeFunction
     [Function("AccessMethodType_GetAllAccessMethodTypesFunction")]
     public async Task<ApiResponse<IEnumerable<AccessMethodType>>> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "accessmethodtypes")] HttpRequest req)
     {
-        if (!JwtValidator.ValidateJwt(req, out var error))
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
             return new ApiResponse<IEnumerable<AccessMethodType>>
             {
@@ -113,7 +113,7 @@ public class GetAccessMethodTypeFunction
     [Function("AccessMethodType_FindAccessMethodTypesByFieldsFunction")]
     public async Task<ApiResponse<IEnumerable<AccessMethodType>>> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "accessmethodtypes/find")] HttpRequest req)
     {
-        if (!JwtValidator.ValidateJwt(req, out var error))
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
             return new ApiResponse<IEnumerable<AccessMethodType>>
             {

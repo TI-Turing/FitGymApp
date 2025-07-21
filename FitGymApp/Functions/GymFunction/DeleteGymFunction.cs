@@ -31,7 +31,7 @@ namespace FitGymApp.Functions.GymFunction
         {
             var logger = executionContext.GetLogger("Gym_DeleteGymFunction");
             logger.LogInformation($"Processing delete request for Gym {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>

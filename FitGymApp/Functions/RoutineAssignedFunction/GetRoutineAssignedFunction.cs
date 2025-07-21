@@ -36,7 +36,7 @@ namespace FitGymApp.Functions.RoutineAssignedFunction
         {
             var logger = executionContext.GetLogger("RoutineAssigned_GetRoutineAssignedFunction");
             logger.LogInformation($"Consultando RoutineAssigned por Id: {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<RoutineAssigned>
@@ -95,7 +95,7 @@ namespace FitGymApp.Functions.RoutineAssignedFunction
         {
             var logger = executionContext.GetLogger("RoutineAssigned_GetAllRoutineAssignedsFunction");
             logger.LogInformation("Consultando todos los RoutineAssigneds activos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<RoutineAssigned>>
@@ -142,7 +142,7 @@ namespace FitGymApp.Functions.RoutineAssignedFunction
         {
             var logger = executionContext.GetLogger("RoutineAssigned_FindRoutineAssignedsByFieldsFunction");
             logger.LogInformation("Consultando RoutineAssigneds por filtros dinámicos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<RoutineAssigned>>

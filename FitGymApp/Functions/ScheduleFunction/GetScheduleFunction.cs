@@ -36,7 +36,7 @@ namespace FitGymApp.Functions.ScheduleFunction
         {
             var logger = executionContext.GetLogger("Schedule_GetScheduleFunction");
             logger.LogInformation($"Consultando Schedule por Id: {id}");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Schedule>
@@ -95,7 +95,7 @@ namespace FitGymApp.Functions.ScheduleFunction
         {
             var logger = executionContext.GetLogger("Schedule_GetAllSchedulesFunction");
             logger.LogInformation("Consultando todos los Schedules activos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Schedule>>
@@ -142,7 +142,7 @@ namespace FitGymApp.Functions.ScheduleFunction
         {
             var logger = executionContext.GetLogger("Schedule_FindSchedulesByFieldsFunction");
             logger.LogInformation("Consultando Schedules por filtros dinámicos.");
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Schedule>>

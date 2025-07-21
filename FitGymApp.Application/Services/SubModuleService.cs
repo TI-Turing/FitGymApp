@@ -81,7 +81,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateSubModuleAsync(UpdateSubModuleRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateSubModuleAsync(UpdateSubModuleRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {

@@ -24,7 +24,7 @@ namespace FitGymApp.Functions.GymPlanSelectedTypeFunction
         [Function("GymPlanSelectedType_DeleteGymPlanSelectedTypeFunction")]
         public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "gymplanselectedtype/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new JsonResult(new ApiResponse<Guid>
                 {

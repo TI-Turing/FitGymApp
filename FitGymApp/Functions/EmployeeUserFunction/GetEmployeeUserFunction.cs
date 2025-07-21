@@ -28,7 +28,7 @@ namespace FitGymApp.Functions.EmployeeUserFunction
         [Function("EmployeeUser_GetEmployeeUserByIdFunction")]
         public async Task<ApiResponse<EmployeeUser>> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "employeeuser/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<EmployeeUser>
                 {
@@ -76,7 +76,7 @@ namespace FitGymApp.Functions.EmployeeUserFunction
         [Function("EmployeeUser_GetAllEmployeeUsersFunction")]
         public async Task<ApiResponse<IEnumerable<EmployeeUser>>> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "employeeusers")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<EmployeeUser>>
                 {
@@ -114,7 +114,7 @@ namespace FitGymApp.Functions.EmployeeUserFunction
         [Function("EmployeeUser_FindEmployeeUsersByFieldsFunction")]
         public async Task<ApiResponse<IEnumerable<EmployeeUser>>> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "employeeusers/find")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<EmployeeUser>>
                 {

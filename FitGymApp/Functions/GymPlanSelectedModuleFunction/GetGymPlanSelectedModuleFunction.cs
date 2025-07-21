@@ -27,7 +27,7 @@ namespace FitGymApp.Functions.GymPlanSelectedModuleFunction
         [Function("GymPlanSelectedModule_GetGymPlanSelectedModuleByIdFunction")]
         public async Task<ApiResponse<GymPlanSelectedModule>> GetByIdAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "gymplanselectedmodule/{id:guid}")] HttpRequest req, Guid id)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<GymPlanSelectedModule>
                 {
@@ -75,7 +75,7 @@ namespace FitGymApp.Functions.GymPlanSelectedModuleFunction
         [Function("GymPlanSelectedModule_GetAllGymPlanSelectedModulesFunction")]
         public async Task<ApiResponse<IEnumerable<GymPlanSelectedModule>>> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "gymplanselectedmodules")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<GymPlanSelectedModule>>
                 {
@@ -113,7 +113,7 @@ namespace FitGymApp.Functions.GymPlanSelectedModuleFunction
         [Function("GymPlanSelectedModule_FindGymPlanSelectedModulesByFieldsFunction")]
         public async Task<ApiResponse<IEnumerable<GymPlanSelectedModule>>> FindByFieldsAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "gymplanselectedmodules/find")] HttpRequest req)
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 return new ApiResponse<IEnumerable<GymPlanSelectedModule>>
                 {
