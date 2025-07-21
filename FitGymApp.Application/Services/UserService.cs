@@ -230,7 +230,6 @@ namespace FitGymApp.Application.Services
                     EmergencyName = request.EmergencyName ?? userBefore.EmergencyName,
                     EmergencyPhone = request.EmergencyPhone ?? userBefore.EmergencyPhone,
                     PhysicalExceptions = request.PhysicalExceptions ?? userBefore.PhysicalExceptions,
-                    IsActive = request.IsActive.HasValue ? request.IsActive.Value : userBefore.IsActive,
                     UserTypeId = request.UserTypeId ?? userBefore.UserTypeId,
                     Email = userBefore.Email,
                     Password = userBefore.Password

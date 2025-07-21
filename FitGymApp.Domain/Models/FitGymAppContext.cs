@@ -76,6 +76,8 @@ public partial class FitGymAppContext : DbContext
 
     public virtual DbSet<MachineCategory> MachineCategories { get; set; }
 
+    public virtual DbSet<MachineCategoryType> MachineCategoryTypes { get; set; }
+
     public virtual DbSet<Module> Modules { get; set; }
 
     public virtual DbSet<Notification> Notifications { get; set; }

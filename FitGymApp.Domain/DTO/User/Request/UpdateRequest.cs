@@ -28,6 +28,5 @@ namespace FitGymApp.Domain.DTO.User.Request
         public string? PhysicalExceptions { get; set; }
         public Guid? UserTypeId { get; set; } = null;
         // No incluir Password aquí, nunca debe actualizarse por este método
-        public bool? IsActive { get; set; }
     }
 }
