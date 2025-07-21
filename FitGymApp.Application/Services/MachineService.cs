@@ -98,17 +98,34 @@ namespace FitGymApp.Application.Services
         }
 
         // Updated the UpdateMachineAsync method to handle the many-to-many relationship.
-        public async Task<ApplicationResponse<bool>> UpdateMachineAsync(UpdateMachineRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateMachineAsync(UpdateMachineRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
                 var before = await _machineRepository.GetMachineByIdAsync(request.Id);
+                if (before == null)
+                {
+                    return new ApplicationResponse<bool>
+                    {
+                        Success = false,
+                        Data = false,
+                        Message = "Máquina no encontrada.",
+                        ErrorCode = "NotFound"
+                    };
+                }
+
+                // Only update fields that are not null in the request
                 var entity = new Machine
                 {
                     Id = request.Id,
-                    Name = request.Name,
-                    Ip = request.Ip,
-                    IsActive = request.IsActive
+                    Name = !string.IsNullOrEmpty(request.Name) ? request.Name : before.Name,
+                    Status = !string.IsNullOrEmpty(request.Status) ? request.Status : before.Status,
+                    Observations = request.Observations ?? before.Observations,
+                    BrandId = request.BrandId.HasValue && request.BrandId.Value != Guid.Empty ? request.BrandId.Value : before.BrandId,
+                    Ip = before.Ip,
+                    IsActive = before.IsActive,
+                    CreatedAt = before.CreatedAt,
+                    UpdatedAt = DateTime.UtcNow
                 };
 
                 var updated = await _machineRepository.UpdateMachineAsync(entity);

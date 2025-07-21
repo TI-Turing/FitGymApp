@@ -85,7 +85,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateJourneyEmployeeAsync(UpdateJourneyEmployeeRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateJourneyEmployeeAsync(UpdateJourneyEmployeeRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
@@ -103,7 +103,7 @@ namespace FitGymApp.Application.Services
                 var updated = await _journeyEmployeeRepository.UpdateJourneyEmployeeAsync(entity);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("JourneyEmployee", before, entity.Id);
+                    await _logChangeService.LogChangeAsync("JourneyEmployee", before, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,

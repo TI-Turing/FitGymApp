@@ -80,7 +80,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateDailyAsync(UpdateDailyRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateDailyAsync(UpdateDailyRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
@@ -89,7 +89,7 @@ namespace FitGymApp.Application.Services
                 var updated = await _dailyRepository.UpdateDailyAsync(daily);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("Daily", dailyBefore, daily.Id);
+                    await _logChangeService.LogChangeAsync("Daily", dailyBefore, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,

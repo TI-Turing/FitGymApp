@@ -82,7 +82,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateEmployeeRegisterDailyAsync(UpdateEmployeeRegisterDailyRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateEmployeeRegisterDailyAsync(UpdateEmployeeRegisterDailyRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
@@ -98,7 +98,7 @@ namespace FitGymApp.Application.Services
                 var updated = await _employeeRegisterDailyRepository.UpdateEmployeeRegisterDailyAsync(entity);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("EmployeeRegisterDaily", before, entity.Id);
+                    await _logChangeService.LogChangeAsync("EmployeeRegisterDaily", before, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,

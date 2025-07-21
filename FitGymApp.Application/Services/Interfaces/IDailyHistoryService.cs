@@ -12,7 +12,7 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ApplicationResponse<DailyHistory>> CreateDailyHistoryAsync(AddDailyHistoryRequest request);
         Task<ApplicationResponse<DailyHistory>> GetDailyHistoryByIdAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<DailyHistory>>> GetAllDailyHistoriesAsync();
-        Task<ApplicationResponse<bool>> UpdateDailyHistoryAsync(UpdateDailyHistoryRequest request);
+        Task<ApplicationResponse<bool>> UpdateDailyHistoryAsync(UpdateDailyHistoryRequest request, Guid? userId, string ip = "", string invocationId = "");
         Task<ApplicationResponse<bool>> DeleteDailyHistoryAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<DailyHistory>>> FindDailyHistoriesByFieldsAsync(Dictionary<string, object> filters);
     }

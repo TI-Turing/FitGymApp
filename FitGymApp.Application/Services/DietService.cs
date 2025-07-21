@@ -80,7 +80,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateDietAsync(UpdateDietRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateDietAsync(UpdateDietRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
@@ -89,7 +89,7 @@ namespace FitGymApp.Application.Services
                 var updated = await _dietRepository.UpdateDietAsync(diet);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("Diet", dietBefore, diet.Id);
+                    await _logChangeService.LogChangeAsync("Diet", dietBefore, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,

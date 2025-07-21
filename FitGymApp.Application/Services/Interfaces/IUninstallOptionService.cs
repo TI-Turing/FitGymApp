@@ -12,7 +12,7 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ApplicationResponse<UninstallOption>> CreateUninstallOptionAsync(AddUninstallOptionRequest request);
         Task<ApplicationResponse<UninstallOption>> GetUninstallOptionByIdAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<UninstallOption>>> GetAllUninstallOptionsAsync();
-        Task<ApplicationResponse<bool>> UpdateUninstallOptionAsync(UpdateUninstallOptionRequest request);
+        Task<ApplicationResponse<bool>> UpdateUninstallOptionAsync(UpdateUninstallOptionRequest request, Guid? userId, string ip = "", string invocationId = "");
         Task<ApplicationResponse<bool>> DeleteUninstallOptionAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<UninstallOption>>> FindUninstallOptionsByFieldsAsync(Dictionary<string, object> filters);
     }

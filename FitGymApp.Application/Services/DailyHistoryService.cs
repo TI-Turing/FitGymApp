@@ -80,7 +80,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateDailyHistoryAsync(UpdateDailyHistoryRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateDailyHistoryAsync(UpdateDailyHistoryRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
@@ -89,7 +89,7 @@ namespace FitGymApp.Application.Services
                 var updated = await _dailyHistoryRepository.UpdateDailyHistoryAsync(entity);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("DailyHistory", before, entity.Id);
+                    await _logChangeService.LogChangeAsync("DailyHistory", before, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,

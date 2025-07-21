@@ -80,7 +80,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateGymPlanSelectedModuleAsync(UpdateGymPlanSelectedModuleRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateGymPlanSelectedModuleAsync(UpdateGymPlanSelectedModuleRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
@@ -89,7 +89,7 @@ namespace FitGymApp.Application.Services
                 var updated = await _gymPlanSelectedModuleRepository.UpdateGymPlanSelectedModuleAsync(entity);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("GymPlanSelectedModule", before, entity.Id);
+                    await _logChangeService.LogChangeAsync("GymPlanSelectedModule", before, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,

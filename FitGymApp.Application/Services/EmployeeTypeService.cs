@@ -81,7 +81,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateEmployeeTypeAsync(UpdateEmployeeTypeRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateEmployeeTypeAsync(UpdateEmployeeTypeRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
@@ -96,7 +96,7 @@ namespace FitGymApp.Application.Services
                 var updated = await _employeeTypeRepository.UpdateEmployeeTypeAsync(entity);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("EmployeeType", before, entity.Id);
+                    await _logChangeService.LogChangeAsync("EmployeeType", before, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,

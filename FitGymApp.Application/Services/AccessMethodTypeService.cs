@@ -80,7 +80,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateAccessMethodTypeAsync(UpdateAccessMethodTypeRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateAccessMethodTypeAsync(UpdateAccessMethodTypeRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
@@ -89,7 +89,7 @@ namespace FitGymApp.Application.Services
                 var updated = await _accessMethodTypeRepository.UpdateAccessMethodTypeAsync(entity);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("AccessMethodType", before, entity.Id);
+                    await _logChangeService.LogChangeAsync("AccessMethodType", before, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,

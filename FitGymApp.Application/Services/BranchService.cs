@@ -119,7 +119,7 @@ namespace FitGymApp.Application.Services
             }
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateBranchAsync(UpdateBranchRequest request, string ip = "", string invocationId = "")
+        public async Task<ApplicationResponse<bool>> UpdateBranchAsync(UpdateBranchRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             _logger.LogInformation("Starting UpdateBranchAsync method for BranchId: {BranchId}", request.Id);
             try
@@ -142,7 +142,7 @@ namespace FitGymApp.Application.Services
                 if (updated)
                 {
                     _logger.LogInformation("Branch updated successfully for BranchId: {BranchId}", request.Id);
-                    await _logChangeService.LogChangeAsync("Branch", branchBefore, branch.Id, ip, invocationId);
+                    await _logChangeService.LogChangeAsync("Branch", branchBefore, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,

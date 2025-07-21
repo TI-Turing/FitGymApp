@@ -12,7 +12,7 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ApplicationResponse<Branch>> CreateBranchAsync(AddBranchRequest request);
         Task<ApplicationResponse<Branch>> GetBranchByIdAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<Branch>>> GetAllBranchesAsync();
-        Task<ApplicationResponse<bool>> UpdateBranchAsync(UpdateBranchRequest request, string ip = "", string invocationId = "");
+        Task<ApplicationResponse<bool>> UpdateBranchAsync(UpdateBranchRequest request, Guid? userId, string ip = "", string invocationId = "");
         Task<ApplicationResponse<bool>> DeleteBranchAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<Branch>>> FindBranchesByFieldsAsync(Dictionary<string, object> filters);
         Task<ApplicationResponse<bool>> DeleteBranchesByGymIdAsync(Guid gymId);

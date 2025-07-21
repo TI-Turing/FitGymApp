@@ -80,7 +80,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateBrandAsync(UpdateBrandRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateBrandAsync(UpdateBrandRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
@@ -89,7 +89,7 @@ namespace FitGymApp.Application.Services
                 var updated = await _brandRepository.UpdateBrandAsync(brand);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("Brand", brandBefore, brand.Id);
+                    await _logChangeService.LogChangeAsync("Brand", brandBefore, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,

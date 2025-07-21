@@ -37,9 +37,10 @@ public class UpdateScheduleFunction
     {
         var logger = executionContext.GetLogger("Schedule_UpdateScheduleFunction");
         logger.LogInformation("Procesando solicitud para actualizar un Schedule.");
+        var invocationId = executionContext.InvocationId;
         try
         {
-            if (!JwtValidator.ValidateJwt(req, out var error))
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
                 await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
@@ -60,7 +61,15 @@ public class UpdateScheduleFunction
                 await badResponse.WriteAsJsonAsync(validationResult);
                 return badResponse;
             }
-            var result = await _service.UpdateScheduleAsync(objRequest);
+            string? ip = req.Headers.TryGetValues("X-Forwarded-For", out var values) ? values.FirstOrDefault()?.Split(',')[0]?.Trim()
+                : req.Headers.TryGetValues("X-Original-For", out var originalForValues) ? originalForValues.FirstOrDefault()?.Split(':')[0]?.Trim()
+                : req.Headers.TryGetValues("REMOTE_ADDR", out var remoteValues) ? remoteValues.FirstOrDefault()
+                : null;
+            if (objRequest != null)
+            {
+                objRequest.Ip = ip;
+            }
+            var result = await _service.UpdateScheduleAsync(objRequest, userId, ip, invocationId);
             if (!result.Success)
             {
                 var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);

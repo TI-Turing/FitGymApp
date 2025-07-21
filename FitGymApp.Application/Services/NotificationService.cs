@@ -79,7 +79,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateNotificationAsync(UpdateNotificationRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateNotificationAsync(UpdateNotificationRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
@@ -88,7 +88,7 @@ namespace FitGymApp.Application.Services
                 var updated = await _notificationRepository.UpdateNotificationAsync(entity);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("Notification", before, entity.Id);
+                    await _logChangeService.LogChangeAsync("Notification", before, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,

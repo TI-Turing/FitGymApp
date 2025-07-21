@@ -12,7 +12,7 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ApplicationResponse<Machine>> CreateMachineAsync(AddMachineRequest request);
         Task<ApplicationResponse<Machine>> GetMachineByIdAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<Machine>>> GetAllMachinesAsync();
-        Task<ApplicationResponse<bool>> UpdateMachineAsync(UpdateMachineRequest request);
+        Task<ApplicationResponse<bool>> UpdateMachineAsync(UpdateMachineRequest request, Guid? userId, string ip = "", string invocationId = "");
         Task<ApplicationResponse<bool>> DeleteMachineAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<Machine>>> FindMachinesByFieldsAsync(Dictionary<string, object> filters);
         Task<ApplicationResponse<bool>> CreateMachinesAsync(IEnumerable<AddMachineRequest> requests);

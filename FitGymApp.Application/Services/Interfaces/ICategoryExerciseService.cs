@@ -12,7 +12,7 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ApplicationResponse<CategoryExercise>> CreateCategoryExerciseAsync(AddCategoryExerciseRequest request);
         Task<ApplicationResponse<CategoryExercise>> GetCategoryExerciseByIdAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<CategoryExercise>>> GetAllCategoryExercisesAsync();
-        Task<ApplicationResponse<bool>> UpdateCategoryExerciseAsync(UpdateCategoryExerciseRequest request);
+        Task<ApplicationResponse<bool>> UpdateCategoryExerciseAsync(UpdateCategoryExerciseRequest request, Guid? userId, string ip = "", string invocationId = "");
         Task<ApplicationResponse<bool>> DeleteCategoryExerciseAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<CategoryExercise>>> FindCategoryExercisesByFieldsAsync(Dictionary<string, object> filters);
     }

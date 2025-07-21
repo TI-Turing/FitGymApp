@@ -12,7 +12,7 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ApplicationResponse<FitUser>> CreateFitUserAsync(AddFitUserRequest request);
         Task<ApplicationResponse<FitUser>> GetFitUserByIdAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<FitUser>>> GetAllFitUsersAsync();
-        Task<ApplicationResponse<bool>> UpdateFitUserAsync(UpdateFitUserRequest request);
+        Task<ApplicationResponse<bool>> UpdateFitUserAsync(UpdateFitUserRequest request, Guid? userId, string ip = "", string invocationId = "");
         Task<ApplicationResponse<bool>> DeleteFitUserAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<FitUser>>> FindFitUsersByFieldsAsync(Dictionary<string, object> filters);
     }

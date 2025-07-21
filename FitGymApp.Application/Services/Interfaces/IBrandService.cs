@@ -12,7 +12,7 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ApplicationResponse<Brand>> CreateBrandAsync(AddBrandRequest request);
         Task<ApplicationResponse<Brand>> GetBrandByIdAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<Brand>>> GetAllBrandsAsync();
-        Task<ApplicationResponse<bool>> UpdateBrandAsync(UpdateBrandRequest request);
+        Task<ApplicationResponse<bool>> UpdateBrandAsync(UpdateBrandRequest request, Guid? userId, string ip = "", string invocationId = "");
         Task<ApplicationResponse<bool>> DeleteBrandAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<Brand>>> FindBrandsByFieldsAsync(Dictionary<string, object> filters);
     }

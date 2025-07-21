@@ -12,7 +12,7 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ApplicationResponse<Daily>> CreateDailyAsync(AddDailyRequest request);
         Task<ApplicationResponse<Daily>> GetDailyByIdAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<Daily>>> GetAllDailiesAsync();
-        Task<ApplicationResponse<bool>> UpdateDailyAsync(UpdateDailyRequest request);
+        Task<ApplicationResponse<bool>> UpdateDailyAsync(UpdateDailyRequest request, Guid? userId, string ip = "", string invocationId = "");
         Task<ApplicationResponse<bool>> DeleteDailyAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<Daily>>> FindDailiesByFieldsAsync(Dictionary<string, object> filters);
     }

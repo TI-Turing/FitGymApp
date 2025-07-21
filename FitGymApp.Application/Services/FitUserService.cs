@@ -79,7 +79,7 @@ namespace FitGymApp.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateFitUserAsync(UpdateFitUserRequest request)
+        public async Task<ApplicationResponse<bool>> UpdateFitUserAsync(UpdateFitUserRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
@@ -88,7 +88,7 @@ namespace FitGymApp.Application.Services
                 var updated = await _fitUserRepository.UpdateFitUserAsync(entity);
                 if (updated)
                 {
-                    await _logChangeService.LogChangeAsync("FitUser", before, entity.Id);
+                    await _logChangeService.LogChangeAsync("FitUser", before, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
