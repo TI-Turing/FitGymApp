@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FitGymApp.Domain.Models;
 using FitGymApp.Domain.DTO.User.Request;
 using FitGymApp.Domain.DTO;
+using FitGymApp.Domain.DTO.User.Response;
 
 namespace FitGymApp.Application.Services.Interfaces
 {
@@ -18,5 +19,6 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ApplicationResponse<bool>> UpdatePasswordAsync(PasswordUserRequest request, string invocationId = "");
         Task<ApplicationResponse<bool>> UpdateUserGymAsync(Guid userId, Guid gymId, string ip="",  string invocationId = "");
         Task<ApplicationResponse<bool>> UpdateUsersGymToNullAsync(Guid gymId, string ip ="", string invocationId = "");
+        Task<ValidateUserFieldsResponse> ValidateUserFieldsAsync(Guid userId);
     }
 }

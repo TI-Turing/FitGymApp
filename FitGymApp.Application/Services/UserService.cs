@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FitGymApp.Application.Services.Interfaces;
 using FitGymApp.Domain.Models;
 using FitGymApp.Domain.DTO.User.Request;
+using FitGymApp.Domain.DTO.User.Response;
 using FitGymApp.Domain.DTO;
 using FitGymApp.Repository.Services.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -232,8 +233,12 @@ namespace FitGymApp.Application.Services
                     PhysicalExceptions = request.PhysicalExceptions ?? userBefore.PhysicalExceptions,
                     UserTypeId = request.UserTypeId ?? userBefore.UserTypeId,
                     Email = userBefore.Email,
-                    Password = userBefore.Password
+                    Password = userBefore.Password,
+                    IsActive = userBefore.IsActive,
+                    
                 };
+                user.RegistrationCompleted = await ValidateUserFieldsAsync(user);
+
                 var updated = await _userRepository.UpdateUserAsync(user);
                 if (updated)
                 {
@@ -337,7 +342,23 @@ namespace FitGymApp.Application.Services
             try
             {
                 var user = await _userRepository.GetUserByIdAsync(userId);
+                if (user == null)
+                {
+                    return new ApplicationResponse<bool>
+                    {
+                        Success = false,
+                        Data = false,
+                        Message = "User not found.",
+                        ErrorCode = "NotFound"
+                    };
+                }
+
+                // Only update GymUserId if it is provided
+                if (gymId != Guid.Empty)
+                {
                 user.GymUserId = gymId;
+                }
+
                 var updated = await _userRepository.UpdateUserAsync(user);
                 if (updated)
                 {
@@ -540,6 +561,72 @@ namespace FitGymApp.Application.Services
                     ErrorCode = "TechnicalError"
                 };
             }
+        }
+
+        public async Task<ValidateUserFieldsResponse> ValidateUserFieldsAsync(Guid userId)
+        {
+            var userResponse = await GetUserByIdAsync(userId);
+            if (!userResponse.Success || userResponse.Data == null)
+            {
+                return new ValidateUserFieldsResponse
+                {
+                    IsComplete = false,
+                    MissingFields = new List<string> { "User not found" }
+                };
+            }
+
+            var user = userResponse.Data;
+            var missingFields = new List<string>();
+
+            if (string.IsNullOrEmpty(user.Email)) missingFields.Add("Email");
+            if (string.IsNullOrEmpty(user.Password)) missingFields.Add("Password");
+            if (!user.IdEps.HasValue) missingFields.Add("IdEPS");
+            if (string.IsNullOrEmpty(user.Name)) missingFields.Add("Name");
+            if (string.IsNullOrEmpty(user.UserName)) missingFields.Add("UserName");
+            if (!user.IdGender.HasValue) missingFields.Add("IdGender");
+            if (!user.BirthDate.HasValue) missingFields.Add("BirthDate");
+            if (string.IsNullOrEmpty(user.ProfileImageUrl)) missingFields.Add("ProfileImageUrl");
+            if (!user.DocumentTypeId.HasValue) missingFields.Add("DocumentTypeId");
+            if (string.IsNullOrEmpty(user.DocumentType)) missingFields.Add("DocumentType");
+            if (string.IsNullOrEmpty(user.Phone)) missingFields.Add("Phone");
+            if (!user.CountryId.HasValue) missingFields.Add("CountryId");
+            if (string.IsNullOrEmpty(user.Address)) missingFields.Add("Address");
+            if (!user.CityId.HasValue) missingFields.Add("CityId");
+            if (!user.RegionId.HasValue) missingFields.Add("RegionId");
+            if (string.IsNullOrEmpty(user.Rh)) missingFields.Add("RH");
+            if (string.IsNullOrEmpty(user.EmergencyName)) missingFields.Add("EmergencyName");
+            if (string.IsNullOrEmpty(user.EmergencyPhone)) missingFields.Add("EmergencyPhone");
+            if (string.IsNullOrEmpty(user.PhysicalExceptions)) missingFields.Add("PhysicalExceptions");
+
+            return new ValidateUserFieldsResponse
+            {
+                IsComplete = !missingFields.Any(),
+                MissingFields = missingFields
+            };
+        }
+
+        public async Task<bool> ValidateUserFieldsAsync(User user)
+        {
+
+            return !string.IsNullOrEmpty(user.Email) &&
+                   !string.IsNullOrEmpty(user.Password) &&
+                   user.IdEps.HasValue &&
+                   !string.IsNullOrEmpty(user.Name) &&
+                   !string.IsNullOrEmpty(user.UserName) &&
+                   user.IdGender.HasValue &&
+                   user.BirthDate.HasValue &&
+                   !string.IsNullOrEmpty(user.ProfileImageUrl) &&
+                   user.DocumentTypeId.HasValue &&
+                   !string.IsNullOrEmpty(user.DocumentType) &&
+                   !string.IsNullOrEmpty(user.Phone) &&
+                   user.CountryId.HasValue &&
+                   !string.IsNullOrEmpty(user.Address) &&
+                   user.CityId.HasValue &&
+                   user.RegionId.HasValue &&
+                   !string.IsNullOrEmpty(user.Rh) &&
+                   !string.IsNullOrEmpty(user.EmergencyName) &&
+                   !string.IsNullOrEmpty(user.EmergencyPhone) &&
+                   !string.IsNullOrEmpty(user.PhysicalExceptions);
         }
     }
 }

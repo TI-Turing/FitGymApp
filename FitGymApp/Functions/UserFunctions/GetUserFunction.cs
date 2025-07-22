@@ -14,6 +14,7 @@ using System.Net;
 using FitGymApp.Utils;
 using Newtonsoft.Json;
 using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
+using FitGymApp.Domain.DTO.User.Response;
 
 namespace FitGymApp.Functions.UserFunctions
 {
@@ -189,6 +190,56 @@ namespace FitGymApp.Functions.UserFunctions
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
+                    Data = null,
+                    StatusCode = StatusCodes.Status400BadRequest
+                });
+                return errorResponse;
+            }
+        }
+
+        [Function("User_GetInfoUserByIdFunction")]
+        public async Task<HttpResponseData> ValidateUserFieldsAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "user/getinfo/{id:guid}")] HttpRequestData req,
+            FunctionContext executionContext,
+            Guid id)
+        {
+            var logger = executionContext.GetLogger("User_ValidateUserFieldsFunction");
+            logger.LogInformation($"Validating fields for user with Id: {id}");
+
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
+            {
+                var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
+                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<ValidateUserFieldsResponse>
+                {
+                    Success = false,
+                    Message = error!,
+                    Data = null,
+                    StatusCode = StatusCodes.Status401Unauthorized
+                });
+                return unauthorizedResponse;
+            }
+
+            try
+            {
+                var validationResponse = await _userService.ValidateUserFieldsAsync(id);
+                var successResponse = req.CreateResponse(HttpStatusCode.OK);
+                await successResponse.WriteAsJsonAsync(new ApiResponse<ValidateUserFieldsResponse>
+                {
+                    Success = true,
+                    Message = validationResponse.IsComplete ? "User fields are complete." : "User fields are incomplete.",
+                    Data = validationResponse,
+                    StatusCode = StatusCodes.Status200OK
+                });
+                return successResponse;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error validating user fields.");
+                var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await errorResponse.WriteAsJsonAsync(new ApiResponse<ValidateUserFieldsResponse>
+                {
+                    Success = false,
+                    Message = "An error occurred while validating user fields.",
                     Data = null,
                     StatusCode = StatusCodes.Status400BadRequest
                 });

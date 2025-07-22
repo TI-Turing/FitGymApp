@@ -146,7 +146,7 @@ namespace FitGymApp.Application.Services
                         }
                     }
 
-                    await _logChangeService.LogChangeAsync("Machine", before, entity.Id);
+                    await _logChangeService.LogChangeAsync("Machine", before, userId, ip, invocationId);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
