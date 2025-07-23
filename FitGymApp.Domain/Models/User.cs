@@ -75,8 +75,6 @@ public partial class User
 
     public Guid? GymId { get; set; }
 
-    public bool EmailVerified { get; set; } = false;
-
     public bool RegistrationCompleted { get; set; } = false;
 
     public virtual ICollection<Bill> BillUserSellers { get; set; } = new List<Bill>();

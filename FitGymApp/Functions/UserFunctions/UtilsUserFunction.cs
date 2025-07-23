@@ -107,4 +107,58 @@ public class UtilsUserFunction
             return errorResponse;
         }
     }
+
+    [Function("User_GenerateOtpFunction")]
+    public async Task<HttpResponseData> GenerateOtpAsync(
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "user/generate-otp")] HttpRequestData req,
+        FunctionContext executionContext)
+    {
+        var logger = executionContext.GetLogger("User_GenerateOtpFunction");
+        logger.LogInformation("Generating OTP code for user");
+        try
+        {
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var data = System.Text.Json.JsonSerializer.Deserialize<OtpRequest>(requestBody);
+            if (data == null || data.UserId == Guid.Empty || string.IsNullOrEmpty(data.VerificationType) || string.IsNullOrEmpty(data.Recipient) || string.IsNullOrEmpty(data.Method))
+            {
+                var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await badResponse.WriteAsJsonAsync(new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "UserId, VerificationType, Recipient, and Method are required.",
+                    Data = null,
+                    StatusCode = StatusCodes.Status400BadRequest
+                });
+                return badResponse;
+            }
+            // Generar OTP de 5 dígitos
+            var random = new Random();
+            var otp = random.Next(10000, 99999).ToString();
+            var result = await _userService.SendOtpAsync(data.UserId, data.VerificationType, data.Recipient, data.Method, otp);
+            var response = req.CreateResponse(result.Success ? HttpStatusCode.OK : HttpStatusCode.BadRequest);
+            await response.WriteAsJsonAsync(result);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error generating OTP");
+            var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
+            await errorResponse.WriteAsJsonAsync(new ApiResponse<string>
+            {
+                Success = false,
+                Message = "Unexpected error generating OTP.",
+                Data = null,
+                StatusCode = StatusCodes.Status500InternalServerError
+            });
+            return errorResponse;
+        }
+    }
+
+    public class OtpRequest
+    {
+        public Guid UserId { get; set; }
+        public string VerificationType { get; set; } = null!;
+        public string Recipient { get; set; } = null!;
+        public string Method { get; set; } = null!;
+    }
 }

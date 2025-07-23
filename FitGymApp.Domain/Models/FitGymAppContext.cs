@@ -108,6 +108,10 @@ public partial class FitGymAppContext : DbContext
 
     public virtual DbSet<UserType> UserTypes { get; set; }
 
+    public virtual DbSet<UserOTP> UserOTPs { get; set; }
+
+    public virtual DbSet<VerificationType> VerificationTypes { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AccessMethodType>(entity =>
@@ -1112,6 +1116,46 @@ public partial class FitGymAppContext : DbContext
             entity.Property(e => e.Ip).HasMaxLength(45);
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<UserOTP>(entity =>
+        {
+            entity.ToTable("UserOTP");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.OTP).IsRequired();
+            entity.Property(e => e.Method).HasMaxLength(100);
+            entity.Property(e => e.IsVerified).IsRequired();
+            entity.Property(e => e.Ip).HasMaxLength(45);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.IsActive);
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_UserOTP_User");
+            entity.HasOne(e => e.VerificationType)
+                .WithMany()
+                .HasForeignKey(e => e.VerificationTypeId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_UserOTP_VerificationType");
+        });
+
+        modelBuilder.Entity<VerificationType>(entity =>
+        {
+            entity.ToTable("VerificationType");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Ip).HasMaxLength(45);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.IsActive);
+
+            
         });
 
         OnModelCreatingPartial(modelBuilder);

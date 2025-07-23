@@ -9,6 +9,9 @@ using FitGymApp.Domain.Models;
 using FitGymApp.Repository.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
 
 namespace FitGymApp.Repository.Services
 {
@@ -154,6 +157,45 @@ namespace FitGymApp.Repository.Services
             await _context.SaveChangesAsync();
 
             return uploadedUrl;
+        }
+
+        public async Task<bool> PhoneExistsAsync(string phone)
+        {
+            return await _context.Users.AnyAsync(u => u.Phone == phone && (u.IsActive ?? false));
+        }
+
+        public async Task<bool> SendSmsAsync(string to, string message)
+        {
+            var accountSid = _configuration["Twilio:AccountSid"];
+            var authToken = _configuration["Twilio:AuthToken"];
+            var fromNumber = _configuration["Twilio:SmsFrom"];
+            TwilioClient.Init(accountSid, authToken);
+            var msg = await MessageResource.CreateAsync(
+                to: new PhoneNumber(to),
+                from: new PhoneNumber(fromNumber),
+                body: message
+            );
+            return msg.ErrorCode == null;
+        }
+
+        public async Task<bool> SendWhatsappAsync(string to, string message)
+        {
+            var accountSid = _configuration["Twilio:AccountSid"];
+            var authToken = _configuration["Twilio:AuthToken"];
+            var fromNumber = _configuration["Twilio:WhatsappFrom"];
+            TwilioClient.Init(accountSid, authToken);
+            var msg = await MessageResource.CreateAsync(
+                to: new PhoneNumber($"whatsapp:{to}"),
+                from: new PhoneNumber($"whatsapp:{fromNumber}"),
+                body: message
+            );
+            return msg.ErrorCode == null;
+        }
+
+        public async Task SaveUserOtpAsync(UserOTP otp)
+        {
+            _context.UserOTPs.Add(otp);
+            await _context.SaveChangesAsync();
         }
     }
 }

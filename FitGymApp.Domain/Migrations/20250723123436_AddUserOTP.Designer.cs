@@ -4,6 +4,7 @@ using FitGymApp.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitGymApp.Domain.Migrations
 {
     [DbContext(typeof(FitGymAppContext))]
-    partial class FitGymAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250723123436_AddUserOTP")]
+    partial class AddUserOTP
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2098,6 +2101,9 @@ namespace FitGymApp.Domain.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<bool>("EmailVerified")
+                        .HasColumnType("bit");
+
                     b.Property<string>("EmergencyName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -2254,14 +2260,14 @@ namespace FitGymApp.Domain.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("VerificationTypeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("VerificationType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("VerificationTypeId");
 
                     b.ToTable("UserOTP", (string)null);
                 });
@@ -2295,37 +2301,6 @@ namespace FitGymApp.Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserType", (string)null);
-                });
-
-            modelBuilder.Entity("FitGymApp.Domain.Models.VerificationType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Ip")
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)");
-
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("VerificationType", (string)null);
                 });
 
             modelBuilder.Entity("ExerciseMachine", b =>
@@ -2956,16 +2931,7 @@ namespace FitGymApp.Domain.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_UserOTP_User");
 
-                    b.HasOne("FitGymApp.Domain.Models.VerificationType", "VerificationType")
-                        .WithMany()
-                        .HasForeignKey("VerificationTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_UserOTP_VerificationType");
-
                     b.Navigation("User");
-
-                    b.Navigation("VerificationType");
                 });
 
             modelBuilder.Entity("FitGymApp.Domain.Models.AccessMethodType", b =>

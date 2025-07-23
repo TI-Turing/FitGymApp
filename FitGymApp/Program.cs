@@ -129,7 +129,7 @@ using (var scope = builder.Services.BuildServiceProvider().CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<FitGymAppContext>();
     db.Database.Migrate(); // Aplica migraciones pendientes
-    GymFitApp.Repository.Persistence.Seed.DbInitializer.SeedAsync(db).GetAwaiter().GetResult(); // Llamar al inicializador de seeds de repository
+    DbInitializer.SeedAsync(db).GetAwaiter().GetResult(); // Llamar al inicializador de seeds de repository
 
     // Ejecutar funciones de ConfigFunction
     var configAutoService = scope.ServiceProvider.GetRequiredService<IConfigAutoService>();

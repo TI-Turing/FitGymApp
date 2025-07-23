@@ -211,6 +211,22 @@ namespace FitGymApp.Application.Services
                     };
                 }
 
+                // Nueva regla: Validar si el teléfono ya existe
+                if (!string.IsNullOrEmpty(request.Phone))
+                {
+                    var phoneExists = await _userRepository.PhoneExistsAsync(request.Phone);
+                    if (phoneExists && userBefore.Phone != request.Phone)
+                    {
+                        return new ApplicationResponse<bool>
+                        {
+                            Success = false,
+                            Data = false,
+                            Message = "El teléfono ya está registrado.",
+                            ErrorCode = "PhoneExists"
+                        };
+                    }
+                }
+
                 var user = new User
                 {
                     Id = request.Id,
@@ -235,7 +251,6 @@ namespace FitGymApp.Application.Services
                     Email = userBefore.Email,
                     Password = userBefore.Password,
                     IsActive = userBefore.IsActive,
-                    
                 };
                 user.RegistrationCompleted = await ValidateUserFieldsAsync(user);
 
@@ -651,6 +666,64 @@ namespace FitGymApp.Application.Services
                     ErrorCode = "TechnicalError"
                 };
             }
+        }
+
+        public async Task<ApplicationResponse<bool>> PhoneExistsAsync(string phone)
+        {
+            var exists = await _userRepository.PhoneExistsAsync(phone);
+            return new ApplicationResponse<bool>
+            {
+                Success = true,
+                Data = exists,
+                Message = exists ? "Phone already exists." : "Phone does not exist."
+            };
+        }
+
+        public async Task<ApplicationResponse<string>> SendOtpAsync(Guid userId, string verificationType, string recipient, string method, string otp)
+        {
+            // Buscar VerificationTypeId
+            var verificationTypeId = await GetVerificationTypeIdByNameAsync(verificationType);
+            if (verificationTypeId == Guid.Empty)
+            {
+                return new ApplicationResponse<string>
+                {
+                    Success = false,
+                    Message = "Verification type not found.",
+                    Data = null
+                };
+            }
+            var message = $"Your verification code is: {otp}";
+            bool sent = false;
+            if (method.ToLower() == "whatsapp")
+                sent = await _userRepository.SendWhatsappAsync(recipient, message);
+            else if (method.ToLower() == "sms")
+                sent = await _userRepository.SendSmsAsync(recipient, message);
+            else
+                return new ApplicationResponse<string> { Success = false, Message = "Invalid method.", Data = null };
+            if (!sent)
+                return new ApplicationResponse<string> { Success = false, Message = "Failed to send OTP.", Data = null };
+            // Guardar OTP
+            var otpEntity = new UserOTP
+            {
+                Id = Guid.NewGuid(),
+                OTP = Guid.Parse(otp.PadLeft(32, '0')), // For demo, store as Guid
+                Method = method,
+                IsVerified = false,
+                VerificationTypeId = verificationTypeId,
+                UserId = userId,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            };
+            await _userRepository.SaveUserOtpAsync(otpEntity);
+            return new ApplicationResponse<string> { Success = true, Message = "OTP sent and saved.", Data = otp };
+        }
+
+        private async Task<Guid> GetVerificationTypeIdByNameAsync(string name)
+        {
+            // Simulación: buscar en la base de datos real
+            var types = await _userRepository.FindUsersByFieldsAsync(new Dictionary<string, object> { }); // Reemplazar por repo de VerificationType
+            // Aquí deberías consultar el repo/capa correspondiente
+            return Guid.Empty; // Implementar correctamente
         }
     }
 }

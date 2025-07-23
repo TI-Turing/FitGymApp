@@ -16,5 +16,9 @@ namespace FitGymApp.Repository.Services.Interfaces
         Task<bool> BulkUpdateFieldAsync(IEnumerable<Guid> userIds, string fieldName, object? value);
         Task SaveChangesAsync();
         Task<string> UploadUserProfileImageAsync(Guid userId, byte[] image);
+        Task<bool> PhoneExistsAsync(string phone);
+        Task<bool> SendSmsAsync(string to, string message);
+        Task<bool> SendWhatsappAsync(string to, string message);
+        Task SaveUserOtpAsync(UserOTP otp);
     }
 }

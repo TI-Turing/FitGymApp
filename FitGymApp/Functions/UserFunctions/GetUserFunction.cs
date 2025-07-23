@@ -246,5 +246,53 @@ namespace FitGymApp.Functions.UserFunctions
                 return errorResponse;
             }
         }
+
+        [Function("User_PhoneExistsFunction")]
+        public async Task<HttpResponseData> PhoneExistsAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "user/phone-exists/{phone}")] HttpRequestData req,
+            FunctionContext executionContext,
+            string phone)
+        {
+            var logger = executionContext.GetLogger("User_PhoneExistsFunction");
+            logger.LogInformation($"Validando existencia de teléfono: {phone}");
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
+            {
+                var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
+                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = error!,
+                    Data = false,
+                    StatusCode = StatusCodes.Status401Unauthorized
+                });
+                return unauthorizedResponse;
+            }
+            try
+            {
+                var result = await _userService.PhoneExistsAsync(phone);
+                var response = req.CreateResponse(HttpStatusCode.OK);
+                await response.WriteAsJsonAsync(new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = result.Data ? "El teléfono ya existe." : "El teléfono no existe.",
+                    Data = result.Data,
+                    StatusCode = StatusCodes.Status200OK
+                });
+                return response;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error al validar existencia de teléfono.");
+                var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await errorResponse.WriteAsJsonAsync(new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Ocurrió un error al procesar la solicitud.",
+                    Data = false,
+                    StatusCode = StatusCodes.Status400BadRequest
+                });
+                return errorResponse;
+            }
+        }
     }
 }
