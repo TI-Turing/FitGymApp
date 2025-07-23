@@ -1,20 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using FitGymApp.Domain.Models;
 using FitGymApp.Repository.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace FitGymApp.Repository.Services
 {
     public class UserRepository : IUserRepository
     {
         private readonly FitGymAppContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserRepository(FitGymAppContext context)
+        public UserRepository(FitGymAppContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public async Task<User> CreateUserAsync(User user)
@@ -76,7 +82,7 @@ namespace FitGymApp.Repository.Services
                 var property = typeof(User).GetProperty(filter.Key);
                 if (property == null) continue;
                 var left = Expression.Property(parameter, property);
-                var right = Expression.Constant(Convert.ChangeType(filter.Value, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType));
+                var right = Expression.Constant(ValueConverter.ConvertValueToType(filter.Value, property.PropertyType));
                 var equals = Expression.Equal(left, right);
                 predicate = Expression.AndAlso(predicate, equals);
             }
@@ -113,6 +119,41 @@ namespace FitGymApp.Repository.Services
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<string> UploadUserProfileImageAsync(Guid userId, byte[] image)
+        {
+            // Get connection string and container name from environment variables
+            string connectionString = _configuration["BlobStorage:ConnectionString"] ?? _configuration["AzureWebJobsStorage"];
+            string containerName = _configuration["BlobStorage:UserProfileContainer"] ?? "user-profile-images";
+            string blobName = $"{userId}_ProfileImage.png";
+
+            var blobServiceClient = new BlobServiceClient(connectionString);
+            var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.None);
+            var blobClient = containerClient.GetBlobClient(blobName);
+
+            using (var ms = new MemoryStream(image))
+            {   
+                await blobClient.UploadAsync(ms, new BlobUploadOptions
+                {
+                    HttpHeaders = new BlobHttpHeaders { ContentType = "image/png" }
+                });
+            }
+            var uploadedUrl = blobClient.Uri.ToString();
+
+            // Update the user's profile image URL in the database
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            user.ProfileImageUrl = uploadedUrl;
+            user.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            return uploadedUrl;
         }
     }
 }

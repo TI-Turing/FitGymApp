@@ -20,5 +20,6 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ApplicationResponse<bool>> UpdateUserGymAsync(Guid userId, Guid gymId, string ip="",  string invocationId = "");
         Task<ApplicationResponse<bool>> UpdateUsersGymToNullAsync(Guid gymId, string ip ="", string invocationId = "");
         Task<ValidateUserFieldsResponse> ValidateUserFieldsAsync(Guid userId);
+        Task<ApplicationResponse<string>> UploadUserProfileImageAsync(UploadUserProfileImageRequest request);
     }
 }

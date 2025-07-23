@@ -19,11 +19,11 @@ namespace FitGymApp.Functions.ConfigFunction
         }
 
         // Se ejecuta todos los días a la medianoche (0:00)
-        [Function("Config_UpdateUsdPriceTimerFunction")]
-        public async Task Run([TimerTrigger("0 0 0 * * *")] TimerInfo myTimer)
-        {
-            _logger.LogInformation($"UpdateUsdPriceTimerFunction ejecutada a: {DateTime.Now}");
-            await _configAutoService.UpdateUsdPricesFromExchangeAsync();
-        }
+        //[Function("Config_UpdateUsdPriceTimerFunction")]
+        //public async Task Run([TimerTrigger("0 0 0 * * *")] TimerInfo myTimer)
+        //{
+        //    _logger.LogInformation($"UpdateUsdPriceTimerFunction ejecutada a: {DateTime.Now}");
+        //    await _configAutoService.UpdateUsdPricesFromExchangeAsync();
+        //}
     }
 }

@@ -628,5 +628,29 @@ namespace FitGymApp.Application.Services
                    !string.IsNullOrEmpty(user.EmergencyPhone) &&
                    !string.IsNullOrEmpty(user.PhysicalExceptions);
         }
+
+        public async Task<ApplicationResponse<string>> UploadUserProfileImageAsync(UploadUserProfileImageRequest request)
+        {
+            try
+            {
+                var uploadedUrl = await _userRepository.UploadUserProfileImageAsync(request.UserId, request.Image);
+                return new ApplicationResponse<string>
+                {
+                    Success = true,
+                    Data = uploadedUrl,
+                    Message = "Profile image uploaded successfully."
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while uploading the profile image for UserId: {UserId}", request.UserId);
+                return new ApplicationResponse<string>
+                {
+                    Success = false,
+                    Message = "Technical error while uploading the profile image.",
+                    ErrorCode = "TechnicalError"
+                };
+            }
+        }
     }
 }

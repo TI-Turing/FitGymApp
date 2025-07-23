@@ -15,19 +15,19 @@ namespace FitGymApp.Functions.AutomaticProcess
             _gymUserService = gymUserService;
         }
 
-        [FunctionName("NullifyGymIdForExpiredPlans")]
-        public async Task Run([TimerTrigger("0 1 0 * * *")] TimerInfo myTimer, ILogger log)
-        {
-            log.LogInformation("NullifyGymIdForExpiredPlans function executed at: {time}", DateTime.Now);
+        //[FunctionName("NullifyGymIdForExpiredPlans")]
+        //public async Task Run([TimerTrigger("0 1 0 * * *")] TimerInfo myTimer, ILogger log)
+        //{
+        //    log.LogInformation("NullifyGymIdForExpiredPlans function executed at: {time}", DateTime.Now);
 
-            try
-            {
-                await _gymUserService.NullifyGymIdForExpiredPlansAsync();
-            }
-            catch (Exception ex)
-            {
-                log.LogError(ex, "An error occurred while nullifying GymId for users with expired plans.");
-            }
-        }
+        //    try
+        //    {
+        //        await _gymUserService.NullifyGymIdForExpiredPlansAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        log.LogError(ex, "An error occurred while nullifying GymId for users with expired plans.");
+        //    }
+        //}
     }
 }

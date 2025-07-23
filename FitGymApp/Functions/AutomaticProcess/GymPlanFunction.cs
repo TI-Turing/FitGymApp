@@ -15,19 +15,19 @@ namespace FitGymApp.Functions.AutomaticProcess
             _gymPlanService = gymPlanService;
         }
 
-        [FunctionName("DeactivateExpiredGymPlans")]
-        public async Task Run([TimerTrigger("0 0 0 * * *")] TimerInfo myTimer, ILogger log)
-        {
-            log.LogInformation("DeactivateExpiredGymPlans function executed at: {time}", DateTime.Now);
+        //[FunctionName("DeactivateExpiredGymPlans")]
+        //public async Task Run([TimerTrigger("0 0 0 * * *")] TimerInfo myTimer, ILogger log)
+        //{
+        //    log.LogInformation("DeactivateExpiredGymPlans function executed at: {time}", DateTime.Now);
 
-            try
-            {
-                await _gymPlanService.DeactivateExpiredGymPlansAsync();
-            }
-            catch (Exception ex)
-            {
-                log.LogError(ex, "An error occurred while deactivating expired gym plans.");
-            }
-        }
+        //    try
+        //    {
+        //        await _gymPlanService.DeactivateExpiredGymPlansAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        log.LogError(ex, "An error occurred while deactivating expired gym plans.");
+        //    }
+        //}
     }
 }
