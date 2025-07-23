@@ -76,6 +76,8 @@ builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 builder.Services.AddScoped<ISubModuleRepository, SubModuleRepository>();
 builder.Services.AddScoped<IUninstallOptionRepository, UninstallOptionRepository>();
 builder.Services.AddScoped<IUserTypeRepository, UserTypeRepository>();
+builder.Services.AddScoped<IVerificationTypeRepository, VerificationTypeRepository>();
+builder.Services.AddScoped<IUserOtpRepository, UserOtpRepository>();
 
 // Inyección de dependencias de servicios de aplicación
 builder.Services.AddScoped<IPasswordService, PasswordService>();
@@ -121,6 +123,7 @@ builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<ISubModuleService, SubModuleService>();
 builder.Services.AddScoped<IUninstallOptionService, UninstallOptionService>();
 builder.Services.AddScoped<IUserTypeService, UserTypeService>();
+builder.Services.AddScoped<IVerificationTypeService, VerificationTypeService>();
 builder.Services.AddHttpClient<FitGymApp.Application.Services.ConfigAutoService>();
 builder.Services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(builder.Configuration);
 

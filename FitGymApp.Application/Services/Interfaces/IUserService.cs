@@ -22,6 +22,5 @@ namespace FitGymApp.Application.Services.Interfaces
         Task<ValidateUserFieldsResponse> ValidateUserFieldsAsync(Guid userId);
         Task<ApplicationResponse<string>> UploadUserProfileImageAsync(UploadUserProfileImageRequest request);
         Task<ApplicationResponse<bool>> PhoneExistsAsync(string phone);
-        Task<ApplicationResponse<string>> SendOtpAsync(Guid userId, string verificationType, string recipient, string method, string otp);
     }
 }

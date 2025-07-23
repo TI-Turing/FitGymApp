@@ -20,6 +20,7 @@ namespace FitGymApp.Application.Services
         private readonly ILogErrorService _logErrorService;
         private readonly ILogger<UserService> _logger;
         private readonly IGymRepository _gymRepository;
+        private readonly IVerificationTypeRepository _verificationTypeRepository;
 
         public UserService(
             IUserRepository userRepository,
@@ -27,7 +28,8 @@ namespace FitGymApp.Application.Services
             ILogChangeService logChangeService,
             ILogErrorService logErrorService,
             ILogger<UserService> logger,
-            IGymRepository gymRepository)
+            IGymRepository gymRepository,
+            IVerificationTypeRepository verificationTypeRepository)
         {
             _userRepository = userRepository;
             _passwordService = passwordService;
@@ -35,6 +37,7 @@ namespace FitGymApp.Application.Services
             _logErrorService = logErrorService;
             _logger = logger;
             _gymRepository = gymRepository;
+            _verificationTypeRepository = verificationTypeRepository;
         }
 
         public async Task<ApplicationResponse<User>> CreateUserAsync(AddRequest request)
@@ -669,49 +672,6 @@ namespace FitGymApp.Application.Services
                 Data = exists,
                 Message = exists ? "Phone already exists." : "Phone does not exist."
             };
-        }
-
-        public async Task<ApplicationResponse<string>> SendOtpAsync(Guid userId, string verificationType, string recipient, string method, string otp)
-        {
-            var verificationTypeId = await GetVerificationTypeIdByNameAsync(verificationType).ConfigureAwait(false);
-            if (verificationTypeId == Guid.Empty)
-            {
-                return new ApplicationResponse<string>
-                {
-                    Success = false,
-                    Message = "Verification type not found.",
-                    Data = null
-                };
-            }
-            var message = $"Your verification code is: {otp}";
-            bool sent = false;
-            if (method.ToLower() == "whatsapp")
-                sent = await _userRepository.SendWhatsappAsync(recipient, message).ConfigureAwait(false);
-            else if (method.ToLower() == "sms")
-                sent = await _userRepository.SendSmsAsync(recipient, message).ConfigureAwait(false);
-            else
-                return new ApplicationResponse<string> { Success = false, Message = "Invalid method.", Data = null };
-            if (!sent)
-                return new ApplicationResponse<string> { Success = false, Message = "Failed to send OTP.", Data = null };
-            var otpEntity = new UserOTP
-            {
-                Id = Guid.NewGuid(),
-                OTP = Guid.Parse(otp.PadLeft(32, '0')),
-                Method = method,
-                IsVerified = false,
-                VerificationTypeId = verificationTypeId,
-                UserId = userId,
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true
-            };
-            await _userRepository.SaveUserOtpAsync(otpEntity).ConfigureAwait(false);
-            return new ApplicationResponse<string> { Success = true, Message = "OTP sent and saved.", Data = otp };
-        }
-
-        private async Task<Guid> GetVerificationTypeIdByNameAsync(string name)
-        {
-            var types = await _userRepository.FindUsersByFieldsAsync(new Dictionary<string, object> { }).ConfigureAwait(false);
-            return Guid.Empty;
         }
     }
 }

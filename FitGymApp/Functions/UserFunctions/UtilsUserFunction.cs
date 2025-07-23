@@ -18,11 +18,13 @@ public class UtilsUserFunction
 {
     private readonly ILogger<UtilsUserFunction> _logger;
     private readonly IUserService _userService;
+    private readonly IUserOtpService _userOtpService;
 
-    public UtilsUserFunction(ILogger<UtilsUserFunction> logger, IUserService userService)
+    public UtilsUserFunction(ILogger<UtilsUserFunction> logger, IUserService userService, IUserOtpService userOtpService)
     {
         _logger = logger;
         _userService = userService;
+        _userOtpService = userOtpService;
     }
 
     [Function("User_UploadProfileImageFunction")]
@@ -115,6 +117,20 @@ public class UtilsUserFunction
     {
         var logger = executionContext.GetLogger("User_GenerateOtpFunction");
         logger.LogInformation("Generating OTP code for user");
+
+        if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
+        {
+            var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
+            await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<string>
+            {
+                Success = false,
+                Message = error!,
+                Data = null,
+                StatusCode = StatusCodes.Status401Unauthorized
+            });
+            return unauthorizedResponse;
+        }
+
         try
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -131,10 +147,7 @@ public class UtilsUserFunction
                 });
                 return badResponse;
             }
-            // Generar OTP de 5 dígitos
-            var random = new Random();
-            var otp = random.Next(10000, 99999).ToString();
-            var result = await _userService.SendOtpAsync(data.UserId, data.VerificationType, data.Recipient, data.Method, otp);
+            var result = await _userOtpService.SendOtpAsync(data.UserId, data.VerificationType, data.Recipient, data.Method);
             var response = req.CreateResponse(result.Success ? HttpStatusCode.OK : HttpStatusCode.BadRequest);
             await response.WriteAsJsonAsync(result);
             return response;
@@ -152,13 +165,5 @@ public class UtilsUserFunction
             });
             return errorResponse;
         }
-    }
-
-    public class OtpRequest
-    {
-        public Guid UserId { get; set; }
-        public string VerificationType { get; set; } = null!;
-        public string Recipient { get; set; } = null!;
-        public string Method { get; set; } = null!;
     }
 }
