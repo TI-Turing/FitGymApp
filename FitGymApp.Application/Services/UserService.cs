@@ -21,7 +21,13 @@ namespace FitGymApp.Application.Services
         private readonly ILogger<UserService> _logger;
         private readonly IGymRepository _gymRepository;
 
-        public UserService(IUserRepository userRepository, IPasswordService passwordService, ILogChangeService logChangeService, ILogErrorService logErrorService, ILogger<UserService> logger, IGymRepository gymRepository)
+        public UserService(
+            IUserRepository userRepository,
+            IPasswordService passwordService,
+            ILogChangeService logChangeService,
+            ILogErrorService logErrorService,
+            ILogger<UserService> logger,
+            IGymRepository gymRepository)
         {
             _userRepository = userRepository;
             _passwordService = passwordService;
@@ -36,7 +42,6 @@ namespace FitGymApp.Application.Services
             _logger.LogInformation("Starting CreateUserAsync method.");
             try
             {
-                // Validate password rules before creating user
                 if (_passwordService is FitGymApp.Application.Services.PasswordService passwordServiceImpl)
                 {
                     var passwordValidation = passwordServiceImpl.ValidatePassword(request.Password, request.Email);
@@ -52,7 +57,7 @@ namespace FitGymApp.Application.Services
                     }
                 }
 
-                var existingUsers = await _userRepository.FindUsersByFieldsAsync(new Dictionary<string, object> { { "Email", request.Email } });
+                var existingUsers = await _userRepository.FindUsersByFieldsAsync(new Dictionary<string, object> { { "Email", request.Email } }).ConfigureAwait(false);
                 if (existingUsers != null && existingUsers.Any())
                 {
                     _logger.LogWarning("Email already registered: {Email}", request.Email);
@@ -64,7 +69,7 @@ namespace FitGymApp.Application.Services
                     };
                 }
 
-                var hashResult = await _passwordService.HashPasswordAsync(request.Password);
+                var hashResult = await _passwordService.HashPasswordAsync(request.Password).ConfigureAwait(false);
                 if (!hashResult.Success)
                 {
                     _logger.LogError("Password hashing failed for email: {Email}", request.Email);
@@ -81,7 +86,7 @@ namespace FitGymApp.Application.Services
                     Email = request.Email,
                     Password = hashResult.Data,
                 };
-                var created = await _userRepository.CreateUserAsync(user);
+                var created = await _userRepository.CreateUserAsync(user).ConfigureAwait(false);
                 _logger.LogInformation("User created successfully with ID: {UserId}", created.Id);
                 return new ApplicationResponse<User>
                 {
@@ -93,7 +98,7 @@ namespace FitGymApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while creating a user.");
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<User>
                 {
                     Success = false,
@@ -108,7 +113,7 @@ namespace FitGymApp.Application.Services
             _logger.LogInformation("Starting GetUserByIdAsync method for UserId: {UserId}", id);
             try
             {
-                var user = await _userRepository.GetUserByIdAsync(id);
+                var user = await _userRepository.GetUserByIdAsync(id).ConfigureAwait(false);
                 if (user == null)
                 {
                     _logger.LogWarning("User not found for UserId: {UserId}", id);
@@ -129,7 +134,7 @@ namespace FitGymApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving user with UserId: {UserId}", id);
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<User>
                 {
                     Success = false,
@@ -144,7 +149,7 @@ namespace FitGymApp.Application.Services
             _logger.LogInformation("Starting GetAllUsersAsync method.");
             try
             {
-                var users = await _userRepository.GetAllUsersAsync();
+                var users = await _userRepository.GetAllUsersAsync().ConfigureAwait(false);
                 _logger.LogInformation("Retrieved {UserCount} users successfully.", users.Count());
                 return new ApplicationResponse<IEnumerable<User>>
                 {
@@ -155,7 +160,7 @@ namespace FitGymApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving all users.");
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<IEnumerable<User>>
                 {
                     Success = false,
@@ -165,12 +170,12 @@ namespace FitGymApp.Application.Services
             }
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateUserAsync(UpdateRequest request, string ip ="", string invocationId = "")
+        public async Task<ApplicationResponse<bool>> UpdateUserAsync(UpdateRequest request, string ip = "", string invocationId = "")
         {
             _logger.LogInformation("Starting UpdateUserAsync method for UserId: {UserId}", request.Id);
             try
             {
-                var userBefore = await _userRepository.GetUserByIdAsync(request.Id);
+                var userBefore = await _userRepository.GetUserByIdAsync(request.Id).ConfigureAwait(false);
                 if (userBefore == null)
                 {
                     _logger.LogWarning("User not found for UserId: {UserId}", request.Id);
@@ -183,7 +188,6 @@ namespace FitGymApp.Application.Services
                     };
                 }
 
-                // RULE: If UpdateRequest model contains Password, reject the operation
                 var updateRequestType = request.GetType();
                 var passwordProp = updateRequestType.GetProperty("Password");
                 if (passwordProp != null)
@@ -198,7 +202,6 @@ namespace FitGymApp.Application.Services
                     };
                 }
 
-                // Nueva regla: No permitir actualizar GymUserId desde este método
                 var gymUserIdProp = updateRequestType.GetProperty("GymUserId");
                 if (gymUserIdProp != null)
                 {
@@ -211,10 +214,9 @@ namespace FitGymApp.Application.Services
                     };
                 }
 
-                // Nueva regla: Validar si el teléfono ya existe
                 if (!string.IsNullOrEmpty(request.Phone))
                 {
-                    var phoneExists = await _userRepository.PhoneExistsAsync(request.Phone);
+                    var phoneExists = await _userRepository.PhoneExistsAsync(request.Phone).ConfigureAwait(false);
                     if (phoneExists && userBefore.Phone != request.Phone)
                     {
                         return new ApplicationResponse<bool>
@@ -252,13 +254,13 @@ namespace FitGymApp.Application.Services
                     Password = userBefore.Password,
                     IsActive = userBefore.IsActive,
                 };
-                user.RegistrationCompleted = await ValidateUserFieldsAsync(user);
+                user.RegistrationCompleted = await ValidateUserFieldsAsync(user).ConfigureAwait(false);
 
-                var updated = await _userRepository.UpdateUserAsync(user);
+                var updated = await _userRepository.UpdateUserAsync(user).ConfigureAwait(false);
                 if (updated)
                 {
                     _logger.LogInformation("User updated successfully for UserId: {UserId}", request.Id);
-                    await _logChangeService.LogChangeAsync("User", userBefore, user.Id, "", invocationId);
+                    await _logChangeService.LogChangeAsync("User", userBefore, user.Id, "", invocationId).ConfigureAwait(false);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
@@ -281,7 +283,7 @@ namespace FitGymApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while updating user with UserId: {UserId}", request.Id);
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<bool>
                 {
                     Success = false,
@@ -294,8 +296,7 @@ namespace FitGymApp.Application.Services
 
         private async Task<ApplicationResponse<bool>> ValidateUpdateUserGymRulesAsync(Guid userId, Guid gymId)
         {
-            // Check if the user exists and is active
-            var user = await _userRepository.GetUserByIdAsync(userId);
+            var user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
             if (user == null || user.IsActive != true)
             {
                 _logger.LogWarning("User is either not found or inactive for UserId: {UserId}", userId);
@@ -308,8 +309,7 @@ namespace FitGymApp.Application.Services
                 };
             }
 
-            // Check if the gym exists and is active
-            var gym = await _gymRepository.GetGymByIdAsync(gymId);
+            var gym = await _gymRepository.GetGymByIdAsync(gymId).ConfigureAwait(false);
             if (gym == null || gym.IsActive != true)
             {
                 _logger.LogWarning("Gym is either not found or inactive for GymId: {GymId}", gymId);
@@ -322,7 +322,6 @@ namespace FitGymApp.Application.Services
                 };
             }
 
-            // Check if the gym has an active GymPlanSelected
             var activeGymPlanSelected = gym.GymPlanSelecteds?.Any(plan => plan.IsActive);
             if (activeGymPlanSelected != true)
             {
@@ -347,8 +346,7 @@ namespace FitGymApp.Application.Services
         {
             _logger.LogInformation("Starting UpdateUserGymAsync method for UserId: {UserId} and GymId: {GymId}", userId, gymId);
 
-            // Validate rules
-            var validationResponse = await ValidateUpdateUserGymRulesAsync(userId, gymId);
+            var validationResponse = await ValidateUpdateUserGymRulesAsync(userId, gymId).ConfigureAwait(false);
             if (!validationResponse.Success)
             {
                 return validationResponse;
@@ -356,7 +354,7 @@ namespace FitGymApp.Application.Services
 
             try
             {
-                var user = await _userRepository.GetUserByIdAsync(userId);
+                var user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
                 if (user == null)
                 {
                     return new ApplicationResponse<bool>
@@ -368,18 +366,16 @@ namespace FitGymApp.Application.Services
                     };
                 }
 
-                // Only update GymUserId if it is provided
                 if (gymId != Guid.Empty)
                 {
-                user.GymUserId = gymId;
+                    user.GymUserId = gymId;
                 }
 
-                var updated = await _userRepository.UpdateUserAsync(user);
+                var updated = await _userRepository.UpdateUserAsync(user).ConfigureAwait(false);
                 if (updated)
                 {
-                    //TODO: Generar orden de pago.
                     _logger.LogInformation("GymUserId updated successfully for UserId: {UserId}", userId);
-                    await _logChangeService.LogChangeAsync("User.GymUserId", user, user.Id, ip, invocationId);
+                    await _logChangeService.LogChangeAsync("User.GymUserId", user, user.Id, ip, invocationId).ConfigureAwait(false);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
@@ -402,7 +398,7 @@ namespace FitGymApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while updating GymUserId for UserId: {UserId}", userId);
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<bool>
                 {
                     Success = false,
@@ -418,7 +414,7 @@ namespace FitGymApp.Application.Services
             _logger.LogInformation("Starting DeleteUserAsync method for UserId: {UserId}", id);
             try
             {
-                var deleted = await _userRepository.DeleteUserAsync(id);
+                var deleted = await _userRepository.DeleteUserAsync(id).ConfigureAwait(false);
                 if (deleted)
                 {
                     _logger.LogInformation("User deleted successfully for UserId: {UserId}", id);
@@ -444,7 +440,7 @@ namespace FitGymApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting user with UserId: {UserId}", id);
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<bool>
                 {
                     Success = false,
@@ -457,7 +453,7 @@ namespace FitGymApp.Application.Services
 
         public async Task<ApplicationResponse<IEnumerable<User>>> FindUsersByFieldsAsync(Dictionary<string, object> filters)
         {
-            var users = await _userRepository.FindUsersByFieldsAsync(filters);
+            var users = await _userRepository.FindUsersByFieldsAsync(filters).ConfigureAwait(false);
             return new ApplicationResponse<IEnumerable<User>>
             {
                 Success = true,
@@ -467,8 +463,7 @@ namespace FitGymApp.Application.Services
 
         public async Task<ApplicationResponse<bool>> UpdatePasswordAsync(PasswordUserRequest request, string invocationId = "")
         {
-            // Validate user existence
-            var users = await _userRepository.FindUsersByFieldsAsync(new Dictionary<string, object> { { "Email", request.Email } });
+            var users = await _userRepository.FindUsersByFieldsAsync(new Dictionary<string, object> { { "Email", request.Email } }).ConfigureAwait(false);
             var user = users?.FirstOrDefault();
             if (user == null)
             {
@@ -481,7 +476,6 @@ namespace FitGymApp.Application.Services
                 };
             }
 
-            // Validate new password rules
             var passwordValidation = _passwordService.ValidatePassword(request.NewPassword, request.Email);
             if (!passwordValidation.Success)
             {
@@ -493,8 +487,7 @@ namespace FitGymApp.Application.Services
                     ErrorCode = passwordValidation.ErrorCode
                 };
             }
-            // Hash and update password
-            var hashResult = await _passwordService.HashPasswordAsync(request.NewPassword);
+            var hashResult = await _passwordService.HashPasswordAsync(request.NewPassword).ConfigureAwait(false);
             if (!hashResult.Success)
             {
                 return new ApplicationResponse<bool>
@@ -506,7 +499,7 @@ namespace FitGymApp.Application.Services
                 };
             }
             user.Password = hashResult.Data;
-            var updated = await _userRepository.UpdateUserAsync(user);
+            var updated = await _userRepository.UpdateUserAsync(user).ConfigureAwait(false);
             if (updated)
             {
                 return new ApplicationResponse<bool>
@@ -528,18 +521,18 @@ namespace FitGymApp.Application.Services
             }
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateUsersGymToNullAsync(Guid gymId, string ip="", string invocationId = "")
+        public async Task<ApplicationResponse<bool>> UpdateUsersGymToNullAsync(Guid gymId, string ip = "", string invocationId = "")
         {
             _logger.LogInformation("Starting UpdateUsersGymToNullAsync method for GymId: {GymId}", gymId);
             try
             {
                 var userFilters = new Dictionary<string, object> { { "GymId", gymId } };
-                var users = await _userRepository.FindUsersByFieldsAsync(userFilters);
+                var users = await _userRepository.FindUsersByFieldsAsync(userFilters).ConfigureAwait(false);
 
                 if (users.Any())
                 {
                     var userIds = users.Select(user => user.Id).ToList();
-                    var updateResult = await _userRepository.BulkUpdateFieldAsync(userIds, "GymId", null);
+                    var updateResult = await _userRepository.BulkUpdateFieldAsync(userIds, "GymId", null).ConfigureAwait(false);
 
                     if (!updateResult)
                     {
@@ -554,7 +547,7 @@ namespace FitGymApp.Application.Services
                     }
 
                     _logger.LogInformation("GymId set to null for {UserCount} users in GymId: {GymId}", users.Count(), gymId);
-                    await _logChangeService.LogChangeAsync("User.GymId", users, null, "", invocationId);
+                    await _logChangeService.LogChangeAsync("User.GymId", users, null, "", invocationId).ConfigureAwait(false);
                 }
 
                 return new ApplicationResponse<bool>
@@ -567,7 +560,7 @@ namespace FitGymApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while updating users' GymId to null for GymId: {GymId}", gymId);
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<bool>
                 {
                     Success = false,
@@ -580,7 +573,7 @@ namespace FitGymApp.Application.Services
 
         public async Task<ValidateUserFieldsResponse> ValidateUserFieldsAsync(Guid userId)
         {
-            var userResponse = await GetUserByIdAsync(userId);
+            var userResponse = await GetUserByIdAsync(userId).ConfigureAwait(false);
             if (!userResponse.Success || userResponse.Data == null)
             {
                 return new ValidateUserFieldsResponse
@@ -622,7 +615,6 @@ namespace FitGymApp.Application.Services
 
         public async Task<bool> ValidateUserFieldsAsync(User user)
         {
-
             return !string.IsNullOrEmpty(user.Email) &&
                    !string.IsNullOrEmpty(user.Password) &&
                    user.IdEps.HasValue &&
@@ -648,7 +640,7 @@ namespace FitGymApp.Application.Services
         {
             try
             {
-                var uploadedUrl = await _userRepository.UploadUserProfileImageAsync(request.UserId, request.Image);
+                var uploadedUrl = await _userRepository.UploadUserProfileImageAsync(request.UserId, request.Image).ConfigureAwait(false);
                 return new ApplicationResponse<string>
                 {
                     Success = true,
@@ -670,7 +662,7 @@ namespace FitGymApp.Application.Services
 
         public async Task<ApplicationResponse<bool>> PhoneExistsAsync(string phone)
         {
-            var exists = await _userRepository.PhoneExistsAsync(phone);
+            var exists = await _userRepository.PhoneExistsAsync(phone).ConfigureAwait(false);
             return new ApplicationResponse<bool>
             {
                 Success = true,
@@ -681,8 +673,7 @@ namespace FitGymApp.Application.Services
 
         public async Task<ApplicationResponse<string>> SendOtpAsync(Guid userId, string verificationType, string recipient, string method, string otp)
         {
-            // Buscar VerificationTypeId
-            var verificationTypeId = await GetVerificationTypeIdByNameAsync(verificationType);
+            var verificationTypeId = await GetVerificationTypeIdByNameAsync(verificationType).ConfigureAwait(false);
             if (verificationTypeId == Guid.Empty)
             {
                 return new ApplicationResponse<string>
@@ -695,18 +686,17 @@ namespace FitGymApp.Application.Services
             var message = $"Your verification code is: {otp}";
             bool sent = false;
             if (method.ToLower() == "whatsapp")
-                sent = await _userRepository.SendWhatsappAsync(recipient, message);
+                sent = await _userRepository.SendWhatsappAsync(recipient, message).ConfigureAwait(false);
             else if (method.ToLower() == "sms")
-                sent = await _userRepository.SendSmsAsync(recipient, message);
+                sent = await _userRepository.SendSmsAsync(recipient, message).ConfigureAwait(false);
             else
                 return new ApplicationResponse<string> { Success = false, Message = "Invalid method.", Data = null };
             if (!sent)
                 return new ApplicationResponse<string> { Success = false, Message = "Failed to send OTP.", Data = null };
-            // Guardar OTP
             var otpEntity = new UserOTP
             {
                 Id = Guid.NewGuid(),
-                OTP = Guid.Parse(otp.PadLeft(32, '0')), // For demo, store as Guid
+                OTP = Guid.Parse(otp.PadLeft(32, '0')),
                 Method = method,
                 IsVerified = false,
                 VerificationTypeId = verificationTypeId,
@@ -714,16 +704,14 @@ namespace FitGymApp.Application.Services
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true
             };
-            await _userRepository.SaveUserOtpAsync(otpEntity);
+            await _userRepository.SaveUserOtpAsync(otpEntity).ConfigureAwait(false);
             return new ApplicationResponse<string> { Success = true, Message = "OTP sent and saved.", Data = otp };
         }
 
         private async Task<Guid> GetVerificationTypeIdByNameAsync(string name)
         {
-            // Simulación: buscar en la base de datos real
-            var types = await _userRepository.FindUsersByFieldsAsync(new Dictionary<string, object> { }); // Reemplazar por repo de VerificationType
-            // Aquí deberías consultar el repo/capa correspondiente
-            return Guid.Empty; // Implementar correctamente
+            var types = await _userRepository.FindUsersByFieldsAsync(new Dictionary<string, object> { }).ConfigureAwait(false);
+            return Guid.Empty;
         }
     }
 }
