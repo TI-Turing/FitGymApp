@@ -20,6 +20,7 @@ namespace GymFitApp.Repository.Persistence.Seed
             await CategoryExerciseSeed.SeedAsync(context);
             await ExerciseSeed.SeedAsync(context);
             await RoutineTemplateSeed.SeedAsync(context);
+            await RoutineDaySeed.SeedAsync(context);
         }
     }
 }
