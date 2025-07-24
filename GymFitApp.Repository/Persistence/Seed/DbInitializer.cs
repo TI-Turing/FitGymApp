@@ -16,6 +16,8 @@ namespace GymFitApp.Repository.Persistence.Seed
             await BrandSeed.SeedAsync(context);
             await MachineCategoryTypeSeed.SeedAsync(context);
             await VerificationTypeSeed.SeedAsync(context);
+            await CategoryExerciseSeed.SeedAsync(context);
+            await ExerciseSeed.SeedAsync(context);
         }
     }
 }

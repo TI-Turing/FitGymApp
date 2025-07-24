@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FitGymApp.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class AddDescriptionToExercise : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -515,51 +515,38 @@ namespace FitGymApp.Domain.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     Ip = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CategoryExerciseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategoryExercise_Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    TagsObjectives = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RequiresEquipment = table.Column<bool>(type: "bit", nullable: false),
+                    UrlImage = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    MachineId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DailyExerciseHistoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Exercise", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CategoryExerciseExercise",
-                        column: x => x.CategoryExercise_Id,
+                        name: "FK_ExerciseCategoryExercise",
+                        column: x => x.CategoryExerciseId,
                         principalTable: "CategoryExercise",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_ExerciseDailyExerciseHistory",
-                        column: x => x.CategoryExerciseId,
-                        principalTable: "DailyExerciseHistory",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ExerciseMachine",
-                columns: table => new
-                {
-                    MachineExerciseMachinesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MachinesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ExerciseMachine", x => new { x.MachineExerciseMachinesId, x.MachinesId });
-                    table.ForeignKey(
-                        name: "FK_ExerciseMachine_Exercise_MachineExerciseMachinesId",
-                        column: x => x.MachineExerciseMachinesId,
-                        principalTable: "Exercise",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ExerciseMachine_Machine_MachinesId",
-                        column: x => x.MachinesId,
+                        name: "FK_ExerciseMachine",
+                        column: x => x.MachineId,
                         principalTable: "Machine",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Exercise_DailyExerciseHistory_DailyExerciseHistoryId",
+                        column: x => x.DailyExerciseHistoryId,
+                        principalTable: "DailyExerciseHistory",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1125,7 +1112,7 @@ namespace FitGymApp.Domain.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OTP = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OTP = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Method = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     IsVerified = table.Column<bool>(type: "bit", nullable: false),
                     VerificationTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1229,7 +1216,13 @@ namespace FitGymApp.Domain.Migrations
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     GymId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoutineUser_RoutineId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoutineAssignedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    RoutineAssignedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsDefault = table.Column<bool>(type: "bit", nullable: false),
+                    TagsObjectives = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TagsMachines = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsBodyweight = table.Column<bool>(type: "bit", nullable: false),
+                    RequiresEquipment = table.Column<bool>(type: "bit", nullable: false),
+                    IsCalisthenic = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1278,6 +1271,35 @@ namespace FitGymApp.Domain.Migrations
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoutineDay",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoutineId = table.Column<int>(type: "int", nullable: false),
+                    DayNumber = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Sets = table.Column<int>(type: "int", nullable: false),
+                    Repetitions = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    Ip = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    RoutineTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoutineDay", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoutineDay_RoutineTemplate_RoutineTemplateId",
+                        column: x => x.RoutineTemplateId,
+                        principalTable: "RoutineTemplate",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1396,19 +1418,19 @@ namespace FitGymApp.Domain.Migrations
                 column: "EmployeeType_Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FK_CategoryExerciseExercise",
+                name: "IX_Exercise_DailyExerciseHistoryId",
                 table: "Exercise",
-                column: "CategoryExercise_Id");
+                column: "DailyExerciseHistoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Exercise_MachineId",
+                table: "Exercise",
+                column: "MachineId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FK_ExerciseDailyExerciseHistory",
                 table: "Exercise",
                 column: "CategoryExerciseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExerciseMachine_MachinesId",
-                table: "ExerciseMachine",
-                column: "MachinesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Gym_GymTypeId",
@@ -1568,6 +1590,11 @@ namespace FitGymApp.Domain.Migrations
                 name: "IX_FK_UserRoutineAssigned",
                 table: "RoutineAssigned",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutineDay_RoutineTemplateId",
+                table: "RoutineDay",
+                column: "RoutineTemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FK_ExerciseRoutineExercise",
@@ -1819,9 +1846,6 @@ namespace FitGymApp.Domain.Migrations
                 name: "DailyExercise");
 
             migrationBuilder.DropTable(
-                name: "ExerciseMachine");
-
-            migrationBuilder.DropTable(
                 name: "JourneyEmployee");
 
             migrationBuilder.DropTable(
@@ -1852,6 +1876,9 @@ namespace FitGymApp.Domain.Migrations
                 name: "PhysicalAssessment");
 
             migrationBuilder.DropTable(
+                name: "RoutineDay");
+
+            migrationBuilder.DropTable(
                 name: "UserOTP");
 
             migrationBuilder.DropTable(
@@ -1864,9 +1891,6 @@ namespace FitGymApp.Domain.Migrations
                 name: "MachineCategoryType");
 
             migrationBuilder.DropTable(
-                name: "Machine");
-
-            migrationBuilder.DropTable(
                 name: "Notification");
 
             migrationBuilder.DropTable(
@@ -1877,9 +1901,6 @@ namespace FitGymApp.Domain.Migrations
 
             migrationBuilder.DropTable(
                 name: "Module");
-
-            migrationBuilder.DropTable(
-                name: "Brand");
 
             migrationBuilder.DropTable(
                 name: "GymPlanSelectedModule");
@@ -1945,10 +1966,16 @@ namespace FitGymApp.Domain.Migrations
                 name: "CategoryExercise");
 
             migrationBuilder.DropTable(
+                name: "Machine");
+
+            migrationBuilder.DropTable(
                 name: "DailyExerciseHistory");
 
             migrationBuilder.DropTable(
                 name: "RoutineAssigned");
+
+            migrationBuilder.DropTable(
+                name: "Brand");
 
             migrationBuilder.DropTable(
                 name: "DailyHistory");

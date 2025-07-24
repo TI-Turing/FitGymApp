@@ -29,5 +29,5 @@ public partial class Machine
 
     public virtual ICollection<MachineCategory> MachineCategories { get; set; } = null!;
 
-    public virtual ICollection<Exercise> MachineExerciseMachines { get; set; } = new List<Exercise>();
+    public virtual ICollection<Exercise> Exercises { get; set; } = new List<Exercise>(); // Relación uno a muchos
 }

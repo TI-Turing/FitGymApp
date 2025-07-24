@@ -22,21 +22,6 @@ namespace FitGymApp.Domain.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ExerciseMachine", b =>
-                {
-                    b.Property<Guid>("MachineExerciseMachinesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MachinesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("MachineExerciseMachinesId", "MachinesId");
-
-                    b.HasIndex("MachinesId");
-
-                    b.ToTable("ExerciseMachine");
-                });
-
             modelBuilder.Entity("FitGymApp.Domain.Models.AccessMethodType", b =>
                 {
                     b.Property<Guid>("Id")
@@ -626,15 +611,18 @@ namespace FitGymApp.Domain.Migrations
                     b.Property<Guid>("CategoryExerciseId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CategoryExerciseId1")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("CategoryExercise_Id");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
 
+                    b.Property<Guid?>("DailyExerciseHistoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Ip")
                         .HasMaxLength(45)
@@ -643,17 +631,32 @@ namespace FitGymApp.Domain.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("MachineId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool>("RequiresEquipment")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TagsObjectives")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
 
+                    b.Property<string>("UrlImage")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CategoryExerciseId1" }, "IX_FK_CategoryExerciseExercise");
+                    b.HasIndex("DailyExerciseHistoryId");
+
+                    b.HasIndex("MachineId");
 
                     b.HasIndex(new[] { "CategoryExerciseId" }, "IX_FK_ExerciseDailyExerciseHistory");
 
@@ -1852,6 +1855,60 @@ namespace FitGymApp.Domain.Migrations
                     b.ToTable("RoutineAssigned", (string)null);
                 });
 
+            modelBuilder.Entity("FitGymApp.Domain.Models.RoutineDay", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("DayNumber")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Ip")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Repetitions")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("RoutineId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("RoutineTemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Sets")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoutineTemplateId");
+
+                    b.ToTable("RoutineDay", (string)null);
+                });
+
             modelBuilder.Entity("FitGymApp.Domain.Models.RoutineExercise", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1924,10 +1981,22 @@ namespace FitGymApp.Domain.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsBodyweight")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsCalisthenic")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("RequiresEquipment")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("RoutineAssignedId")
                         .HasColumnType("uniqueidentifier");
@@ -1935,6 +2004,12 @@ namespace FitGymApp.Domain.Migrations
                     b.Property<Guid>("RoutineUserRoutineId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("RoutineUser_RoutineId");
+
+                    b.Property<string>("TagsMachines")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TagsObjectives")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
@@ -2329,21 +2404,6 @@ namespace FitGymApp.Domain.Migrations
                     b.ToTable("VerificationType", (string)null);
                 });
 
-            modelBuilder.Entity("ExerciseMachine", b =>
-                {
-                    b.HasOne("FitGymApp.Domain.Models.Exercise", null)
-                        .WithMany()
-                        .HasForeignKey("MachineExerciseMachinesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FitGymApp.Domain.Models.Machine", null)
-                        .WithMany()
-                        .HasForeignKey("MachinesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("FitGymApp.Domain.Models.Bill", b =>
                 {
                     b.HasOne("FitGymApp.Domain.Models.Gym", "Gym")
@@ -2502,21 +2562,25 @@ namespace FitGymApp.Domain.Migrations
 
             modelBuilder.Entity("FitGymApp.Domain.Models.Exercise", b =>
                 {
-                    b.HasOne("FitGymApp.Domain.Models.DailyExerciseHistory", "CategoryExercise")
+                    b.HasOne("FitGymApp.Domain.Models.CategoryExercise", "CategoryExercise")
                         .WithMany("Exercises")
                         .HasForeignKey("CategoryExerciseId")
                         .IsRequired()
-                        .HasConstraintName("FK_ExerciseDailyExerciseHistory");
+                        .HasConstraintName("FK_ExerciseCategoryExercise");
 
-                    b.HasOne("FitGymApp.Domain.Models.CategoryExercise", "CategoryExerciseId1Navigation")
+                    b.HasOne("FitGymApp.Domain.Models.DailyExerciseHistory", null)
                         .WithMany("Exercises")
-                        .HasForeignKey("CategoryExerciseId1")
-                        .IsRequired()
-                        .HasConstraintName("FK_CategoryExerciseExercise");
+                        .HasForeignKey("DailyExerciseHistoryId");
+
+                    b.HasOne("FitGymApp.Domain.Models.Machine", "Machine")
+                        .WithMany("Exercises")
+                        .HasForeignKey("MachineId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_ExerciseMachine");
 
                     b.Navigation("CategoryExercise");
 
-                    b.Navigation("CategoryExerciseId1Navigation");
+                    b.Navigation("Machine");
                 });
 
             modelBuilder.Entity("FitGymApp.Domain.Models.Gym", b =>
@@ -2807,6 +2871,17 @@ namespace FitGymApp.Domain.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FitGymApp.Domain.Models.RoutineDay", b =>
+                {
+                    b.HasOne("FitGymApp.Domain.Models.RoutineTemplate", "RoutineTemplate")
+                        .WithMany("RoutineDays")
+                        .HasForeignKey("RoutineTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RoutineTemplate");
+                });
+
             modelBuilder.Entity("FitGymApp.Domain.Models.RoutineExercise", b =>
                 {
                     b.HasOne("FitGymApp.Domain.Models.Exercise", "Exercise")
@@ -3087,6 +3162,8 @@ namespace FitGymApp.Domain.Migrations
 
             modelBuilder.Entity("FitGymApp.Domain.Models.Machine", b =>
                 {
+                    b.Navigation("Exercises");
+
                     b.Navigation("MachineCategories");
                 });
 
@@ -3136,6 +3213,8 @@ namespace FitGymApp.Domain.Migrations
 
             modelBuilder.Entity("FitGymApp.Domain.Models.RoutineTemplate", b =>
                 {
+                    b.Navigation("RoutineDays");
+
                     b.Navigation("RoutineExercises");
                 });
 

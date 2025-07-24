@@ -9,6 +9,8 @@ public partial class Exercise
 
     public string Name { get; set; } = null!;
 
+    public string? Description { get; set; } // Nueva propiedad
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
@@ -21,15 +23,18 @@ public partial class Exercise
 
     public Guid CategoryExerciseId { get; set; }
 
-    public Guid CategoryExerciseId1 { get; set; }
+    public string? TagsObjectives { get; set; }
 
-    public virtual DailyExerciseHistory CategoryExercise { get; set; } = null!;
+    public bool RequiresEquipment { get; set; }
 
-    public virtual CategoryExercise CategoryExerciseId1Navigation { get; set; } = null!;
+    public string? UrlImage { get; set; }
+    public Guid? MachineId { get; set; }
+
+    public virtual CategoryExercise CategoryExercise { get; set; } = null!;
 
     public virtual ICollection<DailyExercise> DailyExercises { get; set; } = new List<DailyExercise>();
 
     public virtual ICollection<RoutineExercise> RoutineExercises { get; set; } = new List<RoutineExercise>();
 
-    public virtual ICollection<Machine> Machines { get; set; } = new List<Machine>();
+    public virtual Machine? Machine { get; set; } // Relación uno a muchos, Machine puede ser null
 }

@@ -27,9 +27,23 @@ public partial class RoutineTemplate
 
     public Guid RoutineAssignedId { get; set; }
 
+    public bool IsDefault { get; set; }
+
+    public string? TagsObjectives { get; set; }
+
+    public string? TagsMachines { get; set; }
+
+    public bool IsBodyweight { get; set; }
+
+    public bool RequiresEquipment { get; set; }
+
+    public bool IsCalisthenic { get; set; }
+
     public virtual Gym Gym { get; set; } = null!;
 
     public virtual RoutineAssigned RoutineAssigned { get; set; } = null!;
+
+    public virtual ICollection<RoutineDay> RoutineDays { get; set; } = new List<RoutineDay>();
 
     public virtual ICollection<RoutineExercise> RoutineExercises { get; set; } = new List<RoutineExercise>();
 

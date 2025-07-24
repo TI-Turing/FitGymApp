@@ -112,6 +112,8 @@ public partial class FitGymAppContext : DbContext
 
     public virtual DbSet<VerificationType> VerificationTypes { get; set; }
 
+    public virtual DbSet<RoutineDay> RoutineDays { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AccessMethodType>(entity =>
@@ -405,27 +407,29 @@ public partial class FitGymAppContext : DbContext
         {
             entity.ToTable("Exercise");
 
-            entity.HasIndex(e => e.CategoryExerciseId1, "IX_FK_CategoryExerciseExercise");
-
             entity.HasIndex(e => e.CategoryExerciseId, "IX_FK_ExerciseDailyExerciseHistory");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.CategoryExerciseId1).HasColumnName("CategoryExercise_Id");
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
             entity.Property(e => e.Ip).HasMaxLength(45);
             entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.TagsObjectives).HasColumnType("nvarchar(max)");
+            entity.Property(e => e.RequiresEquipment);
+            entity.Property(e => e.UrlImage).HasMaxLength(255).IsRequired(false); // Nuevo campo
+            entity.Property(e => e.Description).HasMaxLength(500).IsRequired(false); // Nueva propiedad
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
             entity.HasOne(d => d.CategoryExercise).WithMany(p => p.Exercises)
                 .HasForeignKey(d => d.CategoryExerciseId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ExerciseDailyExerciseHistory");
+                .HasConstraintName("FK_ExerciseCategoryExercise");
 
-            entity.HasOne(d => d.CategoryExerciseId1Navigation).WithMany(p => p.Exercises)
-                .HasForeignKey(d => d.CategoryExerciseId1)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CategoryExerciseExercise");
+            entity.HasOne(d => d.Machine)
+                .WithMany(m => m.Exercises)
+                .HasForeignKey(d => d.MachineId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_ExerciseMachine");
         });
 
         modelBuilder.Entity<FitUser>(entity =>
@@ -953,6 +957,8 @@ public partial class FitGymAppContext : DbContext
             entity.Property(e => e.Ip).HasMaxLength(45);
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.RoutineUserRoutineId).HasColumnName("RoutineUser_RoutineId");
+            entity.Property(e => e.TagsObjectives).HasColumnType("nvarchar(max)");
+            entity.Property(e => e.TagsMachines).HasColumnType("nvarchar(max)");
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
             entity.HasOne(d => d.Gym).WithMany(p => p.RoutineTemplates)
@@ -1155,7 +1161,25 @@ public partial class FitGymAppContext : DbContext
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
             entity.Property(e => e.IsActive);
 
-            
+
+        });
+
+        modelBuilder.Entity<RoutineDay>(entity =>
+        {
+            entity.ToTable("RoutineDay");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.Repetitions).HasMaxLength(20).IsRequired();
+            entity.Property(e => e.Notes).HasMaxLength(500);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.Ip).HasMaxLength(45);
+            entity.HasOne(e => e.RoutineTemplate)
+                .WithMany(r => r.RoutineDays)
+                .HasForeignKey(e => e.RoutineTemplateId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         OnModelCreatingPartial(modelBuilder);
