@@ -37,4 +37,6 @@ public partial class Exercise
     public virtual ICollection<RoutineExercise> RoutineExercises { get; set; } = new List<RoutineExercise>();
 
     public virtual Machine? Machine { get; set; } // Relación uno a muchos, Machine puede ser null
+
+    public virtual ICollection<RoutineDay> RoutineDays { get; set; } = new List<RoutineDay>(); // Relación uno a muchos
 }

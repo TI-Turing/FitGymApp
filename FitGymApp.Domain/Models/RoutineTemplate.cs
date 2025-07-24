@@ -21,11 +21,11 @@ public partial class RoutineTemplate
 
     public bool IsActive { get; set; }
 
-    public Guid GymId { get; set; }
+    public Guid? GymId { get; set; }
 
-    public Guid RoutineUserRoutineId { get; set; }
+    public Guid? RoutineUserRoutineId { get; set; }
 
-    public Guid RoutineAssignedId { get; set; }
+    public Guid? RoutineAssignedId { get; set; }
 
     public bool IsDefault { get; set; }
 

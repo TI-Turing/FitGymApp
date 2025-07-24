@@ -4,6 +4,7 @@ using FitGymApp.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitGymApp.Domain.Migrations
 {
     [DbContext(typeof(FitGymAppContext))]
-    partial class FitGymAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250724222423_MakeRoutineTemplateFieldsNullable")]
+    partial class MakeRoutineTemplateFieldsNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1869,9 +1872,6 @@ namespace FitGymApp.Domain.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime");
 
-                    b.Property<Guid?>("ExerciseId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Ip")
                         .HasMaxLength(45)
                         .HasColumnType("nvarchar(45)");
@@ -1893,6 +1893,9 @@ namespace FitGymApp.Domain.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int>("RoutineId")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("RoutineTemplateId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1903,8 +1906,6 @@ namespace FitGymApp.Domain.Migrations
                         .HasColumnType("datetime");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ExerciseId");
 
                     b.HasIndex("RoutineTemplateId");
 
@@ -2875,18 +2876,11 @@ namespace FitGymApp.Domain.Migrations
 
             modelBuilder.Entity("FitGymApp.Domain.Models.RoutineDay", b =>
                 {
-                    b.HasOne("FitGymApp.Domain.Models.Exercise", "Exercise")
-                        .WithMany("RoutineDays")
-                        .HasForeignKey("ExerciseId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("FitGymApp.Domain.Models.RoutineTemplate", "RoutineTemplate")
                         .WithMany("RoutineDays")
                         .HasForeignKey("RoutineTemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Exercise");
 
                     b.Navigation("RoutineTemplate");
                 });
@@ -3116,8 +3110,6 @@ namespace FitGymApp.Domain.Migrations
             modelBuilder.Entity("FitGymApp.Domain.Models.Exercise", b =>
                 {
                     b.Navigation("DailyExercises");
-
-                    b.Navigation("RoutineDays");
 
                     b.Navigation("RoutineExercises");
                 });

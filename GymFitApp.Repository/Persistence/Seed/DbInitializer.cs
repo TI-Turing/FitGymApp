@@ -1,4 +1,5 @@
 using FitGymApp.Domain.Models;
+using FitGymApp.Infrastructure.Persistence.Seeds;
 using FitGymApp.Repository.Persistence.Seed;
 using GymFitApp.Repository.Persistence.Seed;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace GymFitApp.Repository.Persistence.Seed
             await VerificationTypeSeed.SeedAsync(context);
             await CategoryExerciseSeed.SeedAsync(context);
             await ExerciseSeed.SeedAsync(context);
+            await RoutineTemplateSeed.SeedAsync(context);
         }
     }
 }

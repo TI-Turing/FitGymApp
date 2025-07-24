@@ -956,7 +956,9 @@ public partial class FitGymAppContext : DbContext
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
             entity.Property(e => e.Ip).HasMaxLength(45);
             entity.Property(e => e.Name).HasMaxLength(100);
-            entity.Property(e => e.RoutineUserRoutineId).HasColumnName("RoutineUser_RoutineId");
+            entity.Property(e => e.RoutineUserRoutineId).HasColumnName("RoutineUser_RoutineId").IsRequired(false);
+            entity.Property(e => e.GymId).IsRequired(false);
+            entity.Property(e => e.RoutineAssignedId).IsRequired(false);
             entity.Property(e => e.TagsObjectives).HasColumnType("nvarchar(max)");
             entity.Property(e => e.TagsMachines).HasColumnType("nvarchar(max)");
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
@@ -1180,6 +1182,10 @@ public partial class FitGymAppContext : DbContext
                 .WithMany(r => r.RoutineDays)
                 .HasForeignKey(e => e.RoutineTemplateId)
                 .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.Exercise)
+                .WithMany(e => e.RoutineDays)
+                .HasForeignKey(e => e.ExerciseId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         OnModelCreatingPartial(modelBuilder);
