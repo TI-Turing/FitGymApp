@@ -89,7 +89,7 @@ public class OtpUtilsFunction
     {
         var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         var request = JsonConvert.DeserializeObject<ValidateOtpRequest>(requestBody);
-        if (request == null || request.UserId == Guid.Empty || string.IsNullOrEmpty(request.Otp))
+        if (request == null || request.UserId == Guid.Empty || string.IsNullOrEmpty(request.Otp) || string.IsNullOrEmpty(request.VerificationType))
         {
             var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
             await badResponse.WriteAsJsonAsync(new ApiResponse<bool>
@@ -101,7 +101,7 @@ public class OtpUtilsFunction
             });
             return badResponse;
         }
-        var isValid = await _userOtpService.ValidateOtpAsync(request.UserId, request.Otp);
+        var isValid = await _userOtpService.ValidateOtpAsync(request.UserId, request.Otp, request.VerificationType);
         var response = req.CreateResponse(HttpStatusCode.OK);
         await response.WriteAsJsonAsync(new ApiResponse<bool>
         {
@@ -112,5 +112,4 @@ public class OtpUtilsFunction
         });
         return response;
     }
-
 }

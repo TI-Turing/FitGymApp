@@ -31,13 +31,26 @@ namespace FitGymApp.Application.Services
 
         public async Task<bool> ValidateOtpAsync(Guid userId, string otp)
         {
+            // Para compatibilidad retro, delega a la nueva sobrecarga usando un VerificationType vacío
+            return await ValidateOtpAsync(userId, otp, string.Empty);
+        }
+
+        public async Task<bool> ValidateOtpAsync(Guid userId, string otp, string verificationType)
+        {
             try
             {
+                var verificationTypeGuid = await GetVerificationTypeIdAsync(verificationType).ConfigureAwait(false);
+                if (verificationTypeGuid == null)
+                {
+                    _logger.LogWarning("Verification type not found for ValidateOtpAsync: {VerificationType}", verificationType);
+                    return false;
+                }
                 var filters = new Dictionary<string, object>
                 {
                     { "UserId", userId },
                     { "OTP", otp },
-                    { "IsVerified", false }
+                    { "IsVerified", false },
+                    { "VerificationTypeId", verificationTypeGuid.Value }
                 };
                 var otps = await _userOtpRepository.FindUserOtpByFieldsAsync(filters).ConfigureAwait(false);
                 var otpEntity = otps.FirstOrDefault();
@@ -45,7 +58,7 @@ namespace FitGymApp.Application.Services
                 otpEntity.IsVerified = true;
                 otpEntity.UpdatedAt = DateTime.UtcNow;
                 await _userOtpRepository.UpdateUserOtpAsync(otpEntity).ConfigureAwait(false);
-                    return true;
+                return true;
             }
             catch (Exception ex)
             {

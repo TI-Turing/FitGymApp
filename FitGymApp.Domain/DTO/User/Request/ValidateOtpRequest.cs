@@ -6,5 +6,6 @@ namespace FitGymApp.Domain.DTO.User.Request
     {
         public Guid UserId { get; set; }
         public string Otp { get; set; } = null!;
+        public string VerificationType { get; set; } = null!;
     }
 }
