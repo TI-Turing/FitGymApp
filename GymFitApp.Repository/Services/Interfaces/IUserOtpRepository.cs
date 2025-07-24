@@ -8,5 +8,6 @@ namespace FitGymApp.Repository.Services.Interfaces
     {
         Task<IEnumerable<UserOTP>> FindUserOtpByFieldsAsync(Dictionary<string, object> filters);
         Task<bool> UpdateUserOtpAsync(UserOTP entity);
+        Task DeleteUserOtpsAsync(IEnumerable<UserOTP> otps);
     }
 }

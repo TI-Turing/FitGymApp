@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FitGymApp.Application.Services.Interfaces;
+using FitGymApp.Domain.DTO;
 using FitGymApp.Domain.Models;
 using FitGymApp.Repository.Services.Interfaces;
-using FitGymApp.Domain.DTO;
+using Microsoft.Extensions.Logging;
 
 namespace FitGymApp.Application.Services
 {
@@ -14,83 +15,142 @@ namespace FitGymApp.Application.Services
         private readonly IUserOtpRepository _userOtpRepository;
         private readonly IUserRepository _userRepository;
         private readonly IVerificationTypeRepository _verificationTypeRepository;
+        private readonly ILogger<UserOtpService> _logger;
 
-        public UserOtpService(IUserOtpRepository userOtpRepository, IUserRepository userRepository, IVerificationTypeRepository verificationTypeRepository)
+        public UserOtpService(
+            IUserOtpRepository userOtpRepository,
+            IUserRepository userRepository,
+            IVerificationTypeRepository verificationTypeRepository,
+            ILogger<UserOtpService> logger)
         {
             _userOtpRepository = userOtpRepository;
             _userRepository = userRepository;
             _verificationTypeRepository = verificationTypeRepository;
+            _logger = logger;
         }
 
         public async Task<bool> ValidateOtpAsync(Guid userId, string otp)
         {
-            var filters = new Dictionary<string, object>
+            try
             {
-                { "UserId", userId },
-                { "OTP", otp },
-                { "IsVerified", false }
-            };
-            var otps = await _userOtpRepository.FindUserOtpByFieldsAsync(filters);
-            var otpEntity = otps.FirstOrDefault();
-            if (otpEntity != null)
-            {
+                var filters = new Dictionary<string, object>
+                {
+                    { "UserId", userId },
+                    { "OTP", otp },
+                    { "IsVerified", false }
+                };
+                var otps = await _userOtpRepository.FindUserOtpByFieldsAsync(filters).ConfigureAwait(false);
+                var otpEntity = otps.FirstOrDefault();
+                if (otpEntity == null) return false;
                 otpEntity.IsVerified = true;
                 otpEntity.UpdatedAt = DateTime.UtcNow;
-                await _userOtpRepository.UpdateUserOtpAsync(otpEntity);
+                await _userOtpRepository.UpdateUserOtpAsync(otpEntity).ConfigureAwait(false);
+                    return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error validating OTP for user {UserId}", userId);
+                return false;
+            }
+        }
+
+        public async Task<ApplicationResponse<string>> SendOtpAsync(Guid userId, string verificationType, string recipient, string method)
+        {
+            try
+            {
+                var verificationTypeGuid = await GetVerificationTypeIdAsync(verificationType).ConfigureAwait(false);
+                if (verificationTypeGuid == null)
+                {
+                    return new ApplicationResponse<string>
+                    {
+                        Success = false,
+                        Message = "Verification type not found.",
+                        Data = null
+                    };
+                }
+                await RemoveExistingOtpsAsync(userId, method, verificationTypeGuid.Value).ConfigureAwait(false);
+                var otp = GenerateOtpCode();
+                var message = $"Gymmetry te da tu codigo de verificación: {otp}";
+                if (!await SendOtpMessageAsync(verificationTypeGuid.Value, method, recipient, message).ConfigureAwait(false))
+                {
+                    return new ApplicationResponse<string> { Success = false, Message = "Failed to send OTP.", Data = null };
+                }
+                await SaveOtpAsync(userId, method, verificationTypeGuid.Value, otp).ConfigureAwait(false);
+                return new ApplicationResponse<string> { Success = true, Message = "OTP sent and saved.", Data = otp };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error sending OTP for user {UserId}", userId);
+                return new ApplicationResponse<string>
+                {
+                    Success = false,
+                    Message = "Technical error while sending OTP.",
+                    Data = null
+                };
+            }
+        }
+
+        private async Task<Guid?> GetVerificationTypeIdAsync(string verificationType)
+        {
+            var filters = new Dictionary<string, object> { { "Name", verificationType } };
+            var verificationTypes = await _verificationTypeRepository.FindVerificationTypesByFieldsAsync(filters).ConfigureAwait(false);
+            return verificationTypes?.FirstOrDefault()?.Id;
+        }
+
+        private async Task RemoveExistingOtpsAsync(Guid userId, string method, Guid verificationTypeId)
+        {
+            var otpFilters = new Dictionary<string, object>
+            {
+                { "UserId", userId },
+                { "Method", method },
+                { "VerificationTypeId", verificationTypeId },
+                { "IsActive", true }
+            };
+            var existingOtps = await _userOtpRepository.FindUserOtpByFieldsAsync(otpFilters).ConfigureAwait(false);
+            if (existingOtps.Any())
+            {
+                await _userOtpRepository.DeleteUserOtpsAsync(existingOtps).ConfigureAwait(false);
+            }
+        }
+
+        private static string GenerateOtpCode()
+        {
+            var random = new Random();
+            return random.Next(10000, 99999).ToString();
+        }
+
+        private async Task<bool> SendOtpMessageAsync(Guid verificationTypeId, string method, string recipient, string message)
+        {
+            if (verificationTypeId == Guid.Parse("2082D337-B3FD-4F9A-8C89-AF9C1038DA9C")) // Phone
+            {
+                if (method.Equals("whatsapp", StringComparison.OrdinalIgnoreCase))
+                    return await _userRepository.SendWhatsappAsync(recipient, message).ConfigureAwait(false);
+                if (method.Equals("sms", StringComparison.OrdinalIgnoreCase))
+                    return await _userRepository.SendSmsAsync(recipient, message).ConfigureAwait(false);
+                return false;
+            }
+            if (verificationTypeId == Guid.Parse("DDA61A30-679D-4AFF-887C-69DF91E4D21E")) // Email
+            {
+                // TODO: Implementar el envio de OTP por mail
                 return true;
             }
             return false;
         }
 
-        public async Task<ApplicationResponse<string>> SendOtpAsync(Guid userId, string verificationType, string recipient, string method)
+        private async Task SaveOtpAsync(Guid userId, string method, Guid verificationTypeId, string otp)
         {
-            var filters = new Dictionary<string, object>
-            {
-                { "Name", verificationType }
-            };
-            var verificationTypeId = await _verificationTypeRepository.FindVerificationTypesByFieldsAsync(filters).ConfigureAwait(false);
-            if (verificationTypeId is null)
-            {
-                return new ApplicationResponse<string>
-                {
-                    Success = false,
-                    Message = "Verification type not found.",
-                    Data = null
-                };
-            }
-            var random = new Random();
-            var otp = random.Next(10000, 99999).ToString();
-
-            var message = $"Gymmetry te da tu codigo de verificación: {otp}";
-            bool sent = false;
-            if (verificationTypeId.FirstOrDefault().Id == Guid.Parse("2082D337-B3FD-4F9A-8C89-AF9C1038DA9C"))   //Phone
-            {
-                if (method.ToLower() == "whatsapp")
-                    sent = await _userRepository.SendWhatsappAsync(recipient, message).ConfigureAwait(false);
-                else if (method.ToLower() == "sms")
-                    sent = await _userRepository.SendSmsAsync(recipient, message).ConfigureAwait(false);
-                else
-                    return new ApplicationResponse<string> { Success = false, Message = "Invalid method.", Data = null };
-                if (!sent)
-                    return new ApplicationResponse<string> { Success = false, Message = "Failed to send OTP.", Data = null };
-            }
-            if (verificationTypeId.FirstOrDefault().Id == Guid.Parse("DDA61A30-679D-4AFF-887C-69DF91E4D21E"))   //Email
-            {
-                //TODO: Implementar el envio de OTP por mail
-            }
             var otpEntity = new UserOTP
             {
                 Id = Guid.NewGuid(),
                 OTP = otp,
                 Method = method,
                 IsVerified = false,
-                VerificationTypeId = verificationTypeId.FirstOrDefault().Id,
+                VerificationTypeId = verificationTypeId,
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true
             };
             await _userRepository.SaveUserOtpAsync(otpEntity).ConfigureAwait(false);
-            return new ApplicationResponse<string> { Success = true, Message = "OTP sent and saved.", Data = otp };
         }
     }
 }

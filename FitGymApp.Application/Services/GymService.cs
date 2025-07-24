@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using FitGymApp.Application.Services.Interfaces;
 using FitGymApp.Domain.DTO;
@@ -7,13 +13,6 @@ using FitGymApp.Domain.Models;
 using FitGymApp.Repository.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using QRCoder;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FitGymApp.Application.Services
 {
@@ -30,7 +29,17 @@ namespace FitGymApp.Application.Services
         private readonly IUserService _userService;
         private readonly ILogger<GymService> _logger;
 
-        public GymService(IGymRepository gymRepository, ILogChangeService logChangeService, ILogErrorService logErrorService, IMapper mapper, IUserRepository userRepository, IPlanRepository planRepository, IBranchService branchService, IRoutineTemplateService routineTemplateService, IUserService userService, ILogger<GymService> logger)
+        public GymService(
+            IGymRepository gymRepository,
+            ILogChangeService logChangeService,
+            ILogErrorService logErrorService,
+            IMapper mapper,
+            IUserRepository userRepository,
+            IPlanRepository planRepository,
+            IBranchService branchService,
+            IRoutineTemplateService routineTemplateService,
+            IUserService userService,
+            ILogger<GymService> logger)
         {
             _gymRepository = gymRepository;
             _logChangeService = logChangeService;
@@ -50,7 +59,7 @@ namespace FitGymApp.Application.Services
             try
             {
                 var entity = _mapper.Map<Gym>(request);
-                var created = await _gymRepository.CreateGymAsync(entity);
+                var created = await _gymRepository.CreateGymAsync(entity).ConfigureAwait(false);
                 _logger.LogInformation("Gym created successfully with ID: {GymId}", created.Id);
                 return new ApplicationResponse<Gym>
                 {
@@ -62,7 +71,7 @@ namespace FitGymApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while creating a gym.");
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<Gym>
                 {
                     Success = false,
@@ -77,7 +86,7 @@ namespace FitGymApp.Application.Services
             _logger.LogInformation("Starting GetGymByIdAsync method for GymId: {GymId}", id);
             try
             {
-                var entity = await _gymRepository.GetGymByIdAsync(id);
+                var entity = await _gymRepository.GetGymByIdAsync(id).ConfigureAwait(false);
                 if (entity == null)
                 {
                     _logger.LogWarning("Gym not found for GymId: {GymId}", id);
@@ -98,7 +107,7 @@ namespace FitGymApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving gym with GymId: {GymId}", id);
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<Gym>
                 {
                     Success = false,
@@ -113,7 +122,7 @@ namespace FitGymApp.Application.Services
             _logger.LogInformation("Starting GetAllGymsAsync method.");
             try
             {
-                var entities = await _gymRepository.GetAllGymsAsync();
+                var entities = await _gymRepository.GetAllGymsAsync().ConfigureAwait(false);
                 _logger.LogInformation("Retrieved {GymCount} gyms successfully.", entities.Count());
                 return new ApplicationResponse<IEnumerable<Gym>>
                 {
@@ -124,7 +133,7 @@ namespace FitGymApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving all gyms.");
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<IEnumerable<Gym>>
                 {
                     Success = false,
@@ -134,12 +143,12 @@ namespace FitGymApp.Application.Services
             }
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateGymAsync(UpdateGymRequest request, Guid? userId, string ip="", string invocationId = "")
+        public async Task<ApplicationResponse<bool>> UpdateGymAsync(UpdateGymRequest request, Guid? userId, string ip = "", string invocationId = "")
         {
             _logger.LogInformation("Starting UpdateGymAsync method for GymId: {GymId}", request.Id);
             try
             {
-                var before = await _gymRepository.GetGymByIdAsync(request.Id);
+                var before = await _gymRepository.GetGymByIdAsync(request.Id).ConfigureAwait(false);
                 if (before == null)
                 {
                     _logger.LogWarning("Gym not found for GymId: {GymId}", request.Id);
@@ -151,13 +160,12 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "NotFound"
                     };
                 }
-
                 var entity = _mapper.Map<Gym>(request);
-                var updated = await _gymRepository.UpdateGymAsync(entity);
+                var updated = await _gymRepository.UpdateGymAsync(entity).ConfigureAwait(false);
                 if (updated)
                 {
                     _logger.LogInformation("Gym updated successfully for GymId: {GymId}", request.Id);
-                    await _logChangeService.LogChangeAsync("Gym", before, userId,ip, invocationId);
+                    await _logChangeService.LogChangeAsync("Gym", before, userId, ip, invocationId).ConfigureAwait(false);
                     return new ApplicationResponse<bool>
                     {
                         Success = true,
@@ -165,22 +173,19 @@ namespace FitGymApp.Application.Services
                         Message = "Gimnasio actualizado correctamente."
                     };
                 }
-                else
+                _logger.LogWarning("Could not update gym for GymId: {GymId}", request.Id);
+                return new ApplicationResponse<bool>
                 {
-                    _logger.LogWarning("Could not update gym for GymId: {GymId}", request.Id);
-                    return new ApplicationResponse<bool>
-                    {
-                        Success = false,
-                        Data = false,
-                        Message = "No se pudo actualizar el gimnasio.",
-                        ErrorCode = "UpdateFailed"
-                    };
-                }
+                    Success = false,
+                    Data = false,
+                    Message = "No se pudo actualizar el gimnasio.",
+                    ErrorCode = "UpdateFailed"
+                };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while updating gym with GymId: {GymId}", request.Id);
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<bool>
                 {
                     Success = false,
@@ -196,7 +201,7 @@ namespace FitGymApp.Application.Services
             _logger.LogInformation("Starting DeleteGymAsync method for GymId: {GymId}", id);
             try
             {
-                if (!await CanDeleteGymAsync(id))
+                if (!await CanDeleteGymAsync(id).ConfigureAwait(false))
                 {
                     _logger.LogWarning("Cannot delete gym with active related entities for GymId: {GymId}", id);
                     return new ApplicationResponse<bool>
@@ -207,8 +212,7 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "ValidationFailed"
                     };
                 }
-
-                var updateUsersResponse = await _userService.UpdateUsersGymToNullAsync(id);
+                var updateUsersResponse = await _userService.UpdateUsersGymToNullAsync(id).ConfigureAwait(false);
                 if (!updateUsersResponse.Success)
                 {
                     _logger.LogWarning("Failed to update users' GymId to null for GymId: {GymId}", id);
@@ -220,8 +224,7 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "UpdateFailed"
                     };
                 }
-
-                var deleteBranchesResponse = await _branchService.DeleteBranchesByGymIdAsync(id);
+                var deleteBranchesResponse = await _branchService.DeleteBranchesByGymIdAsync(id).ConfigureAwait(false);
                 if (!deleteBranchesResponse.Success)
                 {
                     _logger.LogWarning("Failed to delete branches for GymId: {GymId}", id);
@@ -233,8 +236,7 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "DeleteFailed"
                     };
                 }
-
-                var deleteRoutineTemplatesResponse = await _routineTemplateService.DeleteRoutineTemplatesByGymIdAsync(id);
+                var deleteRoutineTemplatesResponse = await _routineTemplateService.DeleteRoutineTemplatesByGymIdAsync(id).ConfigureAwait(false);
                 if (!deleteRoutineTemplatesResponse.Success)
                 {
                     _logger.LogWarning("Failed to delete routine templates for GymId: {GymId}", id);
@@ -246,8 +248,7 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "DeleteFailed"
                     };
                 }
-
-                var deleted = await _gymRepository.DeleteGymAsync(id);
+                var deleted = await _gymRepository.DeleteGymAsync(id).ConfigureAwait(false);
                 if (deleted)
                 {
                     _logger.LogInformation("Gym deleted successfully for GymId: {GymId}", id);
@@ -258,22 +259,19 @@ namespace FitGymApp.Application.Services
                         Message = "Gym deleted successfully."
                     };
                 }
-                else
+                _logger.LogWarning("Gym not found or already deleted for GymId: {GymId}", id);
+                return new ApplicationResponse<bool>
                 {
-                    _logger.LogWarning("Gym not found or already deleted for GymId: {GymId}", id);
-                    return new ApplicationResponse<bool>
-                    {
-                        Success = false,
-                        Data = false,
-                        Message = "Gym not found or already deleted.",
-                        ErrorCode = "NotFound"
-                    };
-                }
+                    Success = false,
+                    Data = false,
+                    Message = "Gym not found or already deleted.",
+                    ErrorCode = "NotFound"
+                };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting gym with GymId: {GymId}", id);
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<bool>
                 {
                     Success = false,
@@ -289,7 +287,7 @@ namespace FitGymApp.Application.Services
             _logger.LogInformation("Starting FindGymsByFieldsAsync method with filters: {Filters}", filters);
             try
             {
-                var entities = await _gymRepository.FindGymsByFieldsAsync(filters);
+                var entities = await _gymRepository.FindGymsByFieldsAsync(filters).ConfigureAwait(false);
                 _logger.LogInformation("Retrieved {GymCount} gyms successfully with filters.", entities.Count());
                 return new ApplicationResponse<IEnumerable<Gym>>
                 {
@@ -300,7 +298,7 @@ namespace FitGymApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while finding gyms with filters: {Filters}", filters);
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<IEnumerable<Gym>>
                 {
                     Success = false,
@@ -315,7 +313,7 @@ namespace FitGymApp.Application.Services
             _logger.LogInformation("Starting GenerateGymQrAsync method for GymId: {GymId}", gymId);
             try
             {
-                var gym = await _gymRepository.GetGymByIdAsync(gymId);
+                var gym = await _gymRepository.GetGymByIdAsync(gymId).ConfigureAwait(false);
                 if (gym == null)
                 {
                     _logger.LogWarning("Gym not found for GymId: {GymId}", gymId);
@@ -326,25 +324,19 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "NotFound"
                     };
                 }
-
-                using (var qrGenerator = new QRCodeGenerator())
-                using (var qrCodeData = qrGenerator.CreateQrCode(gymId.ToString(), QRCodeGenerator.ECCLevel.Q))
-                using (var qrCode = new PngByteQRCode(qrCodeData))
+                var qrCodeImage = GenerateQrCode(gymId.ToString());
+                _logger.LogInformation("QR code generated successfully for GymId: {GymId}", gymId);
+                return new ApplicationResponse<byte[]>
                 {
-                    byte[] qrCodeImage = qrCode.GetGraphic(20);
-                    _logger.LogInformation("QR code generated successfully for GymId: {GymId}", gymId);
-                    return new ApplicationResponse<byte[]>
-                    {
-                        Success = true,
-                        Data = qrCodeImage,
-                        Message = "QR generado correctamente."
-                    };
-                }
+                    Success = true,
+                    Data = qrCodeImage,
+                    Message = "QR generado correctamente."
+                };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while generating QR code for GymId: {GymId}", gymId);
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<byte[]>
                 {
                     Success = false,
@@ -357,16 +349,10 @@ namespace FitGymApp.Application.Services
         public async Task<ApplicationResponse<GenerateGymQrResponse>> GenerateGymQrWithPlanTypeAsync(Guid gymId, string baseUrl)
         {
             _logger.LogInformation("Starting GenerateGymQrWithPlanTypeAsync method for GymId: {GymId}", gymId);
-
-            // Ensure the baseUrl does not end with a trailing slash
-            if (baseUrl.EndsWith("/"))
-            {
-                baseUrl = baseUrl.TrimEnd('/');
-            }
-
+            if (baseUrl.EndsWith("/")) baseUrl = baseUrl.TrimEnd('/');
             try
             {
-                var gym = await _gymRepository.GetGymByIdAsync(gymId);
+                var gym = await _gymRepository.GetGymByIdAsync(gymId).ConfigureAwait(false);
                 if (gym == null)
                 {
                     _logger.LogWarning("Gym not found for GymId: {GymId}", gymId);
@@ -377,7 +363,6 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "NotFound"
                     };
                 }
-
                 var gymPlanSelected = gym.GymPlanSelecteds?.OrderByDescending(gps => gps.CreatedAt).FirstOrDefault();
                 if (gymPlanSelected == null)
                 {
@@ -389,7 +374,6 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "NotFound"
                     };
                 }
-
                 var gymPlanSelectedType = gymPlanSelected.GymPlanSelectedType;
                 if (gymPlanSelectedType == null)
                 {
@@ -401,60 +385,25 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "NotFound"
                     };
                 }
-
-                var qrContent = $"{baseUrl}/{gymId}"; // Combine base URL and GymId
-
-                using (var qrGenerator = new QRCodeGenerator())
-                using (var qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q))
+                var qrContent = $"{baseUrl}/{gymId}";
+                var qrCodeImage = await GenerateQrCodeWithLogoAsync(qrContent, gymId).ConfigureAwait(false);
+                var response = new GenerateGymQrResponse
                 {
-                    byte[] qrCodeImage;
-
-                    // Attempt to fetch logo from blob storage or local path
-                    string? logoPath = null;
-                    try
-                    {
-                        logoPath = await _gymRepository.GetLogoFromBlobStorageAsync(gymId);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogWarning(ex, "Failed to fetch logo from blob storage for GymId: {GymId}", gymId);
-                    }
-
-                    if (string.IsNullOrEmpty(logoPath))
-                    {
-                        logoPath = Environment.GetEnvironmentVariable("LocalLogoPath");
-                    }
-
-                    if (!string.IsNullOrEmpty(logoPath) && File.Exists(logoPath))
-                    {
-                        using (var logo = (Bitmap)Image.FromFile(logoPath))
-                        {
-                            qrCodeImage = new PngByteQRCode(qrCodeData).GetGraphic(20, Color.Black, Color.White);
-                        }
-                    }
-                    else
-                    {
-                        qrCodeImage = new PngByteQRCode(qrCodeData).GetGraphic(20);
-                    }
-
-                    var response = new GenerateGymQrResponse
-                    {
-                        QrCode = Convert.ToBase64String(qrCodeImage),   
-                        GymPlanSelectedType = gymPlanSelectedType
-                    };
-                    _logger.LogInformation("QR code and plan type generated successfully for GymId: {GymId}", gymId);
-                    return new ApplicationResponse<GenerateGymQrResponse>
-                    {
-                        Success = true,
-                        Data = response,
-                        Message = "QR y tipo de plan seleccionado generados correctamente."
-                    };
-                }
+                    QrCode = Convert.ToBase64String(qrCodeImage),
+                    GymPlanSelectedType = gymPlanSelectedType
+                };
+                _logger.LogInformation("QR code and plan type generated successfully for GymId: {GymId}", gymId);
+                return new ApplicationResponse<GenerateGymQrResponse>
+                {
+                    Success = true,
+                    Data = response,
+                    Message = "QR y tipo de plan seleccionado generados correctamente."
+                };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while generating QR code and plan type for GymId: {GymId}", gymId);
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<GenerateGymQrResponse>
                 {
                     Success = false,
@@ -464,6 +413,41 @@ namespace FitGymApp.Application.Services
             }
         }
 
+        private byte[] GenerateQrCode(string content)
+        {
+            using var qrGenerator = new QRCodeGenerator();
+            using var qrCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
+            using var qrCode = new PngByteQRCode(qrCodeData);
+            return qrCode.GetGraphic(20);
+        }
+
+        private async Task<byte[]> GenerateQrCodeWithLogoAsync(string content, Guid gymId)
+        {
+            using var qrGenerator = new QRCodeGenerator();
+            using var qrCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
+            string? logoPath = await TryGetLogoPathAsync(gymId).ConfigureAwait(false);
+            if (!string.IsNullOrEmpty(logoPath) && File.Exists(logoPath))
+            {
+                using var logo = (Bitmap)Image.FromFile(logoPath);
+                return new PngByteQRCode(qrCodeData).GetGraphic(20, Color.Black, Color.White);
+            }
+            return new PngByteQRCode(qrCodeData).GetGraphic(20);
+        }
+
+        private async Task<string?> TryGetLogoPathAsync(Guid gymId)
+        {
+            try
+            {
+                var logoPath = await _gymRepository.GetLogoFromBlobStorageAsync(gymId).ConfigureAwait(false);
+                if (!string.IsNullOrEmpty(logoPath))
+                    return logoPath;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to fetch logo from blob storage for GymId: {GymId}", gymId);
+            }
+            return Environment.GetEnvironmentVariable("LocalLogoPath");
+        }
 
         private bool ValidateImageSize(byte[] image, int maxBytes = 2 * 1024 * 1024)
         {
@@ -485,8 +469,7 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "ImageTooLarge"
                     };
                 }
-
-                var gym = await _gymRepository.GetGymByIdAsync(request.GymId);
+                var gym = await _gymRepository.GetGymByIdAsync(request.GymId).ConfigureAwait(false);
                 if (gym == null)
                 {
                     _logger.LogWarning("Gym not found for GymId: {GymId}", request.GymId);
@@ -497,8 +480,7 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "NotFound"
                     };
                 }
-
-                var url = await _gymRepository.UploadGymLogoAsync(request.GymId, request.Image, request.FileName, request.ContentType);
+                var url = await _gymRepository.UploadGymLogoAsync(request.GymId, request.Image, request.FileName, request.ContentType).ConfigureAwait(false);
                 if (string.IsNullOrEmpty(url))
                 {
                     _logger.LogWarning("Failed to upload logo for GymId: {GymId}", request.GymId);
@@ -509,7 +491,6 @@ namespace FitGymApp.Application.Services
                         ErrorCode = "UploadFailed"
                     };
                 }
-
                 _logger.LogInformation("Logo uploaded successfully for GymId: {GymId}", request.GymId);
                 return new ApplicationResponse<string>
                 {
@@ -521,7 +502,7 @@ namespace FitGymApp.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while uploading logo for GymId: {GymId}", request.GymId);
-                await _logErrorService.LogErrorAsync(ex);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
                 return new ApplicationResponse<string>
                 {
                     Success = false,
@@ -534,13 +515,8 @@ namespace FitGymApp.Application.Services
         public async Task<bool> CanDeleteGymAsync(Guid gymId)
         {
             var planFilters = new Dictionary<string, object> { { "GymId", gymId } };
-            var plans = await _planRepository.FindPlansByFieldsAsync(planFilters);
-            if (plans.Any(plan => plan.IsActive))
-            {
-                return false;
-            }
-
-            return true;
+            var plans = await _planRepository.FindPlansByFieldsAsync(planFilters).ConfigureAwait(false);
+            return !plans.Any(plan => plan.IsActive);
         }
     }
 }
