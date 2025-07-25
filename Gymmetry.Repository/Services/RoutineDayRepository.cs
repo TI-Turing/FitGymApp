@@ -124,5 +124,31 @@ namespace Gymmetry.Repository.Services
                         };
             return await query.ToListAsync().ConfigureAwait(false);
         }
+
+        public async Task<IEnumerable<Guid>> CreateRoutineDaysAsync(IEnumerable<RoutineDay> routineDays)
+        {
+            if (routineDays == null) throw new ArgumentNullException(nameof(routineDays));
+            var ids = new List<Guid>();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                foreach (var routineDay in routineDays)
+                {
+                    routineDay.Id = Guid.NewGuid();
+                    routineDay.CreatedAt = DateTime.UtcNow;
+                    routineDay.IsActive = true;
+                    _context.RoutineDays.Add(routineDay);
+                    ids.Add(routineDay.Id);
+                }
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                await transaction.CommitAsync();
+                return ids;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
     }
 }

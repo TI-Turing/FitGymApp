@@ -71,6 +71,7 @@ builder.Services.AddScoped<IPhysicalAssessmentRepository, PhysicalAssessmentRepo
 builder.Services.AddScoped<IPlanRepository, PlanRepository>();
 builder.Services.AddScoped<IPlanTypeRepository, PlanTypeRepository>();
 builder.Services.AddScoped<IRoutineAssignedRepository, RoutineAssignedRepository>();
+builder.Services.AddScoped<IRoutineDayRepository, RoutineDayRepository>();
 builder.Services.AddScoped<IRoutineExerciseRepository, RoutineExerciseRepository>();
 builder.Services.AddScoped<IRoutineTemplateRepository, RoutineTemplateRepository>();
 builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
@@ -119,6 +120,7 @@ builder.Services.AddScoped<IPhysicalAssessmentService, PhysicalAssessmentService
 builder.Services.AddScoped<IPlanService, PlanService>();
 builder.Services.AddScoped<IPlanTypeService, PlanTypeService>();
 builder.Services.AddScoped<IRoutineAssignedService, RoutineAssignedService>();
+builder.Services.AddScoped<IRoutineDayService, RoutineDayService>();
 builder.Services.AddScoped<IRoutineExerciseService, RoutineExerciseService>();
 builder.Services.AddScoped<IRoutineTemplateService, RoutineTemplateService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();

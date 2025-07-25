@@ -17,5 +17,6 @@ namespace Gymmetry.Application.Services.Interfaces
         Task<ApplicationResponse<bool>> DeleteRoutineDayAsync(Guid id);
         Task<ApplicationResponse<IEnumerable<RoutineDay>>> FindRoutineDaysByFieldsAsync(Dictionary<string, object> filters);
         Task<ApplicationResponse<IEnumerable<RoutineDayDetailViewModel>>> GetRoutineDayDetailsAsync();
+        Task<ApplicationResponse<IEnumerable<Guid>>> CreateRoutineDaysAsync(AddRoutineDaysRequest request);
     }
 }

@@ -27,12 +27,10 @@
     <PackageReference Include="Twilio" Version="7.11.5" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FitGymApp.Application\Gymmetry.Application.csproj" />
-    <ProjectReference Include="..\FitGymApp.Domain\Gymmetry.Domain.csproj" />
-    <ProjectReference Include="..\Gymmetry.Application\Gymmetry.Application.csproj" />
-    <ProjectReference Include="..\Gymmetry.Domain\Gymmetry.Domain.csproj" />
+    <Folder Include="Functions\AutomaticProcess\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Functions\AutomaticProcess\" />
+    <ProjectReference Include="..\Gymmetry.Application\Gymmetry.Application.csproj" />
+    <ProjectReference Include="..\Gymmetry.Domain\Gymmetry.Domain.csproj" />
   </ItemGroup>
 </Project>

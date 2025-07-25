@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Gymmetry.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class AddDescriptionToExercise : Migration
+    public partial class AddAuthorUserIdForeignKeyToRoutineTemplate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -619,7 +619,7 @@ namespace Gymmetry.Domain.Migrations
                     SubscriptionPlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsVerified = table.Column<bool>(type: "bit", nullable: false),
                     Tags = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OwnerUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Owner_UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     BrandColor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MaxBranchesAllowed = table.Column<int>(type: "int", nullable: true),
                     QrImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -1214,19 +1214,27 @@ namespace Gymmetry.Domain.Migrations
                     DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     Ip = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    GymId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoutineUser_RoutineId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoutineAssignedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GymId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    RoutineUser_RoutineId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    RoutineAssignedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsDefault = table.Column<bool>(type: "bit", nullable: false),
                     TagsObjectives = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TagsMachines = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsBodyweight = table.Column<bool>(type: "bit", nullable: false),
                     RequiresEquipment = table.Column<bool>(type: "bit", nullable: false),
-                    IsCalisthenic = table.Column<bool>(type: "bit", nullable: false)
+                    IsCalisthenic = table.Column<bool>(type: "bit", nullable: false),
+                    Author_UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AuthorUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RoutineTemplate", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AuthorUserRoutineTemplate",
+                        column: x => x.Author_UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_GymRoutine",
                         column: x => x.GymId,
@@ -1236,6 +1244,11 @@ namespace Gymmetry.Domain.Migrations
                         name: "FK_RoutineAssignedRoutine",
                         column: x => x.RoutineAssignedId,
                         principalTable: "RoutineAssigned",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RoutineTemplate_User_AuthorUserId",
+                        column: x => x.AuthorUserId,
+                        principalTable: "User",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_RoutineUser",
@@ -1278,7 +1291,6 @@ namespace Gymmetry.Domain.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoutineId = table.Column<int>(type: "int", nullable: false),
                     DayNumber = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Sets = table.Column<int>(type: "int", nullable: false),
@@ -1289,11 +1301,18 @@ namespace Gymmetry.Domain.Migrations
                     DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     Ip = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    RoutineTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    RoutineTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExerciseId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RoutineDay", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoutineDay_Exercise_ExerciseId",
+                        column: x => x.ExerciseId,
+                        principalTable: "Exercise",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_RoutineDay_RoutineTemplate_RoutineTemplateId",
                         column: x => x.RoutineTemplateId,
@@ -1438,9 +1457,9 @@ namespace Gymmetry.Domain.Migrations
                 column: "GymTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Gym_OwnerUserId",
+                name: "IX_Gym_Owner_UserId",
                 table: "Gym",
-                column: "OwnerUserId");
+                column: "Owner_UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FK_GymPlanSelectedTypeGymPlanSelected",
@@ -1592,6 +1611,11 @@ namespace Gymmetry.Domain.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RoutineDay_ExerciseId",
+                table: "RoutineDay",
+                column: "ExerciseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RoutineDay_RoutineTemplateId",
                 table: "RoutineDay",
                 column: "RoutineTemplateId");
@@ -1607,6 +1631,11 @@ namespace Gymmetry.Domain.Migrations
                 column: "RoutineTemplateId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FK_AuthorUserRoutineTemplate",
+                table: "RoutineTemplate",
+                column: "Author_UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FK_GymRoutine",
                 table: "RoutineTemplate",
                 column: "GymId");
@@ -1620,6 +1649,11 @@ namespace Gymmetry.Domain.Migrations
                 name: "IX_FK_RoutineUser",
                 table: "RoutineTemplate",
                 column: "RoutineUser_RoutineId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoutineTemplate_AuthorUserId",
+                table: "RoutineTemplate",
+                column: "AuthorUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FK_BranchSchedule",
@@ -1778,7 +1812,7 @@ namespace Gymmetry.Domain.Migrations
             migrationBuilder.AddForeignKey(
                 name: "FK_GymOwnerUser",
                 table: "Gym",
-                column: "OwnerUserId",
+                column: "Owner_UserId",
                 principalTable: "User",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
@@ -1822,6 +1856,14 @@ namespace Gymmetry.Domain.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_UserRoutineAssigned",
                 table: "RoutineAssigned");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_AuthorUserRoutineTemplate",
+                table: "RoutineTemplate");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_RoutineTemplate_User_AuthorUserId",
+                table: "RoutineTemplate");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_RoutineUser",

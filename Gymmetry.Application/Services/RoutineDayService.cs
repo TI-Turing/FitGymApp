@@ -179,5 +179,23 @@ namespace Gymmetry.Application.Services
                 return ApplicationResponse<IEnumerable<RoutineDayDetailViewModel>>.ErrorResponse("Error técnico al obtener los detalles de RoutineDay.", "TechnicalError");
             }
         }
+
+        public async Task<ApplicationResponse<IEnumerable<Guid>>> CreateRoutineDaysAsync(AddRoutineDaysRequest request)
+        {
+            _logger.LogInformation("Starting CreateRoutineDaysAsync method.");
+            try
+            {
+                var routineDays = request.RoutineDays.Select(rd => _mapper.Map<RoutineDay>(rd)).ToList();
+                var ids = await _routineDayRepository.CreateRoutineDaysAsync(routineDays).ConfigureAwait(false);
+                _logger.LogInformation("RoutineDays created successfully. Count: {Count}", ids.Count());
+                return ApplicationResponse<IEnumerable<Guid>>.SuccessResponse(ids, "RoutineDays creadas correctamente.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating multiple RoutineDays.");
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
+                return ApplicationResponse<IEnumerable<Guid>>.ErrorResponse("Error técnico al crear las RoutineDays.", "TechnicalError");
+            }
+        }
     }
 }

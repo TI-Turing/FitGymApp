@@ -38,8 +38,7 @@ namespace Gymmetry.Application.Services
                     Ip = request.Ip,
                     IsActive = request.IsActive,
                     GymId = request.GymId,
-                    RoutineUserRoutineId = request.RoutineUserRoutineId,
-                    RoutineAssignedId = request.RoutineAssignedId
+                    Author_UserId = request.Author_UserId
                 };
                 var created = await _routineTemplateRepository.CreateRoutineTemplateAsync(entity);
                 _logger.LogInformation("Routine template created successfully with ID: {RoutineTemplateId}", created.Id);

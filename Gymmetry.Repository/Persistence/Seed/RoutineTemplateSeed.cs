@@ -20,7 +20,7 @@ public static class RoutineTemplateSeed
                     Comments = "Cuerpo completo en casa, ideal para principiantes sin equipamiento.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 1.0, ""masa_muscular"": 0.5, ""definicion_muscular"": 0.7, ""fuerza"": 0.3,
                         ""resistencia_fisica"": 1.0, ""tonificacion"": 0.8, ""movilidad"": 0.3, ""postura"": 0.2,
@@ -42,7 +42,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina de fuerza para todo el cuerpo en gimnasio, con barra y mancuernas.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.2, ""masa_muscular"": 1.0, ""definicion_muscular"": 0.5, ""fuerza"": 1.0,
                         ""resistencia_fisica"": 0.2, ""tonificacion"": 0.3, ""movilidad"": 0.1, ""postura"": 0.2,
@@ -64,7 +64,7 @@ public static class RoutineTemplateSeed
                     Comments = "Enfoque en tren inferior, máquinas y peso libre, nivel intermedio.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.3, ""masa_muscular"": 0.6, ""definicion_muscular"": 0.7, ""fuerza"": 0.7,
                         ""resistencia_fisica"": 0.4, ""tonificacion"": 1.0, ""movilidad"": 0.2, ""postura"": 0.2,
@@ -86,7 +86,7 @@ public static class RoutineTemplateSeed
                     Comments = "Entrenamiento HIIT sin equipo, ideal para quemar grasa y mejorar resistencia.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 1.0, ""masa_muscular"": 0.3, ""definicion_muscular"": 0.8, ""fuerza"": 0.2,
                         ""resistencia_fisica"": 1.0, ""tonificacion"": 0.5, ""movilidad"": 0.2, ""postura"": 0.1,
@@ -108,7 +108,7 @@ public static class RoutineTemplateSeed
                     Comments = "Gimnasio, con énfasis en fuerza y masa muscular en la espalda y brazos.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.1, ""masa_muscular"": 1.0, ""definicion_muscular"": 0.7, ""fuerza"": 0.8,
                         ""resistencia_fisica"": 0.2, ""tonificacion"": 0.3, ""movilidad"": 0.1, ""postura"": 0.2,
@@ -130,7 +130,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina avanzada para fuerza y potencia, enfoque en movimientos explosivos, gimnasio y peso libre.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.0, ""masa_muscular"": 0.7, ""definicion_muscular"": 0.3, ""fuerza"": 1.0,
                         ""resistencia_fisica"": 0.3, ""tonificacion"": 0.2, ""movilidad"": 0.2, ""postura"": 0.3,
@@ -152,7 +152,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina para tonificar todo el cuerpo, énfasis en glúteos, piernas y abdomen.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.5, ""masa_muscular"": 0.6, ""definicion_muscular"": 0.7, ""fuerza"": 0.3,
                         ""resistencia_fisica"": 0.7, ""tonificacion"": 1.0, ""movilidad"": 0.2, ""postura"": 0.1,
@@ -174,7 +174,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina de movilidad articular y corrección postural, ideal para cualquier edad.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.0, ""masa_muscular"": 0.0, ""definicion_muscular"": 0.0, ""fuerza"": 0.0,
                         ""resistencia_fisica"": 0.2, ""tonificacion"": 0.0, ""movilidad"": 1.0, ""postura"": 1.0,
@@ -196,7 +196,7 @@ public static class RoutineTemplateSeed
                     Comments = "Entrenamiento HIIT de alta intensidad para quema extrema de grasa y mejora cardiovascular.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 1.0, ""masa_muscular"": 0.4, ""definicion_muscular"": 1.0, ""fuerza"": 0.2,
                         ""resistencia_fisica"": 1.0, ""tonificacion"": 0.5, ""movilidad"": 0.1, ""postura"": 0.0,
@@ -218,7 +218,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina con pesas y cardio para perder grasa y definir músculos.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.8, ""masa_muscular"": 0.6, ""definicion_muscular"": 1.0, ""fuerza"": 0.5,
                         ""resistencia_fisica"": 0.6, ""tonificacion"": 0.8, ""movilidad"": 0.1, ""postura"": 0.1,
@@ -240,7 +240,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina sin equipo para fortalecer y tonificar pecho, espalda, hombro y brazo.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.5, ""masa_muscular"": 0.4, ""definicion_muscular"": 0.6, ""fuerza"": 0.2,
                         ""resistencia_fisica"": 0.6, ""tonificacion"": 0.7, ""movilidad"": 0.2, ""postura"": 0.1,
@@ -262,7 +262,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina larga para mejorar resistencia muscular, ideal para deportistas.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.4, ""masa_muscular"": 0.7, ""definicion_muscular"": 0.6, ""fuerza"": 0.5,
                         ""resistencia_fisica"": 1.0, ""tonificacion"": 0.8, ""movilidad"": 0.2, ""postura"": 0.1,
@@ -284,7 +284,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina enfocada en mejorar la salud del corazón y la capacidad aeróbica.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.7, ""masa_muscular"": 0.2, ""definicion_muscular"": 0.4, ""fuerza"": 0.1,
                         ""resistencia_fisica"": 1.0, ""tonificacion"": 0.5, ""movilidad"": 0.3, ""postura"": 0.2,
@@ -306,7 +306,7 @@ public static class RoutineTemplateSeed
                     Comments = "Circuito funcional para mejorar agilidad, fuerza y movilidad, ideal para deportistas.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.6, ""masa_muscular"": 0.6, ""definicion_muscular"": 0.6, ""fuerza"": 0.7,
                         ""resistencia_fisica"": 0.7, ""tonificacion"": 0.5, ""movilidad"": 0.6, ""postura"": 0.4,
@@ -328,7 +328,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina para realizar en pareja, combinando fuerza, cardio y coordinación.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.5, ""masa_muscular"": 0.5, ""definicion_muscular"": 0.5, ""fuerza"": 0.3,
                         ""resistencia_fisica"": 0.6, ""tonificacion"": 0.5, ""movilidad"": 0.3, ""postura"": 0.2,
@@ -350,7 +350,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina específica para fortalecer glúteos y abdomen, con énfasis en tonificación y postura.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.4, ""masa_muscular"": 0.6, ""definicion_muscular"": 0.7, ""fuerza"": 0.2,
                         ""resistencia_fisica"": 0.5, ""tonificacion"": 0.9, ""movilidad"": 0.2, ""postura"": 0.3,
@@ -372,7 +372,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina de alto nivel para deportistas experimentados, fuerza, hipertrofia y potencia.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.2, ""masa_muscular"": 1.0, ""definicion_muscular"": 0.7, ""fuerza"": 1.0,
                         ""resistencia_fisica"": 0.5, ""tonificacion"": 0.6, ""movilidad"": 0.1, ""postura"": 0.1,
@@ -394,7 +394,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina funcional para todo tipo de usuarios, combina fuerza, cardio y movilidad.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.5, ""masa_muscular"": 0.5, ""definicion_muscular"": 0.5, ""fuerza"": 0.5,
                         ""resistencia_fisica"": 0.7, ""tonificacion"": 0.7, ""movilidad"": 0.7, ""postura"": 0.5,
@@ -416,7 +416,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina de abdomen y core sólo con peso corporal, adaptable para todos los niveles.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.3, ""masa_muscular"": 0.3, ""definicion_muscular"": 0.7, ""fuerza"": 0.3,
                         ""resistencia_fisica"": 0.6, ""tonificacion"": 0.7, ""movilidad"": 0.2, ""postura"": 0.2,
@@ -438,7 +438,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina de recuperación funcional y movilidad, adecuada para post-lesión o adultos mayores.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.0, ""masa_muscular"": 0.1, ""definicion_muscular"": 0.0, ""fuerza"": 0.1,
                         ""resistencia_fisica"": 0.4, ""tonificacion"": 0.2, ""movilidad"": 1.0, ""postura"": 1.0,
@@ -460,7 +460,7 @@ public static class RoutineTemplateSeed
                     Comments = "Entrenamiento funcional tipo HIIT, combina ejercicios multiarticulares para quema de grasa y mejora de agilidad.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.9, ""masa_muscular"": 0.3, ""definicion_muscular"": 0.8, ""fuerza"": 0.4,
                         ""resistencia_fisica"": 0.9, ""tonificacion"": 0.6, ""movilidad"": 0.6, ""postura"": 0.2,
@@ -482,7 +482,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina avanzada de calistenia, ideal para progresar en fuerza y control corporal.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.4, ""masa_muscular"": 0.7, ""definicion_muscular"": 0.8, ""fuerza"": 1.0,
                         ""resistencia_fisica"": 0.8, ""tonificacion"": 0.8, ""movilidad"": 0.4, ""postura"": 0.3,
@@ -504,7 +504,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina de fuerza muy básica, ideal para adultos mayores y principiantes.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.1, ""masa_muscular"": 0.2, ""definicion_muscular"": 0.0, ""fuerza"": 0.3,
                         ""resistencia_fisica"": 0.4, ""tonificacion"": 0.3, ""movilidad"": 0.7, ""postura"": 0.8,
@@ -526,7 +526,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina de gimnasio enfocada en fuerza y masa muscular de piernas.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.2, ""masa_muscular"": 0.8, ""definicion_muscular"": 0.5, ""fuerza"": 1.0,
                         ""resistencia_fisica"": 0.4, ""tonificacion"": 0.4, ""movilidad"": 0.2, ""postura"": 0.2,
@@ -548,7 +548,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina para fortalecer el core y mejorar la postura, adaptable a todos los niveles.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.2, ""masa_muscular"": 0.1, ""definicion_muscular"": 0.2, ""fuerza"": 0.2,
                         ""resistencia_fisica"": 0.3, ""tonificacion"": 0.5, ""movilidad"": 0.4, ""postura"": 1.0,
@@ -570,7 +570,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina de gimnasio combinando máquinas de cardio y ejercicios de resistencia muscular total.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.8, ""masa_muscular"": 0.2, ""definicion_muscular"": 0.7, ""fuerza"": 0.3,
                         ""resistencia_fisica"": 1.0, ""tonificacion"": 0.7, ""movilidad"": 0.1, ""postura"": 0.1,
@@ -592,7 +592,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina para gimnasio, enfoque en definición muscular y baja de porcentaje graso.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.8, ""masa_muscular"": 0.4, ""definicion_muscular"": 1.0, ""fuerza"": 0.4,
                         ""resistencia_fisica"": 0.4, ""tonificacion"": 0.8, ""movilidad"": 0.1, ""postura"": 0.1,
@@ -614,7 +614,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina para recuperación funcional, movilidad y fuerza básica. Ideal para post-lesión o personas con baja movilidad.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.0, ""masa_muscular"": 0.1, ""definicion_muscular"": 0.0, ""fuerza"": 0.1,
                         ""resistencia_fisica"": 0.2, ""tonificacion"": 0.2, ""movilidad"": 1.0, ""postura"": 0.7,
@@ -636,7 +636,7 @@ public static class RoutineTemplateSeed
                     Comments = "Entrenamiento en pareja, ideal para motivarse y trabajar fuerza, cardio y coordinación juntos.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.6, ""masa_muscular"": 0.5, ""definicion_muscular"": 0.5, ""fuerza"": 0.5,
                         ""resistencia_fisica"": 0.7, ""tonificacion"": 0.6, ""movilidad"": 0.5, ""postura"": 0.2,
@@ -658,7 +658,7 @@ public static class RoutineTemplateSeed
                     Comments = "Rutina funcional pensada para mejorar la resistencia y preparación para deportes de equipo.",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    IsDefault = false,
+                    IsDefault = true,
                     TagsObjectives = @"{
                         ""perdida_peso"": 0.4, ""masa_muscular"": 0.4, ""definicion_muscular"": 0.6, ""fuerza"": 0.6,
                         ""resistencia_fisica"": 1.0, ""tonificacion"": 0.4, ""movilidad"": 0.5, ""postura"": 0.2,
@@ -680,7 +680,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina súper corta de HIIT sin equipamiento, perfecta para quemar grasa en poco tiempo.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 1.0, ""masa_muscular"": 0.2, ""definicion_muscular"": 0.9, ""fuerza"": 0.2,
                     ""resistencia_fisica"": 1.0, ""tonificacion"": 0.4, ""movilidad"": 0.2, ""postura"": 0.0,
@@ -702,7 +702,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina avanzada para espalda, trapecio y fuerza total con pesas.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.2, ""masa_muscular"": 0.8, ""definicion_muscular"": 0.7, ""fuerza"": 1.0,
                     ""resistencia_fisica"": 0.3, ""tonificacion"": 0.3, ""movilidad"": 0.1, ""postura"": 0.3,
@@ -724,7 +724,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina para tonificar todo el cuerpo sin equipo, ideal para rutinas en casa y para todos los niveles.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.7, ""masa_muscular"": 0.4, ""definicion_muscular"": 0.7, ""fuerza"": 0.2,
                     ""resistencia_fisica"": 0.7, ""tonificacion"": 1.0, ""movilidad"": 0.3, ""postura"": 0.1,
@@ -746,7 +746,7 @@ public static class RoutineTemplateSeed
                 Comments = "Enfoque en fuerza explosiva y volumen para tren inferior, usando barras y mancuernas.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.3, ""masa_muscular"": 0.8, ""definicion_muscular"": 0.6, ""fuerza"": 0.9,
                     ""resistencia_fisica"": 0.5, ""tonificacion"": 0.4, ""movilidad"": 0.2, ""postura"": 0.2,
@@ -768,7 +768,7 @@ public static class RoutineTemplateSeed
                 Comments = "Entrenamiento corto para fortalecer abdomen y mejorar la flexibilidad general.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.2, ""masa_muscular"": 0.1, ""definicion_muscular"": 0.5, ""fuerza"": 0.1,
                     ""resistencia_fisica"": 0.3, ""tonificacion"": 0.6, ""movilidad"": 1.0, ""postura"": 0.7,
@@ -790,7 +790,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina de iniciación al gimnasio, ejercicios sencillos y seguros con equipamiento básico.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.4, ""masa_muscular"": 0.5, ""definicion_muscular"": 0.3, ""fuerza"": 0.4,
                     ""resistencia_fisica"": 0.4, ""tonificacion"": 0.8, ""movilidad"": 0.2, ""postura"": 0.2,
@@ -812,7 +812,7 @@ public static class RoutineTemplateSeed
                 Comments = "Entrenamiento funcional de potencia, salto y trabajo de agilidad, ideal para deportes de velocidad.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.3, ""masa_muscular"": 0.3, ""definicion_muscular"": 0.3, ""fuerza"": 0.7,
                     ""resistencia_fisica"": 0.5, ""tonificacion"": 0.3, ""movilidad"": 0.5, ""postura"": 0.1,
@@ -834,7 +834,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina suave tipo yoga y movilidad para reducir estrés y mejorar sueño.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.0, ""masa_muscular"": 0.0, ""definicion_muscular"": 0.0, ""fuerza"": 0.0,
                     ""resistencia_fisica"": 0.2, ""tonificacion"": 0.2, ""movilidad"": 0.9, ""postura"": 0.8,
@@ -856,7 +856,7 @@ public static class RoutineTemplateSeed
                 Comments = "Cuerpo completo para intermedios en gimnasio, ideal para progresar fuerza y musculatura.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.5, ""masa_muscular"": 0.8, ""definicion_muscular"": 0.6, ""fuerza"": 0.8,
                     ""resistencia_fisica"": 0.6, ""tonificacion"": 0.6, ""movilidad"": 0.3, ""postura"": 0.2,
@@ -878,7 +878,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina avanzada para secar y definir usando pesas, cardio y entrenamiento funcional.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.9, ""masa_muscular"": 0.5, ""definicion_muscular"": 1.0, ""fuerza"": 0.4,
                     ""resistencia_fisica"": 0.7, ""tonificacion"": 0.6, ""movilidad"": 0.2, ""postura"": 0.2,
@@ -900,7 +900,7 @@ public static class RoutineTemplateSeed
                 Comments = "Entrenamiento funcional de cuerpo completo con enfoque atlético, ideal para usuarios avanzados.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.6, ""masa_muscular"": 0.8, ""definicion_muscular"": 0.7, ""fuerza"": 0.9,
                     ""resistencia_fisica"": 0.8, ""tonificacion"": 0.7, ""movilidad"": 0.5, ""postura"": 0.3,
@@ -922,7 +922,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina sin equipamiento para fortalecer y tonificar piernas y glúteos, ideal para casa.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.7, ""masa_muscular"": 0.4, ""definicion_muscular"": 0.8, ""fuerza"": 0.3,
                     ""resistencia_fisica"": 0.8, ""tonificacion"": 0.9, ""movilidad"": 0.3, ""postura"": 0.2,
@@ -944,7 +944,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina especializada en fortalecer la zona lumbar, espalda y core para una mejor postura.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.2, ""masa_muscular"": 0.3, ""definicion_muscular"": 0.4, ""fuerza"": 0.4,
                     ""resistencia_fisica"": 0.4, ""tonificacion"": 0.7, ""movilidad"": 0.5, ""postura"": 1.0,
@@ -966,7 +966,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina de gimnasio enfocada en hipertrofia de pecho, espalda y brazos.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.2, ""masa_muscular"": 1.0, ""definicion_muscular"": 0.8, ""fuerza"": 0.7,
                     ""resistencia_fisica"": 0.3, ""tonificacion"": 0.4, ""movilidad"": 0.1, ""postura"": 0.1,
@@ -988,7 +988,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina enfocada en movilidad y relajación, perfecta para días de descanso o recuperación.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.0, ""masa_muscular"": 0.0, ""definicion_muscular"": 0.0, ""fuerza"": 0.0,
                     ""resistencia_fisica"": 0.2, ""tonificacion"": 0.2, ""movilidad"": 1.0, ""postura"": 0.8,
@@ -1010,7 +1010,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina avanzada de gimnasio para esculpir brazos y hombros con máxima definición.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.1, ""masa_muscular"": 0.9, ""definicion_muscular"": 1.0, ""fuerza"": 0.6,
                     ""resistencia_fisica"": 0.3, ""tonificacion"": 0.8, ""movilidad"": 0.1, ""postura"": 0.2,
@@ -1032,7 +1032,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina tipo bootcamp, ideal para preparar pruebas físicas o mejorar condición general.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.7, ""masa_muscular"": 0.5, ""definicion_muscular"": 0.6, ""fuerza"": 0.7,
                     ""resistencia_fisica"": 1.0, ""tonificacion"": 0.5, ""movilidad"": 0.3, ""postura"": 0.2,
@@ -1054,7 +1054,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina funcional para esculpir pierna y glúteos, ideal para combinar con otras rutinas.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.5, ""masa_muscular"": 0.6, ""definicion_muscular"": 0.8, ""fuerza"": 0.4,
                     ""resistencia_fisica"": 0.6, ""tonificacion"": 1.0, ""movilidad"": 0.4, ""postura"": 0.2,
@@ -1076,7 +1076,7 @@ public static class RoutineTemplateSeed
                 Comments = "Entrenamiento cardiovascular de larga duración, ideal para mejorar resistencia y perder peso.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 1.0, ""masa_muscular"": 0.2, ""definicion_muscular"": 0.8, ""fuerza"": 0.1,
                     ""resistencia_fisica"": 1.0, ""tonificacion"": 0.4, ""movilidad"": 0.2, ""postura"": 0.1,
@@ -1098,7 +1098,7 @@ public static class RoutineTemplateSeed
                 Comments = "Rutina de fuerza máxima y potencia, ideal para usuarios experimentados con equipamiento completo.",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                IsDefault = false,
+                IsDefault = true,
                 TagsObjectives = @"{
                     ""perdida_peso"": 0.3, ""masa_muscular"": 1.0, ""definicion_muscular"": 0.8, ""fuerza"": 1.0,
                     ""resistencia_fisica"": 0.4, ""tonificacion"": 0.7, ""movilidad"": 0.2, ""postura"": 0.2,

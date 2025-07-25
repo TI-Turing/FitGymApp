@@ -22,7 +22,7 @@ namespace Gymmetry.Domain.DTO.Gym.Request
         public Guid? SubscriptionPlanId { get; set; }
         public bool IsVerified { get; set; }
         public string? Tags { get; set; }
-        public Guid? OwnerUserId { get; set; }
+        public Guid? Owner_UserId { get; set; }
         public string? BrandColor { get; set; }
         public int? MaxBranchesAllowed { get; set; }
         public string? QrImageUrl { get; set; }

@@ -8,6 +8,7 @@ using Gymmetry.Domain.DTO.FitUser.Request;
 using Gymmetry.Domain.DTO.Gym.Request;
 using Gymmetry.Domain.DTO.GymPlanSelected.Request;
 using Gymmetry.Domain.DTO.Notification.Request;
+using Gymmetry.Domain.DTO.RoutineDay.Request;
 using Gymmetry.Domain.DTO.RoutineExercise.Request;
 using Gymmetry.Domain.Models;
 
@@ -38,6 +39,7 @@ public class AutoMapperProfile : Profile
         CreateMap<AddGymRequest, Gym>();
         CreateMap<UpdateGymRequest, Gym>();
         CreateMap<AddGymPlanSelectedRequest, GymPlanSelected>();
+        CreateMap<AddRoutineDayRequest, RoutineDay>();
 
     }
 }

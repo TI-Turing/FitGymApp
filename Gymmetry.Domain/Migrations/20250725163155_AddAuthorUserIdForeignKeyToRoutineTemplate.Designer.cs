@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gymmetry.Domain.Migrations
 {
     [DbContext(typeof(GymmetryContext))]
-    [Migration("20250724230706_AddExerciseToRoutineDay")]
-    partial class AddExerciseToRoutineDay
+    [Migration("20250725163155_AddAuthorUserIdForeignKeyToRoutineTemplate")]
+    partial class AddAuthorUserIdForeignKeyToRoutineTemplate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -763,7 +763,7 @@ namespace Gymmetry.Domain.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("NIT");
 
-                    b.Property<Guid?>("OwnerUserId")
+                    b.Property<Guid?>("Owner_UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PhoneNumber")
@@ -794,7 +794,7 @@ namespace Gymmetry.Domain.Migrations
 
                     b.HasIndex("GymTypeId");
 
-                    b.HasIndex("OwnerUserId");
+                    b.HasIndex("Owner_UserId");
 
                     b.ToTable("Gym", (string)null);
                 });
@@ -1965,6 +1965,12 @@ namespace Gymmetry.Domain.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AuthorUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("Author_UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Comments")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -2020,6 +2026,10 @@ namespace Gymmetry.Domain.Migrations
                         .HasColumnType("datetime");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorUserId");
+
+                    b.HasIndex(new[] { "Author_UserId" }, "IX_FK_AuthorUserRoutineTemplate");
 
                     b.HasIndex(new[] { "GymId" }, "IX_FK_GymRoutine");
 
@@ -2598,7 +2608,7 @@ namespace Gymmetry.Domain.Migrations
 
                     b.HasOne("Gymmetry.Domain.Models.User", null)
                         .WithMany()
-                        .HasForeignKey("OwnerUserId")
+                        .HasForeignKey("Owner_UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("FK_GymOwnerUser");
 
@@ -2915,6 +2925,16 @@ namespace Gymmetry.Domain.Migrations
 
             modelBuilder.Entity("Gymmetry.Domain.Models.RoutineTemplate", b =>
                 {
+                    b.HasOne("Gymmetry.Domain.Models.User", "AuthorUser")
+                        .WithMany()
+                        .HasForeignKey("AuthorUserId");
+
+                    b.HasOne("Gymmetry.Domain.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("Author_UserId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_AuthorUserRoutineTemplate");
+
                     b.HasOne("Gymmetry.Domain.Models.Gym", "Gym")
                         .WithMany("RoutineTemplates")
                         .HasForeignKey("GymId")
@@ -2929,6 +2949,8 @@ namespace Gymmetry.Domain.Migrations
                         .WithMany("RoutineTemplates")
                         .HasForeignKey("RoutineUserRoutineId")
                         .HasConstraintName("FK_RoutineUser");
+
+                    b.Navigation("AuthorUser");
 
                     b.Navigation("Gym");
 

@@ -460,10 +460,10 @@ public partial class GymmetryContext : DbContext
                 .HasColumnName("NIT");
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
-            // Nueva relación: OwnerUserId como FK a User
+            // Nueva relación: Owner_UserId como FK a User
             entity.HasOne<User>()
                 .WithMany()
-                .HasForeignKey(g => g.OwnerUserId)
+                .HasForeignKey(g => g.Owner_UserId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_GymOwnerUser");
         });
@@ -949,6 +949,8 @@ public partial class GymmetryContext : DbContext
             entity.HasIndex(e => e.RoutineAssignedId, "IX_FK_RoutineAssignedRoutine");
 
             entity.HasIndex(e => e.RoutineUserRoutineId, "IX_FK_RoutineUser");
+            // Nueva relación: Author_UserId como FK a User
+            entity.HasIndex(e => e.Author_UserId, "IX_FK_AuthorUserRoutineTemplate");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Comments).HasMaxLength(500);
@@ -959,6 +961,7 @@ public partial class GymmetryContext : DbContext
             entity.Property(e => e.RoutineUserRoutineId).HasColumnName("RoutineUser_RoutineId").IsRequired(false);
             entity.Property(e => e.GymId).IsRequired(false);
             entity.Property(e => e.RoutineAssignedId).IsRequired(false);
+            entity.Property(e => e.Author_UserId).IsRequired(false);
             entity.Property(e => e.TagsObjectives).HasColumnType("nvarchar(max)");
             entity.Property(e => e.TagsMachines).HasColumnType("nvarchar(max)");
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
@@ -977,6 +980,13 @@ public partial class GymmetryContext : DbContext
                 .HasForeignKey(d => d.RoutineUserRoutineId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_RoutineUser");
+
+            // Relación Author_UserId -> User.Id
+            entity.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(d => d.Author_UserId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_AuthorUserRoutineTemplate");
         });
 
         modelBuilder.Entity<Schedule>(entity =>

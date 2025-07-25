@@ -39,6 +39,9 @@ public partial class RoutineTemplate
 
     public bool IsCalisthenic { get; set; }
 
+    public Guid? Author_UserId { get; set; }
+    public virtual User? AuthorUser { get; set; }
+
     public virtual Gym Gym { get; set; } = null!;
 
     public virtual RoutineAssigned RoutineAssigned { get; set; } = null!;
