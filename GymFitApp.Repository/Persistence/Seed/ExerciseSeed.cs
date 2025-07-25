@@ -1025,6 +1025,16 @@ public static class ExerciseSeed
                 IsActive = true,
                 CategoryExerciseId = Guid.Parse("BC9D888F-4612-4BBB-ABEC-FF1EE76D129A"), // Ejercicio principal (compuesto)
                 TagsObjectives = "{\"pierna\": 0.3, \"gluteo\": 0.4, \"espalda\": 0.2, \"core\": 0.1, \"pecho\": 0.0, \"hombro\": 0.0, \"brazo\": 0.0, \"abdomen\": 0.0, \"trapecio\": 0.0}"
+            },
+            new Exercise
+            {
+    
+                Name = "Jump rope rápido",
+                RequiresEquipment = true,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true,
+                CategoryExerciseId = Guid.Parse("D9507CD0-1EDA-4D4D-A408-13FF76C14D88"), // Cardio
+                TagsObjectives = "{\"resistencia_fisica\": 0.3, \"salud_cardiovascular\": 0.4, \"pierna\": 0.2, \"coordinacion\": 0.1, \"gluteo\": 0.0, \"abdomen\": 0.0, \"brazo\": 0.0, \"hombro\": 0.0, \"core\": 0.0, \"espalda\": 0.0, \"trapecio\": 0.0, \"pecho\": 0.0}"
             }
 
         };
