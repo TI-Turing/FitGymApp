@@ -1,10 +1,10 @@
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Application.Services.Payments;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Domain.DTO.User.Request;
-using FitGymApp.Domain.DTO.Payment.Response;
-using FitGymApp.Domain.Enums;
-using FitGymApp.Utils;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Application.Services.Payments;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Domain.DTO.User.Request;
+using Gymmetry.Domain.DTO.Payment.Response;
+using Gymmetry.Domain.Enums;
+using Gymmetry.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -18,7 +18,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FitGymApp.Functions.UserFunctions
+namespace Gymmetry.Functions.UserFunctions
 {
     public class PaymentUserPlanFunction
     {

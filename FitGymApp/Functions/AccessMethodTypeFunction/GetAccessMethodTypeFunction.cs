@@ -1,7 +1,7 @@
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Domain.Models;
-using FitGymApp.Utils;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Domain.Models;
+using Gymmetry.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace FitGymApp.Functions.AccessMethodTypeFunction;
+namespace Gymmetry.Functions.AccessMethodTypeFunction;
 
 public class GetAccessMethodTypeFunction
 {

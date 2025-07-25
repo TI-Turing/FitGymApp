@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 
-namespace FitGymApp.Utils
+namespace Gymmetry.Utils
 {
     public static class HttpRequestDataConverter
     {

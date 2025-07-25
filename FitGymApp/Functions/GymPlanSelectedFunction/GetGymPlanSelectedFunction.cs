@@ -4,18 +4,18 @@ using System.Net;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Domain.Models;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Linq;
-using FitGymApp.Utils;
+using Gymmetry.Utils;
 
-namespace FitGymApp.Functions.GymPlanSelectedFunction
+namespace Gymmetry.Functions.GymPlanSelectedFunction
 {
     public class GetGymPlanSelectedFunction
     {

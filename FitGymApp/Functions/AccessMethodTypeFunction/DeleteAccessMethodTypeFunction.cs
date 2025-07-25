@@ -1,13 +1,13 @@
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Utils;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace FitGymApp.Functions.AccessMethodTypeFunction;
+namespace Gymmetry.Functions.AccessMethodTypeFunction;
 
 public class DeleteAccessMethodTypeFunction
 {

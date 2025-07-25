@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
 
-namespace FitGymApp.Utils
+namespace Gymmetry.Utils
 {
     public class MultipartSectionData
     {

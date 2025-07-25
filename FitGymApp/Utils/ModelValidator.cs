@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using FitGymApp.Domain.DTO;
+using Gymmetry.Domain.DTO;
 
-namespace FitGymApp.Utils
+namespace Gymmetry.Utils
 {
     public static class ModelValidator
     {

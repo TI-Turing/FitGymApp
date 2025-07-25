@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using FitGymApp.Domain.DTO.LogUninstall.Request;
+using Gymmetry.Domain.DTO.LogUninstall.Request;
 using Newtonsoft.Json;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Application.Services.Interfaces;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using FitGymApp.Utils;
+using Gymmetry.Utils;
 
-namespace FitGymApp.Functions.LogUninstallFunction;
+namespace Gymmetry.Functions.LogUninstallFunction;
 
 public class AddLogUninstallFunction
 {

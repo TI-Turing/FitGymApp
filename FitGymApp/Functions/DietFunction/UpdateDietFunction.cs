@@ -1,5 +1,5 @@
-using FitGymApp.Domain.DTO.Diet.Request;
-using FitGymApp.Domain.DTO;
+using Gymmetry.Domain.DTO.Diet.Request;
+using Gymmetry.Domain.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -10,11 +10,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Utils;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Utils;
 using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
-namespace FitGymApp.Functions.DietFunction;
+namespace Gymmetry.Functions.DietFunction;
 
 public class UpdateDietFunction
 {

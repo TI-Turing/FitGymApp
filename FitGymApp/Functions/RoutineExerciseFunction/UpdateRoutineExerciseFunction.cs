@@ -1,8 +1,8 @@
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Domain.DTO.RoutineExercise.Request;
-using FitGymApp.Domain.Models;
-using FitGymApp.Utils;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Domain.DTO.RoutineExercise.Request;
+using Gymmetry.Domain.Models;
+using Gymmetry.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
-namespace FitGymApp.Functions.RoutineExerciseFunction;
+namespace Gymmetry.Functions.RoutineExerciseFunction;
 
 public class UpdateRoutineExerciseFunction
 {

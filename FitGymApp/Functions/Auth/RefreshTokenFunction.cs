@@ -1,8 +1,8 @@
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.DTO.Auth.Request;
-using FitGymApp.Domain.DTO.Auth.Response;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Utils;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO.Auth.Request;
+using Gymmetry.Domain.DTO.Auth.Response;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace FitGymApp.Functions.Auth
+namespace Gymmetry.Functions.Auth
 {
     public class Auth_RefreshTokenFunction
     {

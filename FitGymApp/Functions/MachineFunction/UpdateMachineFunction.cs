@@ -1,21 +1,21 @@
-using FitGymApp.Domain.DTO.Machine.Request;
-using FitGymApp.Domain.DTO;
+using Gymmetry.Domain.DTO.Machine.Request;
+using Gymmetry.Domain.DTO;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using FitGymApp.Application.Services.Interfaces;
+using Gymmetry.Application.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using FitGymApp.Utils;
+using Gymmetry.Utils;
 using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
-namespace FitGymApp.Functions.MachineFunction;
+namespace Gymmetry.Functions.MachineFunction;
 
 public class UpdateMachineFunction
 {

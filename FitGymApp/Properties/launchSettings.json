@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "FitGymApp": {
+    "Gymmetry": {
       "commandName": "Project",
       "commandLineArgs": "--port 7160",
       "launchBrowser": false

@@ -1,7 +1,7 @@
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Domain.DTO.DailyHistory.Request;
-using FitGymApp.Utils;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Domain.DTO.DailyHistory.Request;
+using Gymmetry.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -15,7 +15,7 @@ using System.Net;
 using System.Threading.Tasks;
 using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
-namespace FitGymApp.Functions.DailyHistoryFunction;
+namespace Gymmetry.Functions.DailyHistoryFunction;
 
 public class UpdateDailyHistoryFunction
 {

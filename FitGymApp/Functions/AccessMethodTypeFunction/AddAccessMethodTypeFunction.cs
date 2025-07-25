@@ -1,8 +1,8 @@
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Domain.DTO.AccessMethodType.Request;
-using FitGymApp.Domain.Models;
-using FitGymApp.Utils;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Domain.DTO.AccessMethodType.Request;
+using Gymmetry.Domain.Models;
+using Gymmetry.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace FitGymApp.Functions.AccessMethodTypeFunction;
+namespace Gymmetry.Functions.AccessMethodTypeFunction;
 
 public class AddAccessMethodTypeFunction
 {

@@ -3,13 +3,13 @@ using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.DTO;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
 using System;
 using System.Threading.Tasks;
-using FitGymApp.Utils;
+using Gymmetry.Utils;
 
-namespace FitGymApp.Functions.GymTypeFunction
+namespace Gymmetry.Functions.GymTypeFunction
 {
     public class DeleteGymTypeFunction
     {

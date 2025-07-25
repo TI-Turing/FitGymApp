@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using FitGymApp.Domain.DTO.MachineCategory.Request;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO.MachineCategory.Request;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Application.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,10 +12,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using FitGymApp.Utils;
+using Gymmetry.Utils;
 using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
-namespace FitGymApp.Functions.MachineCategoryFunction;
+namespace Gymmetry.Functions.MachineCategoryFunction;
 
 public class UpdateMachineCategoryFunction
 {

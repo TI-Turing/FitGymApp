@@ -4,12 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using FitGymApp.Domain.Models;
-using FitGymApp.Application.Services;
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Repository.Services;
-using FitGymApp.Repository.Services.Interfaces;
-using GymFitApp.Repository.Persistence.Seed;
+using Gymmetry.Domain.Models;
+using Gymmetry.Application.Services;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Repository.Services;
+using Gymmetry.Repository.Services.Interfaces;
+using Gymmetry.Repository.Persistence.Seed;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
@@ -23,10 +23,10 @@ builder.Services
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection")
     ?? configuration["ConnectionStrings:DefaultConnection"]
-    ?? configuration["ConnectionStrings:FitGymApp"];
+    ?? configuration["ConnectionStrings:Gymmetry"];
 
 // Registrar DbContext
-builder.Services.AddDbContext<FitGymAppContext>(options =>
+builder.Services.AddDbContext<GymmetryContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddAutoMapper(cfg => {
@@ -126,13 +126,13 @@ builder.Services.AddScoped<ISubModuleService, SubModuleService>();
 builder.Services.AddScoped<IUninstallOptionService, UninstallOptionService>();
 builder.Services.AddScoped<IUserTypeService, UserTypeService>();
 builder.Services.AddScoped<IVerificationTypeService, VerificationTypeService>();
-builder.Services.AddHttpClient<FitGymApp.Application.Services.ConfigAutoService>();
+builder.Services.AddHttpClient<Gymmetry.Application.Services.ConfigAutoService>();
 builder.Services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(builder.Configuration);
 
 // Aplicar migraciones y ejecutar seeds (opcional, solo en desarrollo o si es seguro)
 using (var scope = builder.Services.BuildServiceProvider().CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<FitGymAppContext>();
+    var db = scope.ServiceProvider.GetRequiredService<GymmetryContext>();
     db.Database.Migrate(); // Aplica migraciones pendientes
     DbInitializer.SeedAsync(db).GetAwaiter().GetResult(); // Llamar al inicializador de seeds de repository
 

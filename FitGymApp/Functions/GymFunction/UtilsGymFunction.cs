@@ -1,8 +1,8 @@
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Domain.DTO.Gym.Request;
-using FitGymApp.Domain.DTO.Gym.Response;
-using FitGymApp.Utils;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Domain.DTO.Gym.Request;
+using Gymmetry.Domain.DTO.Gym.Response;
+using Gymmetry.Utils;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -14,7 +14,7 @@ using System.Net;
 using System.Threading.Tasks;
 using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
-namespace FitGymApp.Functions.GymFunction;
+namespace Gymmetry.Functions.GymFunction;
 
 public class UtilsGymFunction
 {

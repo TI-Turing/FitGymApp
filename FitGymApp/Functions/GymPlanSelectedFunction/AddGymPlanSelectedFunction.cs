@@ -2,18 +2,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using FitGymApp.Domain.DTO.GymPlanSelected.Request;
+using Gymmetry.Domain.DTO.GymPlanSelected.Request;
 using Newtonsoft.Json;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.Models;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.Models;
 using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using FitGymApp.Utils;
+using Gymmetry.Utils;
 
-namespace FitGymApp.Functions.GymPlanSelectedFunction;
+namespace Gymmetry.Functions.GymPlanSelectedFunction;
 
 public class AddGymPlanSelectedFunction
 {

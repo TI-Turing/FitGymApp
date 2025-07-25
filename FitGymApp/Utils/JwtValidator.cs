@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker.Http;
 using System;
-using FitGymApp.Application.Services;
+using Gymmetry.Application.Services;
 
-namespace FitGymApp.Utils
+namespace Gymmetry.Utils
 {
     public static class JwtValidator
     {

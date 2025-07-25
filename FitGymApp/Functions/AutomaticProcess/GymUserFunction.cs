@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using FitGymApp.Application.Services.Interfaces;
+using Gymmetry.Application.Services.Interfaces;
 
-namespace FitGymApp.Functions.AutomaticProcess
+namespace Gymmetry.Functions.AutomaticProcess
 {
     public class GymUserFunction
     {

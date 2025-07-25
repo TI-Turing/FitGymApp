@@ -1,8 +1,8 @@
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Domain.DTO.Auth.Request;
-using FitGymApp.Domain.DTO.Auth.Response;
-using FitGymApp.Utils;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Domain.DTO.Auth.Request;
+using Gymmetry.Domain.DTO.Auth.Response;
+using Gymmetry.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -12,7 +12,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace FitGymApp.Functions.Auth
+namespace Gymmetry.Functions.Auth
 {
     public class Auth_LoginFunction
     {

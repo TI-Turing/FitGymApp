@@ -1,18 +1,18 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using FitGymApp.Domain.DTO.GymType.Request;
+using Gymmetry.Domain.DTO.GymType.Request;
 using Newtonsoft.Json;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Application.Services.Interfaces;
 using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using FitGymApp.Utils;
+using Gymmetry.Utils;
 using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
-namespace FitGymApp.Functions.GymTypeFunction;
+namespace Gymmetry.Functions.GymTypeFunction;
 
 public class AddGymTypeFunction
 {

@@ -2,10 +2,10 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using FitGymApp.Application.Services.Interfaces;
+using Gymmetry.Application.Services.Interfaces;
 using Microsoft.Azure.Functions.Worker.Extensions.Timer;
 
-namespace FitGymApp.Functions.ConfigFunction
+namespace Gymmetry.Functions.ConfigFunction
 {
     public class UpdateUsdPriceTimerFunction
     {

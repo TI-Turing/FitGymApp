@@ -1,10 +1,10 @@
-using FitGymApp.Application.Services;
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Domain.DTO.User.Request;
-using FitGymApp.Domain.DTO.User.Response;
-using FitGymApp.Domain.Models;
-using FitGymApp.Utils;
+using Gymmetry.Application.Services;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Domain.DTO.User.Request;
+using Gymmetry.Domain.DTO.User.Response;
+using Gymmetry.Domain.Models;
+using Gymmetry.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -20,7 +20,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace FitGymApp.Functions.UserFunctions;
+namespace Gymmetry.Functions.UserFunctions;
 
 public class AddUserFunction
 {

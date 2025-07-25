@@ -2,21 +2,21 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using FitGymApp.Domain.DTO.Permission.Request;
+using Gymmetry.Domain.DTO.Permission.Request;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.Models;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Net;
-using FitGymApp.Utils;
+using Gymmetry.Utils;
 
-namespace FitGymApp.Functions.PermissionFunction;
+namespace Gymmetry.Functions.PermissionFunction;
 
 public class AddPermissionFunction
 {

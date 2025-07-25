@@ -1,7 +1,7 @@
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Domain.DTO.User.Request;
-using FitGymApp.Utils;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Domain.DTO.User.Request;
+using Gymmetry.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -11,7 +11,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace FitGymApp.Functions.UserFunctions;
+namespace Gymmetry.Functions.UserFunctions;
 
 public class PasswordUserFunction
 {

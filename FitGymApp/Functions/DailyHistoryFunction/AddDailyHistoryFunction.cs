@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using FitGymApp.Domain.DTO.DailyHistory.Request;
+using Gymmetry.Domain.DTO.DailyHistory.Request;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using FitGymApp.Domain.DTO;
-using FitGymApp.Application.Services.Interfaces;
-using FitGymApp.Domain.Models;
+using Gymmetry.Domain.DTO;
+using Gymmetry.Application.Services.Interfaces;
+using Gymmetry.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
-using FitGymApp.Utils;
+using Gymmetry.Utils;
 
-namespace FitGymApp.Functions.DailyHistoryFunction;
+namespace Gymmetry.Functions.DailyHistoryFunction;
 
 public class AddDailyHistoryFunction
 {
