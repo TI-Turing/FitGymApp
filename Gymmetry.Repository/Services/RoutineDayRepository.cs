@@ -30,6 +30,32 @@ namespace Gymmetry.Repository.Services
             return routineDay;
         }
 
+        public async Task<IEnumerable<Guid>> CreateRoutineDaysAsync(IEnumerable<RoutineDay> routineDays)
+        {
+            if (routineDays == null) throw new ArgumentNullException(nameof(routineDays));
+            var ids = new List<Guid>();
+            await using var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false);
+            try
+            {
+                foreach (var routineDay in routineDays)
+                {
+                    routineDay.Id = Guid.NewGuid();
+                    routineDay.CreatedAt = DateTime.UtcNow;
+                    routineDay.IsActive = true;
+                    _context.RoutineDays.Add(routineDay);
+                    ids.Add(routineDay.Id);
+                }
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                await transaction.CommitAsync().ConfigureAwait(false);
+                return ids;
+            }
+            catch
+            {
+                await transaction.RollbackAsync().ConfigureAwait(false);
+                throw;
+            }
+        }
+
         public async Task<RoutineDay?> GetRoutineDayByIdAsync(Guid id)
         {
             return await _context.RoutineDays
@@ -123,32 +149,6 @@ namespace Gymmetry.Repository.Services
                             MachineName = m != null ? m.Name : null
                         };
             return await query.ToListAsync().ConfigureAwait(false);
-        }
-
-        public async Task<IEnumerable<Guid>> CreateRoutineDaysAsync(IEnumerable<RoutineDay> routineDays)
-        {
-            if (routineDays == null) throw new ArgumentNullException(nameof(routineDays));
-            var ids = new List<Guid>();
-            using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            {
-                foreach (var routineDay in routineDays)
-                {
-                    routineDay.Id = Guid.NewGuid();
-                    routineDay.CreatedAt = DateTime.UtcNow;
-                    routineDay.IsActive = true;
-                    _context.RoutineDays.Add(routineDay);
-                    ids.Add(routineDay.Id);
-                }
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-                await transaction.CommitAsync();
-                return ids;
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
         }
     }
 }

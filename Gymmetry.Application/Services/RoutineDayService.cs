@@ -9,7 +9,6 @@ using Gymmetry.Domain.DTO.RoutineDay.Request;
 using Gymmetry.Domain.Models;
 using Gymmetry.Domain.ViewModels;
 using Gymmetry.Repository.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Gymmetry.Application.Services
@@ -48,8 +47,7 @@ namespace Gymmetry.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while creating a RoutineDay.");
-                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
+                await LogErrorAsync(ex, "Error técnico al crear la RoutineDay.");
                 return ApplicationResponse<RoutineDay>.ErrorResponse("Error técnico al crear la RoutineDay.", "TechnicalError");
             }
         }
@@ -70,8 +68,7 @@ namespace Gymmetry.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while retrieving RoutineDay with RoutineDayId: {RoutineDayId}", id);
-                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
+                await LogErrorAsync(ex, "Error técnico al obtener la RoutineDay.");
                 return ApplicationResponse<RoutineDay>.ErrorResponse("Error técnico al obtener la RoutineDay.", "TechnicalError");
             }
         }
@@ -87,8 +84,7 @@ namespace Gymmetry.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while retrieving all routineDays.");
-                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
+                await LogErrorAsync(ex, "Error técnico al obtener las routineDays.");
                 return ApplicationResponse<IEnumerable<RoutineDay>>.ErrorResponse("Error técnico al obtener las routineDays.", "TechnicalError");
             }
         }
@@ -118,8 +114,7 @@ namespace Gymmetry.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while updating RoutineDay with RoutineDayId: {RoutineDayId}", request.Id);
-                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
+                await LogErrorAsync(ex, "Error técnico al actualizar la RoutineDay.");
                 return ApplicationResponse<bool>.ErrorResponse("Error técnico al actualizar la RoutineDay.", "TechnicalError");
             }
         }
@@ -140,8 +135,7 @@ namespace Gymmetry.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while deleting RoutineDay with RoutineDayId: {RoutineDayId}", id);
-                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
+                await LogErrorAsync(ex, "Error técnico al eliminar la RoutineDay.");
                 return ApplicationResponse<bool>.ErrorResponse("Error técnico al eliminar la RoutineDay.", "TechnicalError");
             }
         }
@@ -157,8 +151,7 @@ namespace Gymmetry.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while finding routineDays with filters: {Filters}", filters);
-                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
+                await LogErrorAsync(ex, "Error técnico al buscar las routineDays.");
                 return ApplicationResponse<IEnumerable<RoutineDay>>.ErrorResponse("Error técnico al buscar las routineDays.", "TechnicalError");
             }
         }
@@ -174,8 +167,7 @@ namespace Gymmetry.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while retrieving routine day details.");
-                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
+                await LogErrorAsync(ex, "Error técnico al obtener los detalles de RoutineDay.");
                 return ApplicationResponse<IEnumerable<RoutineDayDetailViewModel>>.ErrorResponse("Error técnico al obtener los detalles de RoutineDay.", "TechnicalError");
             }
         }
@@ -192,10 +184,15 @@ namespace Gymmetry.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while creating multiple RoutineDays.");
-                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
+                await LogErrorAsync(ex, "Error técnico al crear las RoutineDays.");
                 return ApplicationResponse<IEnumerable<Guid>>.ErrorResponse("Error técnico al crear las RoutineDays.", "TechnicalError");
             }
+        }
+
+        private async Task LogErrorAsync(Exception ex, string message)
+        {
+            _logger.LogError(ex, message);
+            await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
         }
     }
 }
