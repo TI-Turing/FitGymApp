@@ -28,6 +28,7 @@ namespace Gymmetry.Application.Services
         private readonly IRoutineTemplateService _routineTemplateService;
         private readonly IUserService _userService;
         private readonly ILogger<GymService> _logger;
+        private readonly IEmailService _emailService;
 
         public GymService(
             IGymRepository gymRepository,
@@ -39,7 +40,8 @@ namespace Gymmetry.Application.Services
             IBranchService branchService,
             IRoutineTemplateService routineTemplateService,
             IUserService userService,
-            ILogger<GymService> logger)
+            ILogger<GymService> logger,
+            IEmailService emailService)
         {
             _gymRepository = gymRepository;
             _logChangeService = logChangeService;
@@ -51,6 +53,7 @@ namespace Gymmetry.Application.Services
             _routineTemplateService = routineTemplateService;
             _userService = userService;
             _logger = logger;
+            _emailService = emailService;
         }
 
         public async Task<ApplicationResponse<Gym>> CreateGymAsync(AddGymRequest request)
@@ -61,6 +64,17 @@ namespace Gymmetry.Application.Services
                 var entity = _mapper.Map<Gym>(request);
                 var created = await _gymRepository.CreateGymAsync(entity).ConfigureAwait(false);
                 _logger.LogInformation("Gym created successfully with ID: {GymId}", created.Id);
+
+                // Enviar correo de notificación de creación de gimnasio
+                if (!string.IsNullOrEmpty(created.Email))
+                {
+                    _ = _emailService.SendEmailAsync(
+                        created.Email,
+                        "¡Tu gimnasio ha sido creado!",
+                        $"<h1>¡Felicidades!</h1><p>Tu gimnasio '{created.Name}' ha sido registrado exitosamente en Gymmetry.</p>"
+                    );
+                }
+
                 return new ApplicationResponse<Gym>
                 {
                     Success = true,
@@ -75,7 +89,7 @@ namespace Gymmetry.Application.Services
                 return new ApplicationResponse<Gym>
                 {
                     Success = false,
-                    Message = "Error técnico al crear el gimnasio.",
+                    Message = "Error t?cnico al crear el gimnasio.",
                     ErrorCode = "TechnicalError"
                 };
             }

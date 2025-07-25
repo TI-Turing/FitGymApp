@@ -21,6 +21,7 @@ namespace Gymmetry.Application.Services
         private readonly ILogger<UserService> _logger;
         private readonly IGymRepository _gymRepository;
         private readonly IVerificationTypeRepository _verificationTypeRepository;
+        private readonly IEmailService _emailService;
 
         public UserService(
             IUserRepository userRepository,
@@ -29,7 +30,8 @@ namespace Gymmetry.Application.Services
             ILogErrorService logErrorService,
             ILogger<UserService> logger,
             IGymRepository gymRepository,
-            IVerificationTypeRepository verificationTypeRepository)
+            IVerificationTypeRepository verificationTypeRepository,
+            IEmailService emailService)
         {
             _userRepository = userRepository;
             _passwordService = passwordService;
@@ -38,6 +40,7 @@ namespace Gymmetry.Application.Services
             _logger = logger;
             _gymRepository = gymRepository;
             _verificationTypeRepository = verificationTypeRepository;
+            _emailService = emailService;
         }
 
         public async Task<ApplicationResponse<User>> CreateUserAsync(AddRequest request)
@@ -91,6 +94,20 @@ namespace Gymmetry.Application.Services
                 };
                 var created = await _userRepository.CreateUserAsync(user).ConfigureAwait(false);
                 _logger.LogInformation("User created successfully with ID: {UserId}", created.Id);
+
+                // Enviar correo de bienvenida
+                _ = _emailService.SendEmailAsync(
+                    created.Email,
+                    "¡Bienvenido a Gymmetry!",
+                    $"<h1>Bienvenido, {created.Name ?? created.Email}!</h1><p>Gracias por registrarte en Gymmetry.</p>"
+                );
+                // Enviar correo de verificación
+                _ = _emailService.SendEmailAsync(
+                    created.Email,
+                    "Verifica tu correo electrónico",
+                    $"<p>Por favor verifica tu correo haciendo clic en el siguiente enlace: <a href='{{verification_link}}'>Verificar</a></p>"
+                );
+
                 return new ApplicationResponse<User>
                 {
                     Success = true,
