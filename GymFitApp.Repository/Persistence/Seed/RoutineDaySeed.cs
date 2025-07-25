@@ -1264,6 +1264,578 @@ namespace FitGymApp.Infrastructure.Persistence.Seeds
                 new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Estiramiento largo", Sets = 1, Repetitions = "10m", Notes = "Postura del niño, cadena posterior, aductores y dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid20, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
             });
 
+            // 21. Fullbody Express Avanzado
+            var rid21 = Guid.Parse("A1111111-0000-4000-8000-000000000021");
+
+            // Día 1: Fullbody HIIT
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Calentamiento", Sets = 1, Repetitions = "7m", Notes = "Jumping jacks y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Jumping jacks").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Burpees", Sets = 5, Repetitions = "40s ON / 20s OFF", Notes = "HIIT", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Burpees").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Thrusters", Sets = 4, Repetitions = "12", Notes = "Fullbody", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Thrusters").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Clean & Press", Sets = 4, Repetitions = "10", Notes = "Potencia", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Clean & Press").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Plancha abdominal", Sets = 4, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Estiramiento integral", Sets = 1, Repetitions = "6m", Notes = "Postura del niño y cadena posterior", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 2: Tren superior avanzado
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Rotación de brazos y movilidad escapular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Rotación de brazos").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Press militar con barra", Sets = 4, Repetitions = "12", Notes = "Fuerza", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Press militar con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Remo con barra", Sets = 4, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Remo con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Fondos en paralelas", Sets = 4, Repetitions = "12", Notes = "Tríceps", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Fondos en paralelas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Dominadas", Sets = 4, Repetitions = "10", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Dominadas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Estiramiento de hombros cruzado", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de hombros cruzado").Id }
+            });
+
+            // Día 3: Tren inferior y core
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Calentamiento", Sets = 1, Repetitions = "7m", Notes = "Jump rope lento y movilidad cadera", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Sentadilla frontal con barra", Sets = 4, Repetitions = "12", Notes = "Fuerza", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Sentadilla frontal con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Peso muerto rumano con mancuernas", Sets = 4, Repetitions = "15", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Peso muerto rumano con mancuernas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Abducción de cadera en máquina", Sets = 4, Repetitions = "15", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Abducción de cadera en máquina").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Elevaciones de talón sentado", Sets = 3, Repetitions = "20", Notes = "Pantorrillas", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Elevaciones de talón sentado").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Estiramiento de glúteo piriforme", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de glúteo piriforme").Id }
+            });
+
+            // Día 4: Fullbody dinámico
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Calentamiento", Sets = 1, Repetitions = "7m", Notes = "Shadow boxing y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Shadow boxing").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Thrusters", Sets = 4, Repetitions = "12", Notes = "Fullbody", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Thrusters").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Clean & Press", Sets = 4, Repetitions = "10", Notes = "Potencia", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Clean & Press").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Bear Crawl", Sets = 4, Repetitions = "20m", Notes = "Funcional", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Bear Crawl").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Plancha lateral", Sets = 3, Repetitions = "45s por lado", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Plancha lateral").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Estiramiento general", Sets = 1, Repetitions = "6m", Notes = "Postura del niño y cadena posterior", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 5: Core y movilidad
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jump rope lento y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Plancha abdominal", Sets = 4, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Crunch abdominal", Sets = 4, Repetitions = "20", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Estiramiento integral", Sets = 1, Repetitions = "10m", Notes = "Postura del niño, cadena posterior y aductores", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 6: Recuperación y movilidad total
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Movilidad articular global", Sets = 1, Repetitions = "10m", Notes = "Movilidad escapular, tobillos y columna", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Movilidad escapular (bandas)").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Estiramiento largo", Sets = 1, Repetitions = "10m", Notes = "Postura del niño, cadena posterior, aductores y dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid21, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // 22. Cardio Metabólico y Core
+            var rid22 = Guid.Parse("A1111111-0000-4000-8000-000000000022");
+
+            // Día 1: Cardio HIIT y core
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Calentamiento", Sets = 1, Repetitions = "7m", Notes = "Jump rope lento y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Burpees", Sets = 5, Repetitions = "40s ON / 20s OFF", Notes = "HIIT", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Burpees").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Mountain climbers", Sets = 5, Repetitions = "40s ON / 20s OFF", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Mountain climbers").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Saltar cuerda", Sets = 5, Repetitions = "1m ON / 30s OFF", Notes = "Cardio", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Saltar cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Plancha abdominal", Sets = 4, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Estiramiento general", Sets = 1, Repetitions = "6m", Notes = "Postura del niño y cadena posterior", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 2: Cardio funcional y core
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Step touch y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Saltar cuerda", Sets = 5, Repetitions = "1m ON / 30s OFF", Notes = "Cardio", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Saltar cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Step touch", Sets = 4, Repetitions = "2m", Notes = "Intervalos", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Plancha abdominal", Sets = 4, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Crunch abdominal", Sets = 4, Repetitions = "20", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Estiramiento de cadena posterior", Sets = 1, Repetitions = "3m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de cadena posterior").Id }
+            });
+
+            // Día 3: HIIT funcional y core
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Calentamiento", Sets = 1, Repetitions = "7m", Notes = "Jumping jacks y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Jumping jacks").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Burpees", Sets = 4, Repetitions = "40s ON / 20s OFF", Notes = "HIIT", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Burpees").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Mountain climbers", Sets = 4, Repetitions = "40s ON / 20s OFF", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Mountain climbers").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Bear Crawl", Sets = 4, Repetitions = "15m", Notes = "Funcional", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Bear Crawl").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Plancha abdominal", Sets = 4, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Estiramiento de aductores (mariposa)", Sets = 1, Repetitions = "3m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de aductores (mariposa)").Id }
+            });
+
+            // Día 4: Cardio express y core
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jump rope lento y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Saltar cuerda", Sets = 5, Repetitions = "1m ON / 30s OFF", Notes = "Cardio", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Saltar cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Step touch", Sets = 4, Repetitions = "2m", Notes = "Intervalos", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Plancha abdominal", Sets = 4, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Crunch abdominal", Sets = 4, Repetitions = "20", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Estiramiento general", Sets = 1, Repetitions = "5m", Notes = "Postura del niño y aductores", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 5: Core express y movilidad
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Step touch y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Plancha abdominal", Sets = 4, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Crunch abdominal", Sets = 4, Repetitions = "20", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Estiramiento integral", Sets = 1, Repetitions = "8m", Notes = "Postura del niño, cadena posterior y aductores", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 6: Movilidad y estiramiento largo
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Movilidad articular global", Sets = 1, Repetitions = "10m", Notes = "Movilidad escapular, tobillos y columna", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Movilidad escapular (bandas)").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Estiramiento largo", Sets = 1, Repetitions = "10m", Notes = "Postura del niño, cadena posterior, aductores y dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid22, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // 23. Tren Inferior Express
+            var rid23 = Guid.Parse("A1111111-0000-4000-8000-000000000023");
+
+            // Día 1: Pierna fuerza express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Calentamiento", Sets = 1, Repetitions = "7m", Notes = "Jump rope lento y movilidad cadera", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Sentadilla frontal con barra", Sets = 4, Repetitions = "12", Notes = "Fuerza", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Sentadilla frontal con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Prensa de piernas vertical", Sets = 4, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Prensa de piernas vertical").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Peso muerto rumano con mancuernas", Sets = 4, Repetitions = "15", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Peso muerto rumano con mancuernas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Estiramiento de glúteo piriforme", Sets = 1, Repetitions = "3m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de glúteo piriforme").Id }
+            });
+
+            // Día 2: Pierna y salto
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jumping jacks y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Jumping jacks").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Box Jump", Sets = 4, Repetitions = "10", Notes = "Explosividad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Box Jump").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Desplante lateral", Sets = 3, Repetitions = "12 por lado", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Desplante lateral").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Abducción de cadera en máquina", Sets = 3, Repetitions = "15", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Abducción de cadera en máquina").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Estiramiento de glúteo piriforme", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de glúteo piriforme").Id }
+            });
+
+            // Día 3: Cardio HIIT y tren inferior
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Step touch y movilidad cadera", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Burpees", Sets = 4, Repetitions = "40s ON / 20s OFF", Notes = "HIIT", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Burpees").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Mountain climbers", Sets = 4, Repetitions = "40s ON / 20s OFF", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Mountain climbers").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Saltar cuerda", Sets = 4, Repetitions = "1m ON / 30s OFF", Notes = "Cardio", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Saltar cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Sentadilla goblet", Sets = 4, Repetitions = "15", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Sentadilla goblet").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Estiramiento de aductores (mariposa)", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de aductores (mariposa)").Id }
+            });
+
+            // Día 4: Pierna funcional express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jump rope lento y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Bear Crawl", Sets = 4, Repetitions = "15m", Notes = "Funcional", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Bear Crawl").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Desplante con barra", Sets = 4, Repetitions = "12 por pierna", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Desplante con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Abducción de cadera en máquina", Sets = 3, Repetitions = "15", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Abducción de cadera en máquina").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Estiramiento de glúteo piriforme", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de glúteo piriforme").Id }
+            });
+
+            // Día 5: Cardio express y movilidad
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jump rope lento y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Saltar cuerda", Sets = 4, Repetitions = "1m ON / 30s OFF", Notes = "Cardio", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Saltar cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Step touch", Sets = 4, Repetitions = "2m", Notes = "Intervalos", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Estiramiento general", Sets = 1, Repetitions = "5m", Notes = "Postura del niño y aductores", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 6: Estiramiento y movilidad global
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Movilidad articular global", Sets = 1, Repetitions = "10m", Notes = "Movilidad escapular, tobillos y columna", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Movilidad escapular (bandas)").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Estiramiento largo", Sets = 1, Repetitions = "10m", Notes = "Postura del niño, cadena posterior, aductores y dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid23, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // 24. Tren Superior Express
+            var rid24 = Guid.Parse("A1111111-0000-4000-8000-000000000024");
+
+            // Día 1: Pecho y tríceps express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jumping jacks y movilidad escapular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Jumping jacks").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Press de banca", Sets = 4, Repetitions = "12", Notes = "Hipertrofia", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Press de banca").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Press inclinado con barra", Sets = 4, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Press inclinado con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Fondos en paralelas", Sets = 3, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Fondos en paralelas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Extensión de tríceps en cuerda", Sets = 4, Repetitions = "15", Notes = "Tríceps", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Extensión de tríceps en cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Estiramiento de pecho en pared", Sets = 1, Repetitions = "3m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de pecho en pared").Id }
+            });
+
+            // Día 2: Espalda y bíceps express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Remo ergómetro y movilidad dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Remo ergómetro").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Remo con barra", Sets = 4, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Remo con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Jalón al pecho", Sets = 4, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Jalón al pecho").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Remo bajo en polea", Sets = 4, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Remo bajo en polea").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Curl con barra", Sets = 4, Repetitions = "15", Notes = "Bíceps", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Curl con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Estiramiento de dorsal", Sets = 1, Repetitions = "3m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de dorsal").Id }
+            });
+
+            // Día 3: Hombro y core express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Rotación de brazos y movilidad escapular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Rotación de brazos").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Press militar con barra", Sets = 4, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Press militar con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Elevaciones laterales", Sets = 4, Repetitions = "15", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Elevaciones laterales").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Crunch abdominal", Sets = 3, Repetitions = "20", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Plancha abdominal", Sets = 3, Repetitions = "1m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Estiramiento de hombros cruzado", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de hombros cruzado").Id }
+            });
+
+            // Día 4: Fullbody superior express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jumping jacks y movilidad escapular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Jumping jacks").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Press de banca", Sets = 4, Repetitions = "12", Notes = "Hipertrofia", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Press de banca").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Remo con barra", Sets = 4, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Remo con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Fondos en paralelas", Sets = 3, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Fondos en paralelas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Curl con barra", Sets = 3, Repetitions = "15", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Curl con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Extensión de tríceps en cuerda", Sets = 3, Repetitions = "15", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Extensión de tríceps en cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Crunch abdominal", Sets = 3, Repetitions = "20", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Estiramiento de dorsal", Sets = 1, Repetitions = "3m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de dorsal").Id }
+            });
+
+            // Día 5: Cardio y core express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Step touch y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Burpees", Sets = 4, Repetitions = "40s ON / 20s OFF", Notes = "HIIT", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Burpees").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Mountain climbers", Sets = 4, Repetitions = "40s ON / 20s OFF", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Mountain climbers").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Saltar cuerda", Sets = 4, Repetitions = "1m ON / 30s OFF", Notes = "Cardio", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Saltar cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Crunch abdominal", Sets = 3, Repetitions = "20", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Plancha abdominal", Sets = 3, Repetitions = "1m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Estiramiento de aductores (mariposa)", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de aductores (mariposa)").Id }
+            });
+
+            // Día 6: Recuperación y movilidad total
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Movilidad articular global", Sets = 1, Repetitions = "10m", Notes = "Movilidad escapular, tobillos y columna", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Movilidad escapular (bandas)").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Estiramiento largo", Sets = 1, Repetitions = "10m", Notes = "Postura del niño, cadena posterior, aductores y dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid24, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // 25. Fullbody Funcional Express
+            var rid25 = Guid.Parse("A1111111-0000-4000-8000-000000000025");
+
+            // Día 1: Fullbody HIIT express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jumping jacks y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Jumping jacks").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Burpees", Sets = 4, Repetitions = "40s ON / 20s OFF", Notes = "HIIT", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Burpees").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Thrusters", Sets = 3, Repetitions = "12", Notes = "Fullbody", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Thrusters").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Clean & Press", Sets = 3, Repetitions = "10", Notes = "Potencia", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Clean & Press").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Plancha abdominal", Sets = 3, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Estiramiento integral", Sets = 1, Repetitions = "5m", Notes = "Postura del niño y cadena posterior", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 2: Tren superior express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Rotación de brazos y movilidad escapular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Rotación de brazos").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Press militar con barra", Sets = 3, Repetitions = "12", Notes = "Fuerza", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Press militar con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Remo con barra", Sets = 3, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Remo con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Fondos en paralelas", Sets = 3, Repetitions = "12", Notes = "Tríceps", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Fondos en paralelas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Dominadas", Sets = 3, Repetitions = "10", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Dominadas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Estiramiento de hombros cruzado", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de hombros cruzado").Id }
+            });
+
+            // Día 3: Tren inferior y core express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Jump rope lento y movilidad cadera", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Sentadilla frontal con barra", Sets = 3, Repetitions = "12", Notes = "Fuerza", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Sentadilla frontal con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Peso muerto rumano con mancuernas", Sets = 3, Repetitions = "15", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Peso muerto rumano con mancuernas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Abducción de cadera en máquina", Sets = 3, Repetitions = "15", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Abducción de cadera en máquina").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Elevaciones de talón sentado", Sets = 2, Repetitions = "20", Notes = "Pantorrillas", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Elevaciones de talón sentado").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Estiramiento de glúteo piriforme", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de glúteo piriforme").Id }
+            });
+
+            // Día 4: Fullbody dinámico express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Shadow boxing y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Shadow boxing").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Thrusters", Sets = 3, Repetitions = "12", Notes = "Fullbody", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Thrusters").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Clean & Press", Sets = 3, Repetitions = "10", Notes = "Potencia", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Clean & Press").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Bear Crawl", Sets = 3, Repetitions = "15m", Notes = "Funcional", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Bear Crawl").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Plancha lateral", Sets = 2, Repetitions = "45s por lado", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Plancha lateral").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Estiramiento general", Sets = 1, Repetitions = "5m", Notes = "Postura del niño y cadena posterior", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 5: Core y movilidad express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Jump rope lento y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Plancha abdominal", Sets = 3, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Crunch abdominal", Sets = 3, Repetitions = "20", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Estiramiento integral", Sets = 1, Repetitions = "7m", Notes = "Postura del niño, cadena posterior y aductores", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 6: Recuperación y movilidad total express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Movilidad articular global", Sets = 1, Repetitions = "8m", Notes = "Movilidad escapular, tobillos y columna", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Movilidad escapular (bandas)").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Estiramiento largo", Sets = 1, Repetitions = "8m", Notes = "Postura del niño, cadena posterior, aductores y dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid25, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // 26. Cardio Express y Core
+            var rid26 = Guid.Parse("A1111111-0000-4000-8000-000000000026");
+
+            // Día 1: Cardio HIIT y Core express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jump rope lento y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Burpees", Sets = 4, Repetitions = "40s ON / 20s OFF", Notes = "HIIT", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Burpees").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Mountain climbers", Sets = 4, Repetitions = "40s ON / 20s OFF", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Mountain climbers").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Saltar cuerda", Sets = 4, Repetitions = "1m ON / 30s OFF", Notes = "Cardio", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Saltar cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Plancha abdominal", Sets = 3, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Estiramiento general", Sets = 1, Repetitions = "5m", Notes = "Postura del niño y cadena posterior", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 2: Cardio funcional y core express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Step touch y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Saltar cuerda", Sets = 4, Repetitions = "1m ON / 30s OFF", Notes = "Cardio", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Saltar cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Step touch", Sets = 3, Repetitions = "2m", Notes = "Intervalos", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Plancha abdominal", Sets = 3, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Crunch abdominal", Sets = 3, Repetitions = "20", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Estiramiento de cadena posterior", Sets = 1, Repetitions = "3m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de cadena posterior").Id }
+            });
+
+            // Día 3: HIIT funcional y core express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jumping jacks y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Jumping jacks").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Burpees", Sets = 3, Repetitions = "40s ON / 20s OFF", Notes = "HIIT", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Burpees").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Mountain climbers", Sets = 3, Repetitions = "40s ON / 20s OFF", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Mountain climbers").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Bear Crawl", Sets = 3, Repetitions = "15m", Notes = "Funcional", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Bear Crawl").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Plancha abdominal", Sets = 3, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Estiramiento de aductores (mariposa)", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de aductores (mariposa)").Id }
+            });
+
+            // Día 4: Cardio express y core
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Jump rope lento y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Saltar cuerda", Sets = 4, Repetitions = "1m ON / 30s OFF", Notes = "Cardio", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Saltar cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Step touch", Sets = 3, Repetitions = "2m", Notes = "Intervalos", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Plancha abdominal", Sets = 3, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Crunch abdominal", Sets = 3, Repetitions = "20", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Estiramiento general", Sets = 1, Repetitions = "4m", Notes = "Postura del niño y aductores", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 5: Core express y movilidad
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Step touch y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Plancha abdominal", Sets = 3, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Crunch abdominal", Sets = 3, Repetitions = "20", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Estiramiento integral", Sets = 1, Repetitions = "7m", Notes = "Postura del niño, cadena posterior y aductores", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 6: Movilidad y estiramiento largo express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Movilidad articular global", Sets = 1, Repetitions = "8m", Notes = "Movilidad escapular, tobillos y columna", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Movilidad escapular (bandas)").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Estiramiento largo", Sets = 1, Repetitions = "8m", Notes = "Postura del niño, cadena posterior, aductores y dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid26, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+
+            // 27. Tren Inferior Power Express
+            var rid27 = Guid.Parse("A1111111-0000-4000-8000-000000000027");
+
+            // Día 1: Power pierna express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jump rope lento y movilidad cadera", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Sentadilla frontal con barra", Sets = 3, Repetitions = "10", Notes = "Fuerza", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Sentadilla frontal con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Box Jump", Sets = 3, Repetitions = "8", Notes = "Explosividad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Box Jump").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Peso muerto rumano con mancuernas", Sets = 3, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Peso muerto rumano con mancuernas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Abducción de cadera en máquina", Sets = 3, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Abducción de cadera en máquina").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Estiramiento de glúteo piriforme", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de glúteo piriforme").Id }
+            });
+
+            // Día 2: Fuerza y salto express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Jumping jacks y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Jumping jacks").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Desplante lateral", Sets = 3, Repetitions = "10 por lado", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Desplante lateral").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Box Jump", Sets = 3, Repetitions = "8", Notes = "Explosividad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Box Jump").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Abducción de cadera en máquina", Sets = 3, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Abducción de cadera en máquina").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Estiramiento de glúteo piriforme", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de glúteo piriforme").Id }
+            });
+
+            // Día 3: Cardio HIIT y tren inferior express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Step touch y movilidad cadera", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Burpees", Sets = 3, Repetitions = "40s ON / 20s OFF", Notes = "HIIT", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Burpees").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Mountain climbers", Sets = 3, Repetitions = "40s ON / 20s OFF", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Mountain climbers").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Saltar cuerda", Sets = 3, Repetitions = "1m ON / 30s OFF", Notes = "Cardio", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Saltar cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Sentadilla goblet", Sets = 3, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Sentadilla goblet").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Estiramiento de aductores (mariposa)", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de aductores (mariposa)").Id }
+            });
+
+            // Día 4: Tren inferior funcional express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Jump rope lento y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Bear Crawl", Sets = 3, Repetitions = "12m", Notes = "Funcional", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Bear Crawl").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Desplante con barra", Sets = 3, Repetitions = "10 por pierna", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Desplante con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Abducción de cadera en máquina", Sets = 3, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Abducción de cadera en máquina").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Estiramiento de glúteo piriforme", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de glúteo piriforme").Id }
+            });
+
+            // Día 5: Cardio express y movilidad
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Jump rope lento y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Saltar cuerda", Sets = 3, Repetitions = "1m ON / 30s OFF", Notes = "Cardio", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Saltar cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Step touch", Sets = 3, Repetitions = "2m", Notes = "Intervalos", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Estiramiento general", Sets = 1, Repetitions = "4m", Notes = "Postura del niño y aductores", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 6: Estiramiento y movilidad global express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Movilidad articular global", Sets = 1, Repetitions = "8m", Notes = "Movilidad escapular, tobillos y columna", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Movilidad escapular (bandas)").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Estiramiento largo", Sets = 1, Repetitions = "8m", Notes = "Postura del niño, cadena posterior, aductores y dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid27, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // 28. Tren Superior Power Express
+            var rid28 = Guid.Parse("A1111111-0000-4000-8000-000000000028");
+
+            // Día 1: Power tren superior express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jumping jacks y movilidad escapular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Jumping jacks").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Press militar con barra", Sets = 3, Repetitions = "10", Notes = "Fuerza", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Press militar con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Remo con barra", Sets = 3, Repetitions = "10", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Remo con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Fondos en paralelas", Sets = 3, Repetitions = "10", Notes = "Tríceps", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Fondos en paralelas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Dominadas", Sets = 3, Repetitions = "8", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Dominadas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Estiramiento de hombros cruzado", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de hombros cruzado").Id }
+            });
+
+            // Día 2: Espalda y pectoral power express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Remo ergómetro y movilidad dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Remo ergómetro").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Remo con barra", Sets = 3, Repetitions = "10", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Remo con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Jalón al pecho", Sets = 3, Repetitions = "10", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Jalón al pecho").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Press de banca", Sets = 3, Repetitions = "10", Notes = "Pecho", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Press de banca").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Press inclinado con barra", Sets = 3, Repetitions = "10", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Press inclinado con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Estiramiento de dorsal", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de dorsal").Id }
+            });
+
+            // Día 3: Tríceps, bíceps y core express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Rotación de brazos y movilidad escapular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Rotación de brazos").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Fondos en paralelas", Sets = 3, Repetitions = "10", Notes = "Tríceps", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Fondos en paralelas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Extensión de tríceps en cuerda", Sets = 3, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Extensión de tríceps en cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Curl con barra", Sets = 3, Repetitions = "12", Notes = "Bíceps", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Curl con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Curl martillo con mancuernas", Sets = 3, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Curl martillo con mancuernas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Crunch abdominal", Sets = 3, Repetitions = "20", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Estiramiento de hombros cruzado", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de hombros cruzado").Id }
+            });
+
+            // Día 4: Fullbody superior power express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jumping jacks y movilidad escapular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Jumping jacks").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Press de banca", Sets = 3, Repetitions = "10", Notes = "Pecho", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Press de banca").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Remo con barra", Sets = 3, Repetitions = "10", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Remo con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Fondos en paralelas", Sets = 3, Repetitions = "10", Notes = "Tríceps", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Fondos en paralelas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Curl con barra", Sets = 3, Repetitions = "12", Notes = "Bíceps", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Curl con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Estiramiento de dorsal", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de dorsal").Id }
+            });
+
+            // Día 5: Cardio y core power express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Step touch y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Step touch").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Burpees", Sets = 3, Repetitions = "40s ON / 20s OFF", Notes = "HIIT", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Burpees").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Mountain climbers", Sets = 3, Repetitions = "40s ON / 20s OFF", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Mountain climbers").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Saltar cuerda", Sets = 3, Repetitions = "1m ON / 30s OFF", Notes = "Cardio", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Saltar cuerda").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Crunch abdominal", Sets = 3, Repetitions = "20", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Plancha abdominal", Sets = 3, Repetitions = "1m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Estiramiento de aductores (mariposa)", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de aductores (mariposa)").Id }
+            });
+
+            // Día 6: Recuperación y movilidad superior express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Movilidad articular global", Sets = 1, Repetitions = "8m", Notes = "Movilidad escapular, hombros y columna", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Movilidad escapular (bandas)").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Estiramiento largo", Sets = 1, Repetitions = "8m", Notes = "Postura del niño, cadena posterior, aductores y dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid28, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // 29. Fullbody Power Express
+            var rid29 = Guid.Parse("A1111111-0000-4000-8000-000000000029");
+
+            // Día 1: Fullbody fuerza/potencia express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Calentamiento", Sets = 1, Repetitions = "6m", Notes = "Jumping jacks y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Jumping jacks").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Thrusters", Sets = 3, Repetitions = "10", Notes = "Fullbody/Potencia", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Thrusters").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Clean & Press", Sets = 3, Repetitions = "8", Notes = "Potencia", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Clean & Press").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Box Jump", Sets = 3, Repetitions = "8", Notes = "Explosividad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Box Jump").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Plancha abdominal", Sets = 3, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 1, Name = "Estiramiento integral", Sets = 1, Repetitions = "5m", Notes = "Postura del niño y cadena posterior", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 2: Tren superior power express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Rotación de brazos y movilidad escapular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Rotación de brazos").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Press militar con barra", Sets = 3, Repetitions = "10", Notes = "Fuerza", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Press militar con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Remo con barra", Sets = 3, Repetitions = "10", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Remo con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Fondos en paralelas", Sets = 3, Repetitions = "10", Notes = "Tríceps", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Fondos en paralelas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Dominadas", Sets = 3, Repetitions = "8", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Dominadas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 2, Name = "Estiramiento de hombros cruzado", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de hombros cruzado").Id }
+            });
+
+            // Día 3: Tren inferior power express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Jump rope lento y movilidad cadera", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Sentadilla frontal con barra", Sets = 3, Repetitions = "10", Notes = "Fuerza", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Sentadilla frontal con barra").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Box Jump", Sets = 3, Repetitions = "8", Notes = "Explosividad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Box Jump").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Peso muerto rumano con mancuernas", Sets = 3, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Peso muerto rumano con mancuernas").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Abducción de cadera en máquina", Sets = 3, Repetitions = "12", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Abducción de cadera en máquina").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 3, Name = "Estiramiento de glúteo piriforme", Sets = 1, Repetitions = "2m", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Estiramiento de glúteo piriforme").Id }
+            });
+
+            // Día 4: Fullbody dinámico/potencia express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Shadow boxing y movilidad articular", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Shadow boxing").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Thrusters", Sets = 3, Repetitions = "10", Notes = "Fullbody", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Thrusters").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Clean & Press", Sets = 3, Repetitions = "8", Notes = "Potencia", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Clean & Press").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Bear Crawl", Sets = 3, Repetitions = "12m", Notes = "Funcional", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Bear Crawl").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Plancha lateral", Sets = 2, Repetitions = "45s por lado", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Plancha lateral").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 4, Name = "Estiramiento general", Sets = 1, Repetitions = "5m", Notes = "Postura del niño y cadena posterior", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 5: Core y movilidad power express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Calentamiento", Sets = 1, Repetitions = "5m", Notes = "Jump rope lento y movilidad", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Jump rope lento").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Plancha abdominal", Sets = 3, Repetitions = "1m", Notes = "Core", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Plancha abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Crunch abdominal", Sets = 3, Repetitions = "20", Notes = "", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Crunch abdominal").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 5, Name = "Estiramiento integral", Sets = 1, Repetitions = "7m", Notes = "Postura del niño, cadena posterior y aductores", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
+            // Día 6: Recuperación y movilidad total power express
+            routineDays.AddRange(new[]
+            {
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Movilidad articular global", Sets = 1, Repetitions = "8m", Notes = "Movilidad escapular, tobillos y columna", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Movilidad escapular (bandas)").Id },
+                new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Estiramiento largo", Sets = 1, Repetitions = "8m", Notes = "Postura del niño, cadena posterior, aductores y dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid29, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
+            });
+
 
 
             context.RoutineDays.AddRange(routineDays);
