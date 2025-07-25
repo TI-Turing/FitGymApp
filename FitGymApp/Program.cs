@@ -10,7 +10,7 @@ using Gymmetry.Application.Services.Interfaces;
 using Gymmetry.Repository.Services;
 using Gymmetry.Repository.Services.Interfaces;
 using Gymmetry.Repository.Persistence.Seed;
-
+ 
 var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
