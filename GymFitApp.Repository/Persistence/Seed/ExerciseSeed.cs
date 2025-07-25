@@ -1007,7 +1007,26 @@ public static class ExerciseSeed
                 IsActive = true,
                 CategoryExerciseId = Guid.Parse("BC9D888F-4612-4BBB-ABEC-FF1EE76D129A"),
                 TagsObjectives = @"{""hombro"": 0.7, ""brazo"": 0.2, ""core"": 0.1, ""pecho"": 0.0, ""espalda"": 0.0, ""abdomen"": 0.0, ""gluteo"": 0.0, ""pierna"": 0.0, ""trapecio"": 0.0}"
+            },
+            new Exercise
+            {
+                Name = "Hip Thrust con barra",
+                RequiresEquipment = true,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true,
+                CategoryExerciseId = Guid.Parse("9F9F94D0-7CD1-48E9-81A7-86AA503CA685"), // Aislado (focalizado)
+                TagsObjectives = "{\"gluteo\": 0.6, \"pierna\": 0.2, \"core\": 0.1, \"espalda\": 0.1, \"pecho\": 0.0, \"hombro\": 0.0, \"brazo\": 0.0, \"abdomen\": 0.0, \"trapecio\": 0.0}"
+            },
+            new Exercise
+            {
+                Name = "Peso muerto rumano con mancuernas",
+                RequiresEquipment = true,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true,
+                CategoryExerciseId = Guid.Parse("BC9D888F-4612-4BBB-ABEC-FF1EE76D129A"), // Ejercicio principal (compuesto)
+                TagsObjectives = "{\"pierna\": 0.3, \"gluteo\": 0.4, \"espalda\": 0.2, \"core\": 0.1, \"pecho\": 0.0, \"hombro\": 0.0, \"brazo\": 0.0, \"abdomen\": 0.0, \"trapecio\": 0.0}"
             }
+
         };
 
         // Asignar un Guid válido y único a cada ejercicio

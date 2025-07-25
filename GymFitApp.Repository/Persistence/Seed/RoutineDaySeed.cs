@@ -1264,6 +1264,8 @@ namespace FitGymApp.Infrastructure.Persistence.Seeds
                 new RoutineDay { Id = Guid.NewGuid(), DayNumber = 6, Name = "Estiramiento largo", Sets = 1, Repetitions = "10m", Notes = "Postura del niño, cadena posterior, aductores y dorsal", CreatedAt = DateTime.UtcNow, IsActive = true, RoutineTemplateId = rid20, ExerciseId = context.Exercises.First(e => e.Name == "Postura del niño (yoga)").Id }
             });
 
+
+
             context.RoutineDays.AddRange(routineDays);
             await context.SaveChangesAsync();
         }
