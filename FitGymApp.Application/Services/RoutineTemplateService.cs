@@ -292,5 +292,22 @@ namespace FitGymApp.Application.Services
                 };
             }
         }
+
+        public async Task<ApplicationResponse<Guid>> DuplicateRoutineTemplateAsync(Guid routineTemplateId, Guid gymId)
+        {
+            _logger.LogInformation("Starting DuplicateRoutineTemplateAsync for RoutineTemplateId: {RoutineTemplateId} and GymId: {GymId}", routineTemplateId, gymId);
+            try
+            {
+                var newId = await _routineTemplateRepository.DuplicateRoutineTemplateAsync(routineTemplateId, gymId).ConfigureAwait(false);
+                _logger.LogInformation("RoutineTemplate duplicated successfully. New Id: {NewId}", newId);
+                return ApplicationResponse<Guid>.SuccessResponse(newId, "Plantilla de rutina duplicada correctamente.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while duplicating RoutineTemplate with RoutineTemplateId: {RoutineTemplateId}", routineTemplateId);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
+                return ApplicationResponse<Guid>.ErrorResponse("Error técnico al duplicar la plantilla de rutina.", "TechnicalError");
+            }
+        }
     }
 }

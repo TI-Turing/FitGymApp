@@ -96,4 +96,77 @@ public class AddRoutineTemplateFunction
             return errorResponse;
         }
     }
+
+    [Function("RoutineTemplate_DuplicateRoutineTemplateFunction")]
+    public async Task<HttpResponseData> DuplicateAsync(
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "routinetemplate/duplicate")] HttpRequestData req,
+        FunctionContext executionContext)
+    {
+        var logger = executionContext.GetLogger("RoutineTemplate_DuplicateRoutineTemplateFunction");
+        logger.LogInformation("Procesando solicitud para duplicar un RoutineTemplate.");
+        try
+        {
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
+            {
+                var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
+                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
+                {
+                    Success = false,
+                    Message = error!,
+                    Data = default,
+                    StatusCode = StatusCodes.Status401Unauthorized
+                });
+                return unauthorizedResponse;
+            }
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var data = JsonConvert.DeserializeObject<DuplicateRoutineTemplateRequest>(requestBody);
+            if (data == null || data.RoutineTemplateId == Guid.Empty || data.GymId == Guid.Empty)
+            {
+                var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await badResponse.WriteAsJsonAsync(new ApiResponse<Guid>
+                {
+                    Success = false,
+                    Message = "Debe enviar RoutineTemplateId y GymId válidos.",
+                    Data = default,
+                    StatusCode = StatusCodes.Status400BadRequest
+                });
+                return badResponse;
+            }
+            var result = await _service.DuplicateRoutineTemplateAsync(data.RoutineTemplateId, data.GymId);
+            if (!result.Success)
+            {
+                var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await errorResponse.WriteAsJsonAsync(new ApiResponse<Guid>
+                {
+                    Success = false,
+                    Message = result.Message,
+                    Data = default,
+                    StatusCode = StatusCodes.Status400BadRequest
+                });
+                return errorResponse;
+            }
+            var successResponse = req.CreateResponse(HttpStatusCode.OK);
+            await successResponse.WriteAsJsonAsync(new ApiResponse<Guid>
+            {
+                Success = true,
+                Message = result.Message,
+                Data = result.Data,
+                StatusCode = StatusCodes.Status200OK
+            });
+            return successResponse;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error al duplicar RoutineTemplate.");
+            var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+            await errorResponse.WriteAsJsonAsync(new ApiResponse<Guid>
+            {
+                Success = false,
+                Message = "Ocurrió un error al procesar la solicitud.",
+                Data = default,
+                StatusCode = StatusCodes.Status400BadRequest
+            });
+            return errorResponse;
+        }
+    }
 }
