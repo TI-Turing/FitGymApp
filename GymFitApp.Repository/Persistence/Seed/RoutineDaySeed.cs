@@ -9,9 +9,7 @@ namespace FitGymApp.Infrastructure.Persistence.Seeds
     {
         public static async Task SeedAsync(FitGymAppContext context)
         {
-            // Asume que ya tienes los Ids de ejercicios y rutinas cargados previamente en context
-            // y que puedes hacer búsquedas por Name para obtener los IDs
-            // Ejemplo: var pressBancaId = context.Exercises.FirstOrDefault(e => e.Name == "Press de banca").Id;
+            
 
             var routineDays = new List<RoutineDay>();
 
