@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
+using Gymmetry.Repository.Services.Cache;
 
 namespace Gymmetry.Repository.Services
 {
@@ -19,11 +20,14 @@ namespace Gymmetry.Repository.Services
     {
         private readonly GymmetryContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IRedisCacheService _redisCache;
+        private readonly string _redisPrefix = "user:";
 
-        public UserRepository(GymmetryContext context, IConfiguration configuration)
+        public UserRepository(GymmetryContext context, IConfiguration configuration, IRedisCacheService redisCache)
         {
             _context = context;
             _configuration = configuration;
+            _redisCache = redisCache;
         }
 
         public async Task<User> CreateUserAsync(User user)
@@ -38,7 +42,18 @@ namespace Gymmetry.Repository.Services
 
         public async Task<User?> GetUserByIdAsync(Guid id)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id && (u.IsActive ?? false));
+            string cacheKey = _redisPrefix + id;
+            var cached = await _redisCache.GetAsync(cacheKey);
+            if (cached != null)
+            {
+                return System.Text.Json.JsonSerializer.Deserialize<User>(cached);
+            }
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id && (u.IsActive ?? false));
+            if (user != null)
+            {
+                await _redisCache.SetAsync(cacheKey, System.Text.Json.JsonSerializer.Serialize(user), TimeSpan.FromMinutes(10));
+            }
+            return user;
         }
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()

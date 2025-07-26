@@ -117,9 +117,9 @@ public partial class User
 
     public virtual Diet? UserDietUser { get; set; }
 
-    public virtual EmployeeUser? UserEmployeeUserUser { get; set; }
+    public virtual EmployeeUser? UserEmployeeUser { get; set; }
 
-    public virtual FitUser? UserFitUserUser { get; set; }
+    public virtual FitUser? UserFitUser { get; set; }
 
     public virtual Gym? GymUser { get; set; }
 

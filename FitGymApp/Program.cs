@@ -10,6 +10,7 @@ using Gymmetry.Application.Services.Interfaces;
 using Gymmetry.Repository.Services;
 using Gymmetry.Repository.Services.Interfaces;
 using Gymmetry.Repository.Persistence.Seed;
+using Gymmetry.Repository.Services.Cache;
  
 var builder = FunctionsApplication.CreateBuilder(args);
 
@@ -34,7 +35,20 @@ builder.Services.AddAutoMapper(cfg => {
 });
 
 // Inyección de dependencias de repositorios
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>(sp =>
+    new UserRepository(
+        sp.GetRequiredService<GymmetryContext>(),
+        sp.GetRequiredService<Microsoft.Extensions.Configuration.IConfiguration>(),
+        sp.GetRequiredService<IRedisCacheService>()
+    )
+);
+builder.Services.AddScoped<IFeedRepository, FeedRepository>(sp =>
+    new FeedRepository(
+        sp.GetRequiredService<GymmetryContext>(),
+        sp.GetRequiredService<Microsoft.Extensions.Configuration.IConfiguration>(),
+        sp.GetRequiredService<IRedisCacheService>()
+    )
+);
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<ILogErrorRepository, LogErrorRepository>();
 builder.Services.AddScoped<ILogLoginRepository, LogLoginRepository>();
@@ -79,7 +93,6 @@ builder.Services.AddScoped<ISubModuleRepository, SubModuleRepository>();
 builder.Services.AddScoped<IUninstallOptionRepository, UninstallOptionRepository>();
 builder.Services.AddScoped<IUserTypeRepository, UserTypeRepository>();
 builder.Services.AddScoped<IVerificationTypeRepository, VerificationTypeRepository>();
-builder.Services.AddScoped<IUserOtpRepository, UserOtpRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 
@@ -132,6 +145,10 @@ builder.Services.AddScoped<IUserTypeService, UserTypeService>();
 builder.Services.AddScoped<IVerificationTypeService, VerificationTypeService>();
 builder.Services.AddHttpClient<Gymmetry.Application.Services.ConfigAutoService>();
 builder.Services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(builder.Configuration);
+
+// Configuración de Redis
+var redisConnectionString = configuration["Redis:ConnectionString"] ?? "localhost:6379";
+builder.Services.AddSingleton<IRedisCacheService>(sp => new RedisCacheService(redisConnectionString));
 
 // Aplicar migraciones y ejecutar seeds (opcional, solo en desarrollo o si es seguro)
 using (var scope = builder.Services.BuildServiceProvider().CreateScope())

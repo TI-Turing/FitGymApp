@@ -10,6 +10,7 @@ using Gymmetry.Repository.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Gymmetry.Domain.DTO.Feed.Request;
+using Gymmetry.Repository.Services.Cache;
 
 namespace Gymmetry.Repository.Services
 {
@@ -17,11 +18,14 @@ namespace Gymmetry.Repository.Services
     {
         private readonly GymmetryContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IRedisCacheService _redisCache;
+        private readonly string _redisPrefix = "feed:";
 
-        public FeedRepository(GymmetryContext context, IConfiguration configuration)
+        public FeedRepository(GymmetryContext context, IConfiguration configuration, IRedisCacheService redisCache)
         {
             _context = context;
             _configuration = configuration;
+            _redisCache = redisCache;
         }
 
         public async Task<Feed> AddFeedAsync(Feed feed, byte[]? media = null, string? fileName = null, string? mediaType = null)
@@ -72,13 +76,35 @@ namespace Gymmetry.Repository.Services
 
         public async Task<Feed?> GetFeedByIdAsync(Guid feedId)
         {
-            return await _context.Feeds.FirstOrDefaultAsync(f => f.Id == feedId && f.IsActive && !f.IsDeleted);
+            string cacheKey = _redisPrefix + feedId;
+            var cached = await _redisCache.GetAsync(cacheKey);
+            if (cached != null)
+            {
+                return System.Text.Json.JsonSerializer.Deserialize<Feed>(cached);
+            }
+            var feed = await _context.Feeds.FirstOrDefaultAsync(f => f.Id == feedId && f.IsActive && !f.IsDeleted);
+            if (feed != null)
+            {
+                await _redisCache.SetAsync(cacheKey, System.Text.Json.JsonSerializer.Serialize(feed), TimeSpan.FromMinutes(10));
+            }
+            return feed;
         }
 
         public async Task<IEnumerable<Feed>> GetFeedsByUserAsync(Guid userId)
         {
-            return await _context.Feeds.Where(f => f.UserId == userId && f.IsActive && !f.IsDeleted)
+            string cacheKey = $"user:feeds:{userId}";
+            var cached = await _redisCache.GetAsync(cacheKey);
+            if (cached != null)
+            {
+                return System.Text.Json.JsonSerializer.Deserialize<List<Feed>>(cached);
+            }
+            var feeds = await _context.Feeds.Where(f => f.UserId == userId && f.IsActive && !f.IsDeleted)
                 .OrderByDescending(f => f.CreatedAt).ToListAsync();
+            if (feeds.Any())
+            {
+                await _redisCache.SetAsync(cacheKey, System.Text.Json.JsonSerializer.Serialize(feeds), TimeSpan.FromMinutes(5));
+            }
+            return feeds;
         }
 
         public async Task<IEnumerable<Feed>> GetAllFeedsAsync()

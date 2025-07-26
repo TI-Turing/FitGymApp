@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Gymmetry.Domain.DTO.Feed.Request;
 using Gymmetry.Domain.Models;
+using Gymmetry.Repository.Services.Cache;
 
 namespace Gymmetry.Repository.Services.Interfaces
 {

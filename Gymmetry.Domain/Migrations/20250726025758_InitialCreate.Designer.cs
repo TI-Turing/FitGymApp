@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gymmetry.Domain.Migrations
 {
     [DbContext(typeof(GymmetryContext))]
-    [Migration("20250725163155_AddAuthorUserIdForeignKeyToRoutineTemplate")]
-    partial class AddAuthorUserIdForeignKeyToRoutineTemplate
+    [Migration("20250726025758_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -225,6 +225,54 @@ namespace Gymmetry.Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CategoryExercise", (string)null);
+                });
+
+            modelBuilder.Entity("Gymmetry.Domain.Models.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Ip")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comment", (string)null);
                 });
 
             modelBuilder.Entity("Gymmetry.Domain.Models.Daily", b =>
@@ -666,6 +714,61 @@ namespace Gymmetry.Domain.Migrations
                     b.ToTable("Exercise", (string)null);
                 });
 
+            modelBuilder.Entity("Gymmetry.Domain.Models.Feed", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Ip")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("MediaType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("MediaUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Feed", (string)null);
+                });
+
             modelBuilder.Entity("Gymmetry.Domain.Models.FitUser", b =>
                 {
                     b.Property<Guid>("Id")
@@ -998,6 +1101,42 @@ namespace Gymmetry.Domain.Migrations
                     b.HasIndex(new[] { "EmployeeUserId" }, "IX_FK_EmployeeUserJourneyEmployee");
 
                     b.ToTable("JourneyEmployee", (string)null);
+                });
+
+            modelBuilder.Entity("Gymmetry.Domain.Models.Like", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Like", (string)null);
                 });
 
             modelBuilder.Entity("Gymmetry.Domain.Models.LogChange", b =>
@@ -1823,6 +1962,57 @@ namespace Gymmetry.Domain.Migrations
                     b.ToTable("PlanType", (string)null);
                 });
 
+            modelBuilder.Entity("Gymmetry.Domain.Models.Post", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Ip")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("MediaType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("MediaUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Post", (string)null);
+                });
+
             modelBuilder.Entity("Gymmetry.Domain.Models.RoutineAssigned", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2477,6 +2667,27 @@ namespace Gymmetry.Domain.Migrations
                     b.Navigation("Gym");
                 });
 
+            modelBuilder.Entity("Gymmetry.Domain.Models.Comment", b =>
+                {
+                    b.HasOne("Gymmetry.Domain.Models.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_CommentPost");
+
+                    b.HasOne("Gymmetry.Domain.Models.User", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_CommentUser");
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Gymmetry.Domain.Models.Daily", b =>
                 {
                     b.HasOne("Gymmetry.Domain.Models.RoutineExercise", "RoutineExercise")
@@ -2598,6 +2809,18 @@ namespace Gymmetry.Domain.Migrations
                     b.Navigation("Machine");
                 });
 
+            modelBuilder.Entity("Gymmetry.Domain.Models.Feed", b =>
+                {
+                    b.HasOne("Gymmetry.Domain.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_FeedUser");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Gymmetry.Domain.Models.Gym", b =>
                 {
                     b.HasOne("Gymmetry.Domain.Models.GymType", "GymType")
@@ -2650,6 +2873,27 @@ namespace Gymmetry.Domain.Migrations
                         .HasConstraintName("FK_EmployeeUserJourneyEmployee");
 
                     b.Navigation("EmployeeUser");
+                });
+
+            modelBuilder.Entity("Gymmetry.Domain.Models.Like", b =>
+                {
+                    b.HasOne("Gymmetry.Domain.Models.Post", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_LikePost");
+
+                    b.HasOne("Gymmetry.Domain.Models.User", "User")
+                        .WithMany("Likes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_LikeUser");
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Gymmetry.Domain.Models.LogChange", b =>
@@ -2875,6 +3119,18 @@ namespace Gymmetry.Domain.Migrations
                     b.Navigation("PlanType");
                 });
 
+            modelBuilder.Entity("Gymmetry.Domain.Models.Post", b =>
+                {
+                    b.HasOne("Gymmetry.Domain.Models.User", "User")
+                        .WithMany("Posts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_PostUser");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Gymmetry.Domain.Models.RoutineAssigned", b =>
                 {
                     b.HasOne("Gymmetry.Domain.Models.User", "User")
@@ -3020,12 +3276,12 @@ namespace Gymmetry.Domain.Migrations
                         .HasForeignKey("UserDietUserId")
                         .HasConstraintName("FK_UserDiet");
 
-                    b.HasOne("Gymmetry.Domain.Models.EmployeeUser", "UserEmployeeUserUser")
+                    b.HasOne("Gymmetry.Domain.Models.EmployeeUser", "UserEmployeeUser")
                         .WithMany("Users")
                         .HasForeignKey("UserEmployeeUserUserId")
                         .HasConstraintName("FK_UserEmployeeUser");
 
-                    b.HasOne("Gymmetry.Domain.Models.FitUser", "UserFitUserUser")
+                    b.HasOne("Gymmetry.Domain.Models.FitUser", "UserFitUser")
                         .WithMany("Users")
                         .HasForeignKey("UserFitUserUserId")
                         .HasConstraintName("FK_UserFitUser");
@@ -3047,9 +3303,9 @@ namespace Gymmetry.Domain.Migrations
 
                     b.Navigation("UserDietUser");
 
-                    b.Navigation("UserEmployeeUserUser");
+                    b.Navigation("UserEmployeeUser");
 
-                    b.Navigation("UserFitUserUser");
+                    b.Navigation("UserFitUser");
 
                     b.Navigation("UserType");
                 });
@@ -3232,6 +3488,13 @@ namespace Gymmetry.Domain.Migrations
                     b.Navigation("Plans");
                 });
 
+            modelBuilder.Entity("Gymmetry.Domain.Models.Post", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Likes");
+                });
+
             modelBuilder.Entity("Gymmetry.Domain.Models.RoutineAssigned", b =>
                 {
                     b.Navigation("RoutineTemplates");
@@ -3272,11 +3535,15 @@ namespace Gymmetry.Domain.Migrations
 
                     b.Navigation("BillUsers");
 
+                    b.Navigation("Comments");
+
                     b.Navigation("Dailies");
 
                     b.Navigation("DailyHistories");
 
                     b.Navigation("Diets");
+
+                    b.Navigation("Likes");
 
                     b.Navigation("LogChanges");
 
@@ -3295,6 +3562,8 @@ namespace Gymmetry.Domain.Migrations
                     b.Navigation("Permissions");
 
                     b.Navigation("PhysicalAssessments");
+
+                    b.Navigation("Posts");
 
                     b.Navigation("RoutineAssigneds");
 

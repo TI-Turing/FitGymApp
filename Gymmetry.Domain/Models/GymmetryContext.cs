@@ -1113,11 +1113,11 @@ public partial class GymmetryContext : DbContext
                 .HasForeignKey(d => d.UserDietUserId)
                 .HasConstraintName("FK_UserDiet");
 
-            entity.HasOne(d => d.UserEmployeeUserUser).WithMany(p => p.Users)
+            entity.HasOne(d => d.UserEmployeeUser).WithMany(p => p.Users)
                 .HasForeignKey(d => d.UserEmployeeUserUserId)
                 .HasConstraintName("FK_UserEmployeeUser");
 
-            entity.HasOne(d => d.UserFitUserUser).WithMany(p => p.Users)
+            entity.HasOne(d => d.UserFitUser).WithMany(p => p.Users)
                 .HasForeignKey(d => d.UserFitUserUserId)
                 .HasConstraintName("FK_UserFitUser");
 
@@ -1243,12 +1243,12 @@ public partial class GymmetryContext : DbContext
             entity.HasOne(e => e.Post)
                 .WithMany(p => p.Comments)
                 .HasForeignKey(e => e.PostId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_CommentPost");
             entity.HasOne(e => e.User)
                 .WithMany(u => u.Comments)
                 .HasForeignKey(e => e.UserId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_CommentUser");
         });
 
@@ -1264,12 +1264,12 @@ public partial class GymmetryContext : DbContext
             entity.HasOne(e => e.Post)
                 .WithMany(p => p.Likes)
                 .HasForeignKey(e => e.PostId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_LikePost");
             entity.HasOne(e => e.User)
                 .WithMany(u => u.Likes)
                 .HasForeignKey(e => e.UserId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_LikeUser");
         });
 

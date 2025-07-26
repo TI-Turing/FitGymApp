@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Gymmetry.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class AddAuthorUserIdForeignKeyToRoutineTemplate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -446,6 +446,26 @@ namespace Gymmetry.Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Comment",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    Ip = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comment", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Daily",
                 columns: table => new
                 {
@@ -599,6 +619,28 @@ namespace Gymmetry.Domain.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Diet", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Feed",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    MediaUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    MediaType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    Ip = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Feed", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1085,6 +1127,33 @@ namespace Gymmetry.Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Post",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    MediaUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    MediaType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    Ip = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Post", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PostUser",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RoutineAssigned",
                 columns: table => new
                 {
@@ -1200,6 +1269,35 @@ namespace Gymmetry.Domain.Migrations
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Like",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Like", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LikePost",
+                        column: x => x.PostId,
+                        principalTable: "Post",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LikeUser",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1387,6 +1485,16 @@ namespace Gymmetry.Domain.Migrations
                 column: "GymId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comment_PostId",
+                table: "Comment",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comment_UserId",
+                table: "Comment",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FK_RoutineExerciseDaily",
                 table: "Daily",
                 column: "RoutineExerciseId");
@@ -1452,6 +1560,11 @@ namespace Gymmetry.Domain.Migrations
                 column: "CategoryExerciseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Feed_UserId",
+                table: "Feed",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Gym_GymTypeId",
                 table: "Gym",
                 column: "GymTypeId");
@@ -1480,6 +1593,16 @@ namespace Gymmetry.Domain.Migrations
                 name: "IX_FK_EmployeeUserJourneyEmployee",
                 table: "JourneyEmployee",
                 column: "EmployeeUser_Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Like_PostId",
+                table: "Like",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Like_UserId",
+                table: "Like",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FK_UserLogChanges",
@@ -1604,6 +1727,11 @@ namespace Gymmetry.Domain.Migrations
                 name: "IX_FK_PlanTypePlan",
                 table: "Plan",
                 column: "PlanTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Post_UserId",
+                table: "Post",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FK_UserRoutineAssigned",
@@ -1761,6 +1889,22 @@ namespace Gymmetry.Domain.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
+                name: "FK_CommentPost",
+                table: "Comment",
+                column: "PostId",
+                principalTable: "Post",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_CommentUser",
+                table: "Comment",
+                column: "UserId",
+                principalTable: "User",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_RoutineExerciseDaily",
                 table: "Daily",
                 column: "RoutineExerciseId",
@@ -1808,6 +1952,14 @@ namespace Gymmetry.Domain.Migrations
                 column: "UserId",
                 principalTable: "User",
                 principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_FeedUser",
+                table: "Feed",
+                column: "UserId",
+                principalTable: "User",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_GymOwnerUser",
@@ -1885,10 +2037,19 @@ namespace Gymmetry.Domain.Migrations
                 name: "Bill");
 
             migrationBuilder.DropTable(
+                name: "Comment");
+
+            migrationBuilder.DropTable(
                 name: "DailyExercise");
 
             migrationBuilder.DropTable(
+                name: "Feed");
+
+            migrationBuilder.DropTable(
                 name: "JourneyEmployee");
+
+            migrationBuilder.DropTable(
+                name: "Like");
 
             migrationBuilder.DropTable(
                 name: "LogChanges");
@@ -1922,6 +2083,9 @@ namespace Gymmetry.Domain.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserOTP");
+
+            migrationBuilder.DropTable(
+                name: "Post");
 
             migrationBuilder.DropTable(
                 name: "SubModule");
