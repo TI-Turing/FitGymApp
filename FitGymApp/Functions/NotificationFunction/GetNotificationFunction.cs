@@ -3,16 +3,13 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Gymmetry.Application.Services.Interfaces;
 using Gymmetry.Domain.DTO;
-using Gymmetry.Domain.Models;
+using Gymmetry.Domain.DTO.Notification.Response;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
-using System.Linq;
 using System.Net;
 using Gymmetry.Utils;
-using Newtonsoft.Json;
 using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace Gymmetry.Functions.NotificationFunction
@@ -39,7 +36,7 @@ namespace Gymmetry.Functions.NotificationFunction
             if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
-                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Notification>
+                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<NotificationResponseDto>
                 {
                     Success = false,
                     Message = error!,
@@ -54,7 +51,7 @@ namespace Gymmetry.Functions.NotificationFunction
                 if (!result.Success)
                 {
                     var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
-                    await notFoundResponse.WriteAsJsonAsync(new ApiResponse<Notification>
+                    await notFoundResponse.WriteAsJsonAsync(new ApiResponse<NotificationResponseDto>
                     {
                         Success = false,
                         Message = result.Message,
@@ -64,7 +61,7 @@ namespace Gymmetry.Functions.NotificationFunction
                     return notFoundResponse;
                 }
                 var successResponse = req.CreateResponse(HttpStatusCode.OK);
-                await successResponse.WriteAsJsonAsync(new ApiResponse<Notification>
+                await successResponse.WriteAsJsonAsync(new ApiResponse<NotificationResponseDto>
                 {
                     Success = true,
                     Message = result.Message,
@@ -77,7 +74,7 @@ namespace Gymmetry.Functions.NotificationFunction
             {
                 logger.LogError(ex, "Error al consultar Notification por Id.");
                 var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-                await errorResponse.WriteAsJsonAsync(new ApiResponse<Notification>
+                await errorResponse.WriteAsJsonAsync(new ApiResponse<NotificationResponseDto>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
@@ -98,7 +95,7 @@ namespace Gymmetry.Functions.NotificationFunction
             if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
-                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Notification>>
+                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<NotificationResponseDto>>
                 {
                     Success = false,
                     Message = error!,
@@ -111,7 +108,7 @@ namespace Gymmetry.Functions.NotificationFunction
             {
                 var result = await _service.GetAllNotificationsAsync();
                 var successResponse = req.CreateResponse(HttpStatusCode.OK);
-                await successResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Notification>>
+                await successResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<NotificationResponseDto>>
                 {
                     Success = result.Success,
                     Message = result.Message,
@@ -124,7 +121,7 @@ namespace Gymmetry.Functions.NotificationFunction
             {
                 logger.LogError(ex, "Error al consultar todos los Notifications.");
                 var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-                await errorResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Notification>>
+                await errorResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<NotificationResponseDto>>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
@@ -145,7 +142,7 @@ namespace Gymmetry.Functions.NotificationFunction
             if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
             {
                 var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
-                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Notification>>
+                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<NotificationResponseDto>>
                 {
                     Success = false,
                     Message = error!,
@@ -161,7 +158,7 @@ namespace Gymmetry.Functions.NotificationFunction
                 if (filters == null || filters.Count == 0)
                 {
                     var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-                    await badResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Notification>>
+                    await badResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<NotificationResponseDto>>
                     {
                         Success = false,
                         Message = "No se proporcionaron filtros válidos.",
@@ -172,7 +169,7 @@ namespace Gymmetry.Functions.NotificationFunction
                 }
                 var result = await _service.FindNotificationsByFieldsAsync(filters);
                 var successResponse = req.CreateResponse(HttpStatusCode.OK);
-                await successResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Notification>>
+                await successResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<NotificationResponseDto>>
                 {
                     Success = result.Success,
                     Message = result.Message,
@@ -185,7 +182,7 @@ namespace Gymmetry.Functions.NotificationFunction
             {
                 logger.LogError(ex, "Error al consultar Notifications por filtros.");
                 var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-                await errorResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Notification>>
+                await errorResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<NotificationResponseDto>>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",

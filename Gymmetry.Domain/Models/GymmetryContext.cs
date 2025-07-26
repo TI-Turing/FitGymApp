@@ -114,6 +114,14 @@ public partial class GymmetryContext : DbContext
 
     public virtual DbSet<RoutineDay> RoutineDays { get; set; }
 
+    public virtual DbSet<Post> Posts { get; set; }
+
+    public virtual DbSet<Comment> Comments { get; set; }
+
+    public virtual DbSet<Like> Likes { get; set; }
+
+    public virtual DbSet<Feed> Feeds { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AccessMethodType>(entity =>
@@ -1196,6 +1204,96 @@ public partial class GymmetryContext : DbContext
                 .WithMany(e => e.RoutineDays)
                 .HasForeignKey(e => e.ExerciseId)
                 .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<Post>(entity =>
+        {
+            entity.ToTable("Post");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Content).HasMaxLength(2000);
+            entity.Property(e => e.MediaUrl).HasMaxLength(500);
+            entity.Property(e => e.MediaType).HasMaxLength(50);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.Ip).HasMaxLength(45);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.Posts)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_PostUser");
+        });
+
+        modelBuilder.Entity<Comment>(entity =>
+        {
+            entity.ToTable("Comment");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Content).HasMaxLength(1000);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.Ip).HasMaxLength(45);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.HasOne(e => e.Post)
+                .WithMany(p => p.Comments)
+                .HasForeignKey(e => e.PostId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_CommentPost");
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.Comments)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_CommentUser");
+        });
+
+        modelBuilder.Entity<Like>(entity =>
+        {
+            entity.ToTable("Like");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.HasOne(e => e.Post)
+                .WithMany(p => p.Likes)
+                .HasForeignKey(e => e.PostId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_LikePost");
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.Likes)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_LikeUser");
+        });
+
+        modelBuilder.Entity<Feed>(entity =>
+        {
+            entity.ToTable("Feed");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Title).HasMaxLength(200);
+            entity.Property(e => e.Description).HasMaxLength(2000);
+            entity.Property(e => e.MediaUrl).HasMaxLength(500);
+            entity.Property(e => e.MediaType).HasMaxLength(50);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.Ip).HasMaxLength(45);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_FeedUser");
         });
 
         OnModelCreatingPartial(modelBuilder);

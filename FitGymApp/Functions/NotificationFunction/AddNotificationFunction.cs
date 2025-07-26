@@ -2,16 +2,11 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Gymmetry.Domain.DTO.Notification.Request;
-using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 using Gymmetry.Domain.DTO;
 using Gymmetry.Application.Services.Interfaces;
-using Gymmetry.Domain.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using System.Linq;
 using Gymmetry.Utils;
 using System.Net;
 using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
@@ -51,8 +46,8 @@ public class AddNotificationFunction
                 return unauthorizedResponse;
             }
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var objRequest = JsonConvert.DeserializeObject<AddNotificationRequest>(requestBody);
-            var validationResult = ModelValidator.ValidateModel<AddNotificationRequest, Guid>(objRequest, StatusCodes.Status400BadRequest);
+            var objRequest = System.Text.Json.JsonSerializer.Deserialize<NotificationCreateRequestDto>(requestBody);
+            var validationResult = ModelValidator.ValidateModel<NotificationCreateRequestDto, Guid>(objRequest, StatusCodes.Status400BadRequest);
             if (validationResult is not null)
             {
                 var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);

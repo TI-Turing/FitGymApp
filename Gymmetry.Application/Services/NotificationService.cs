@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Gymmetry.Application.Services.Interfaces;
-using Gymmetry.Domain.Models;
 using Gymmetry.Domain.DTO.Notification.Request;
+using Gymmetry.Domain.DTO.Notification.Response;
 using Gymmetry.Domain.DTO;
 using Gymmetry.Repository.Services.Interfaces;
 using AutoMapper;
@@ -25,98 +25,59 @@ namespace Gymmetry.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<ApplicationResponse<Notification>> CreateNotificationAsync(AddNotificationRequest request)
+        public async Task<ApplicationResponse<NotificationResponseDto>> CreateNotificationAsync(NotificationCreateRequestDto request)
         {
             try
             {
-                var entity = _mapper.Map<Notification>(request);
+                var entity = _mapper.Map<Domain.Models.Notification>(request);
                 var created = await _notificationRepository.CreateNotificationAsync(entity);
-                return new ApplicationResponse<Notification>
-                {
-                    Success = true,
-                    Message = "Notificación creada correctamente.",
-                    Data = created
-                };
+                var dto = _mapper.Map<NotificationResponseDto>(created);
+                return ApplicationResponse<NotificationResponseDto>.SuccessResponse(dto, "Notificación creada correctamente.");
             }
             catch (Exception ex)
             {
                 await _logErrorService.LogErrorAsync(ex);
-                return new ApplicationResponse<Notification>
-                {
-                    Success = false,
-                    Message = "Error técnico al crear la notificación.",
-                    ErrorCode = "TechnicalError"
-                };
+                return ApplicationResponse<NotificationResponseDto>.ErrorResponse("Error técnico al crear la notificación.");
             }
         }
 
-        public async Task<ApplicationResponse<Notification>> GetNotificationByIdAsync(Guid id)
+        public async Task<ApplicationResponse<NotificationResponseDto>> GetNotificationByIdAsync(Guid id)
         {
             var entity = await _notificationRepository.GetNotificationByIdAsync(id);
             if (entity == null)
-            {
-                return new ApplicationResponse<Notification>
-                {
-                    Success = false,
-                    Message = "Notificación no encontrada.",
-                    ErrorCode = "NotFound"
-                };
-            }
-            return new ApplicationResponse<Notification>
-            {
-                Success = true,
-                Data = entity
-            };
+                return ApplicationResponse<NotificationResponseDto>.ErrorResponse("Notificación no encontrada.");
+            var dto = _mapper.Map<NotificationResponseDto>(entity);
+            return ApplicationResponse<NotificationResponseDto>.SuccessResponse(dto);
         }
 
-        public async Task<ApplicationResponse<IEnumerable<Notification>>> GetAllNotificationsAsync()
+        public async Task<ApplicationResponse<IEnumerable<NotificationResponseDto>>> GetAllNotificationsAsync()
         {
             var entities = await _notificationRepository.GetAllNotificationsAsync();
-            return new ApplicationResponse<IEnumerable<Notification>>
-            {
-                Success = true,
-                Data = entities
-            };
+            var dtos = _mapper.Map<IEnumerable<NotificationResponseDto>>(entities);
+            return ApplicationResponse<IEnumerable<NotificationResponseDto>>.SuccessResponse(dtos);
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateNotificationAsync(UpdateNotificationRequest request, Guid? userId, string ip = "", string invocationId = "")
+        public async Task<ApplicationResponse<bool>> UpdateNotificationAsync(NotificationUpdateRequestDto request, Guid? userId, string ip = "", string invocationId = "")
         {
             try
             {
                 var before = await _notificationRepository.GetNotificationByIdAsync(request.Id);
-                var entity = _mapper.Map<Notification>(request);
+                var entity = _mapper.Map<Domain.Models.Notification>(request);
                 var updated = await _notificationRepository.UpdateNotificationAsync(entity);
                 if (updated)
                 {
                     await _logChangeService.LogChangeAsync("Notification", before, userId, ip, invocationId);
-                    return new ApplicationResponse<bool>
-                    {
-                        Success = true,
-                        Data = true,
-                        Message = "Notificación actualizada correctamente."
-                    };
+                    return ApplicationResponse<bool>.SuccessResponse(true, "Notificación actualizada correctamente.");
                 }
                 else
                 {
-                    return new ApplicationResponse<bool>
-                    {
-                        Success = false,
-                        Data = false,
-                        Message = "No se pudo actualizar la notificación (no encontrada o inactiva).",
-                        ErrorCode = "NotFound"
-                    };
+                    return ApplicationResponse<bool>.ErrorResponse("No se pudo actualizar la notificación (no encontrada o inactiva).");
                 }
             }
             catch (Exception ex)
             {
                 await _logErrorService.LogErrorAsync(ex);
-                return new ApplicationResponse<bool>
-                {
-                    Success = false,
-                    Data = false,
-                    Message = "Error técnico al actualizar la notificación.",
-                    ErrorCode = "TechnicalError"
-                };
+                return ApplicationResponse<bool>.ErrorResponse("Error técnico al actualizar la notificación.");
             }
         }
 
@@ -125,47 +86,22 @@ namespace Gymmetry.Application.Services
             try
             {
                 var deleted = await _notificationRepository.DeleteNotificationAsync(id);
-                if (deleted)
-                {
-                    return new ApplicationResponse<bool>
-                    {
-                        Success = true,
-                        Data = true,
-                        Message = "Notificación eliminada correctamente."
-                    };
-                }
-                else
-                {
-                    return new ApplicationResponse<bool>
-                    {
-                        Success = false,
-                        Data = false,
-                        Message = "Notificación no encontrada o ya eliminada.",
-                        ErrorCode = "NotFound"
-                    };
-                }
+                return deleted
+                    ? ApplicationResponse<bool>.SuccessResponse(true, "Notificación eliminada correctamente.")
+                    : ApplicationResponse<bool>.ErrorResponse("Notificación no encontrada o ya eliminada.");
             }
             catch (Exception ex)
             {
                 await _logErrorService.LogErrorAsync(ex);
-                return new ApplicationResponse<bool>
-                {
-                    Success = false,
-                    Data = false,
-                    Message = "Error técnico al eliminar la notificación.",
-                    ErrorCode = "TechnicalError"
-                };
+                return ApplicationResponse<bool>.ErrorResponse("Error técnico al eliminar la notificación.");
             }
         }
 
-        public async Task<ApplicationResponse<IEnumerable<Notification>>> FindNotificationsByFieldsAsync(Dictionary<string, object> filters)
+        public async Task<ApplicationResponse<IEnumerable<NotificationResponseDto>>> FindNotificationsByFieldsAsync(Dictionary<string, object> filters)
         {
             var entities = await _notificationRepository.FindNotificationsByFieldsAsync(filters);
-            return new ApplicationResponse<IEnumerable<Notification>>
-            {
-                Success = true,
-                Data = entities
-            };
+            var dtos = _mapper.Map<IEnumerable<NotificationResponseDto>>(entities);
+            return ApplicationResponse<IEnumerable<NotificationResponseDto>>.SuccessResponse(dtos);
         }
     }
 }

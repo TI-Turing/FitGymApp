@@ -80,6 +80,8 @@ builder.Services.AddScoped<IUninstallOptionRepository, UninstallOptionRepository
 builder.Services.AddScoped<IUserTypeRepository, UserTypeRepository>();
 builder.Services.AddScoped<IVerificationTypeRepository, VerificationTypeRepository>();
 builder.Services.AddScoped<IUserOtpRepository, UserOtpRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 
 // Inyección de dependencias de servicios de aplicación
 builder.Services.AddScoped<IPasswordService, PasswordService>();

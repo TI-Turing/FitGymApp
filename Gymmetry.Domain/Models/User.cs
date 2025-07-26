@@ -126,4 +126,10 @@ public partial class User
     public virtual UserType? UserType { get; set; }
 
     public virtual ICollection<PaymentAttempt> PaymentAttempts { get; set; } = new List<PaymentAttempt>();
+
+    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+
+    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
+    public virtual ICollection<Like> Likes { get; set; } = new List<Like>();
 }
