@@ -259,12 +259,11 @@ namespace Gymmetry.Application.Services
                     IdGender = request.IdGender.HasValue ? request.IdGender.Value : userBefore.IdGender,
                     BirthDate = request.BirthDate ?? userBefore.BirthDate,
                     DocumentTypeId = request.DocumentTypeId.HasValue ? request.DocumentTypeId.Value : userBefore.DocumentTypeId,
-                    DocumentType = request.DocumentType ?? userBefore.DocumentType,
                     Phone = request.Phone ?? userBefore.Phone,
                     CountryId = request.CountryId.HasValue ? request.CountryId.Value : userBefore.CountryId,
                     Address = request.Address ?? userBefore.Address,
                     CityId = request.CityId.HasValue ? request.CityId.Value : userBefore.CityId,
-                    RegionId = request.RegionId ?? userBefore.RegionId,
+                    RegionId = request.RegionId.HasValue ? request.RegionId.Value : userBefore.RegionId,
                     Rh = request.Rh ?? userBefore.Rh,
                     EmergencyName = request.EmergencyName ?? userBefore.EmergencyName,
                     EmergencyPhone = request.EmergencyPhone ?? userBefore.EmergencyPhone,
@@ -273,6 +272,8 @@ namespace Gymmetry.Application.Services
                     Email = userBefore.Email,
                     Password = userBefore.Password,
                     IsActive = userBefore.IsActive,
+                    CreatedAt = userBefore.CreatedAt,
+                    PhysicalExceptionsNotes = request.PhysicalExceptionsNotes ?? userBefore.PhysicalExceptionsNotes,
                 };
                 user.RegistrationCompleted = await ValidateUserFieldsAsync(user).ConfigureAwait(false);
 
@@ -615,7 +616,6 @@ namespace Gymmetry.Application.Services
             if (!user.BirthDate.HasValue) missingFields.Add("BirthDate");
             if (string.IsNullOrEmpty(user.ProfileImageUrl)) missingFields.Add("ProfileImageUrl");
             if (!user.DocumentTypeId.HasValue) missingFields.Add("DocumentTypeId");
-            if (string.IsNullOrEmpty(user.DocumentType)) missingFields.Add("DocumentType");
             if (string.IsNullOrEmpty(user.Phone)) missingFields.Add("Phone");
             if (!user.CountryId.HasValue) missingFields.Add("CountryId");
             if (string.IsNullOrEmpty(user.Address)) missingFields.Add("Address");
@@ -644,7 +644,6 @@ namespace Gymmetry.Application.Services
                    user.BirthDate.HasValue &&
                    !string.IsNullOrEmpty(user.ProfileImageUrl) &&
                    user.DocumentTypeId.HasValue &&
-                   !string.IsNullOrEmpty(user.DocumentType) &&
                    !string.IsNullOrEmpty(user.Phone) &&
                    user.CountryId.HasValue &&
                    !string.IsNullOrEmpty(user.Address) &&

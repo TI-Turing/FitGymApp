@@ -1072,7 +1072,7 @@ public partial class GymmetryContext : DbContext
             entity.Property(e => e.BirthDate).HasColumnType("datetime");
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
-            entity.Property(e => e.DocumentType).HasMaxLength(50);
+            // entity.Property(e => e.DocumentType).HasMaxLength(50); // Eliminado
             entity.Property(e => e.Email).HasMaxLength(255);
             entity.Property(e => e.EmergencyName).HasMaxLength(100);
             entity.Property(e => e.EmergencyPhone).HasMaxLength(20);
@@ -1085,6 +1085,7 @@ public partial class GymmetryContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Password).HasMaxLength(255);
             entity.Property(e => e.Phone).HasMaxLength(20);
+            entity.Property(e => e.PhysicalExceptionsNotes).HasMaxLength(500);
             entity.Property(e => e.ProfileImageUrl).HasMaxLength(255);
             entity.Property(e => e.Rh)
                 .HasMaxLength(5)

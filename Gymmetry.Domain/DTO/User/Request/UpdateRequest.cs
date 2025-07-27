@@ -16,7 +16,6 @@ namespace Gymmetry.Domain.DTO.User.Request
         public Guid? IdGender { get; set; }
         public DateTime? BirthDate { get; set; } = null;
         public Guid? DocumentTypeId { get; set; }
-        public string? DocumentType { get; set; }
         public string? Phone { get; set; }
         public Guid? CountryId { get; set; }
         public string? Address { get; set; }
@@ -26,7 +25,7 @@ namespace Gymmetry.Domain.DTO.User.Request
         public string? EmergencyName { get; set; }
         public string? EmergencyPhone { get; set; }
         public string? PhysicalExceptions { get; set; }
-        public Guid? UserTypeId { get; set; } = null;
-        // No incluir Password aquí, nunca debe actualizarse por este método
+        public Guid? UserTypeId { get; set; } = null;       
+        public string? PhysicalExceptionsNotes { get; set; }
     }
 }

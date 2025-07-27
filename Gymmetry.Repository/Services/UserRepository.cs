@@ -144,7 +144,9 @@ namespace Gymmetry.Repository.Services
             // Get connection string and container name from environment variables
             string connectionString = _configuration["BlobStorage:ConnectionString"] ?? _configuration["AzureWebJobsStorage"];
             string containerName = _configuration["BlobStorage:UserProfileContainer"] ?? "user-profile-images";
-            string blobName = $"{userId}_ProfileImage.png";
+            // Agregar timestamp para evitar reemplazo
+            string timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            string blobName = $"{userId}_ProfileImage_{timestamp}.png";
 
             var blobServiceClient = new BlobServiceClient(connectionString);
             var containerClient = blobServiceClient.GetBlobContainerClient(containerName);

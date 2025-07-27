@@ -4,6 +4,7 @@ using Gymmetry.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gymmetry.Domain.Migrations
 {
     [DbContext(typeof(GymmetryContext))]
-    partial class GymmetryContextModelSnapshot : ModelSnapshot
+    [Migration("20250727135109_RemoveDocumentTypeFromUser")]
+    partial class RemoveDocumentTypeFromUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2424,10 +2427,6 @@ namespace Gymmetry.Domain.Migrations
 
                     b.Property<string>("PhysicalExceptions")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhysicalExceptionsNotes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<Guid?>("PlanId")
                         .HasColumnType("uniqueidentifier");

@@ -27,8 +27,6 @@ public partial class User
 
     public Guid? DocumentTypeId { get; set; }
 
-    public string? DocumentType { get; set; }
-
     public string? Phone { get; set; }
 
     public Guid? CountryId { get; set; }
@@ -46,6 +44,8 @@ public partial class User
     public string? EmergencyPhone { get; set; }
 
     public string? PhysicalExceptions { get; set; }
+
+    public string? PhysicalExceptionsNotes { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 

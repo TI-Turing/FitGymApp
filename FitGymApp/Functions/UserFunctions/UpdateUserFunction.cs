@@ -77,7 +77,7 @@ public class UpdateUserFunction
                     Success = false,
                     Message = result.Message,
                     Data = objRequest.Id,
-                    StatusCode = StatusCodes.Status404NotFound
+                    StatusCode = StatusCodes.Status422UnprocessableEntity
                 });
                 return notFoundResponse;
             }
