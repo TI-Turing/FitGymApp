@@ -42,17 +42,17 @@ namespace Gymmetry.Repository.Services
 
         public async Task<User?> GetUserByIdAsync(Guid id)
         {
-            string cacheKey = _redisPrefix + id;
-            var cached = await _redisCache.GetAsync(cacheKey);
-            if (cached != null)
-            {
-                return System.Text.Json.JsonSerializer.Deserialize<User>(cached);
-            }
+            //string cacheKey = _redisPrefix + id;
+            //var cached = await _redisCache.GetAsync(cacheKey);
+            //if (cached != null)
+            //{
+            //    return System.Text.Json.JsonSerializer.Deserialize<User>(cached);
+            //}
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id && (u.IsActive ?? false));
-            if (user != null)
-            {
-                await _redisCache.SetAsync(cacheKey, System.Text.Json.JsonSerializer.Serialize(user), TimeSpan.FromMinutes(10));
-            }
+            //if (user != null)
+            //{
+            //    await _redisCache.SetAsync(cacheKey, System.Text.Json.JsonSerializer.Serialize(user), TimeSpan.FromMinutes(10));
+            //}
             return user;
         }
 

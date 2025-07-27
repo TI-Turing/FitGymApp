@@ -15,6 +15,7 @@ namespace Gymmetry.Domain.Models
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public bool IsActive { get; set; }
+        public string? Recipient { get; set; }
 
         public virtual User User { get; set; } = null!;
         public virtual VerificationType VerificationType { get; set; } = null!;

@@ -1,6 +1,7 @@
 using Gymmetry.Application.Services.Interfaces;
 using Gymmetry.Domain.DTO;
 using Gymmetry.Domain.DTO.User.Request;
+using Gymmetry.Domain.DTO.User.Response;
 using Gymmetry.Utils;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -37,11 +38,11 @@ public class OtpUtilsFunction
         if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
         {
             var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
-            await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<string>
+            await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<bool>
             {
                 Success = false,
                 Message = error!,
-                Data = null,
+                Data = false,
                 StatusCode = StatusCodes.Status401Unauthorized
             });
             return unauthorizedResponse;
@@ -65,7 +66,14 @@ public class OtpUtilsFunction
             }
             var result = await _userOtpService.SendOtpAsync(data.UserId, data.VerificationType, data.Recipient, data.Method);
             var response = req.CreateResponse(result.Success ? HttpStatusCode.OK : HttpStatusCode.BadRequest);
-            await response.WriteAsJsonAsync(result);
+
+            await response.WriteAsJsonAsync(new ApiResponse<bool>
+            {
+                Success = true,
+                Message = result.Message,
+                Data = result.Data,
+                StatusCode = StatusCodes.Status201Created
+            });
             return response;
         }
         catch (Exception ex)
@@ -87,29 +95,45 @@ public class OtpUtilsFunction
     public async Task<HttpResponseData> Run(
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = "otp/validate-otp")] HttpRequestData req)
     {
-        var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        var request = JsonConvert.DeserializeObject<ValidateOtpRequest>(requestBody);
-        if (request == null || request.UserId == Guid.Empty || string.IsNullOrEmpty(request.Otp) || string.IsNullOrEmpty(request.VerificationType))
+        try
         {
-            var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-            await badResponse.WriteAsJsonAsync(new ApiResponse<bool>
+            var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var request = JsonConvert.DeserializeObject<ValidateOtpRequest>(requestBody);
+            if (request == null || request.UserId == Guid.Empty || string.IsNullOrEmpty(request.Otp) || string.IsNullOrEmpty(request.VerificationType))
+            {
+                var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await badResponse.WriteAsJsonAsync(new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Datos de entrada inválidos.",
+                    Data = false,
+                    StatusCode = 400
+                });
+                return badResponse;
+            }
+            var isValid = await _userOtpService.ValidateOtpAsync(request.UserId, request.Otp, request.VerificationType);
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(new ApiResponse<bool>
+            {
+                Success = isValid,
+                Message = isValid ? "OTP válido." : "OTP inválido o expirado.",
+                Data = isValid,
+                StatusCode = isValid ? 200 : 400
+            });
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error validating OTP");
+            var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
+            await errorResponse.WriteAsJsonAsync(new ApiResponse<bool>
             {
                 Success = false,
-                Message = "Datos de entrada inválidos.",
+                Message = "Unexpected error validating OTP.",
                 Data = false,
-                StatusCode = 400
+                StatusCode = StatusCodes.Status500InternalServerError
             });
-            return badResponse;
+            return errorResponse;
         }
-        var isValid = await _userOtpService.ValidateOtpAsync(request.UserId, request.Otp, request.VerificationType);
-        var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(new ApiResponse<bool>
-        {
-            Success = isValid,
-            Message = isValid ? "OTP válido." : "OTP inválido o expirado.",
-            Data = isValid,
-            StatusCode = isValid ? 200 : 400
-        });
-        return response;
     }
 }

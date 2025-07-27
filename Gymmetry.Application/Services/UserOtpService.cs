@@ -58,27 +58,43 @@ namespace Gymmetry.Application.Services
                 otpEntity.IsVerified = true;
                 otpEntity.UpdatedAt = DateTime.UtcNow;
                 await _userOtpRepository.UpdateUserOtpAsync(otpEntity).ConfigureAwait(false);
-                return true;
+
+                // Actualizar email o teléfono si corresponde
+                var user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
+                if (user != null)
+                {
+                    if (verificationTypeGuid.Value == Guid.Parse("DDA61A30-679D-4AFF-887C-69DF91E4D21E"))
+                    {
+                        user.Email = otpEntity.Recipient;
+                        await _userRepository.UpdateUserAsync(user).ConfigureAwait(false);
+                    }
+                    else if (verificationTypeGuid.Value == Guid.Parse("2082D337-B3FD-4F9A-8C89-AF9C1038DA9C"))
+                    {
+                        user.Phone = otpEntity.Recipient;
+                        await _userRepository.UpdateUserAsync(user).ConfigureAwait(false);
+                    }
+                }
+                return true;    
             }
-            catch (Exception ex)
+            catch (Exception ex)    
             {
                 _logger.LogError(ex, "Error validating OTP for user {UserId}", userId);
                 return false;
             }
         }
 
-        public async Task<ApplicationResponse<string>> SendOtpAsync(Guid userId, string verificationType, string recipient, string method)
+        public async Task<ApplicationResponse<bool>> SendOtpAsync(Guid userId, string verificationType, string recipient, string method)
         {
             try
             {
                 var verificationTypeGuid = await GetVerificationTypeIdAsync(verificationType).ConfigureAwait(false);
                 if (verificationTypeGuid == null)
                 {
-                    return new ApplicationResponse<string>
+                    return new ApplicationResponse<bool>
                     {
                         Success = false,
                         Message = "Verification type not found.",
-                        Data = null
+                        Data = false
                     };
                 }
                 await RemoveExistingOtpsAsync(userId, method, verificationTypeGuid.Value).ConfigureAwait(false);
@@ -86,19 +102,19 @@ namespace Gymmetry.Application.Services
                 var message = $"Gymmetry te da tu codigo de verificación: {otp}";
                 if (!await SendOtpMessageAsync(verificationTypeGuid.Value, method, recipient, message).ConfigureAwait(false))
                 {
-                    return new ApplicationResponse<string> { Success = false, Message = "Failed to send OTP.", Data = null };
+                    return new ApplicationResponse<bool> { Success = false, Message = "Failed to send OTP.", Data = false };
                 }
-                await SaveOtpAsync(userId, method, verificationTypeGuid.Value, otp).ConfigureAwait(false);
-                return new ApplicationResponse<string> { Success = true, Message = "OTP sent and saved.", Data = otp };
+                await SaveOtpAsync(userId, method, verificationTypeGuid.Value, otp, recipient).ConfigureAwait(false);
+                return new ApplicationResponse<bool> { Success = true, Message = "OTP sent and saved.", Data = true };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error sending OTP for user {UserId}", userId);
-                return new ApplicationResponse<string>
+                return new ApplicationResponse<bool>
                 {
                     Success = false,
                     Message = "Technical error while sending OTP.",
-                    Data = null
+                    Data = false
                 };
             }
         }
@@ -150,7 +166,7 @@ namespace Gymmetry.Application.Services
             return false;
         }
 
-        private async Task SaveOtpAsync(Guid userId, string method, Guid verificationTypeId, string otp)
+        private async Task SaveOtpAsync(Guid userId, string method, Guid verificationTypeId, string otp, string recpient)
         {
             var otpEntity = new UserOTP
             {
@@ -161,7 +177,8 @@ namespace Gymmetry.Application.Services
                 VerificationTypeId = verificationTypeId,
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow,
-                IsActive = true
+                IsActive = true,
+                Recipient = recpient
             };
             await _userRepository.SaveUserOtpAsync(otpEntity).ConfigureAwait(false);
         }

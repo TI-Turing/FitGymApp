@@ -1,0 +1,38 @@
+{
+  "pecho": {
+    "descripcion": "Músculo pectoral mayor y menor, zona del pecho",
+    "valor": 0.0
+  },
+  "espalda": {
+    "descripcion": "Trapecios, dorsales, romboides y erectores de columna",
+    "valor": 0.0
+  },
+  "hombro": {
+    "descripcion": "Deltoides anterior, lateral y posterior",
+    "valor": 0.0
+  },
+  "brazo": {
+    "descripcion": "Incluye bíceps, tríceps y antebrazos",
+    "valor": 0.0
+  },
+  "abdomen": {
+    "descripcion": "Recto abdominal, oblicuos, transverso y core",
+    "valor": 0.0
+  },
+  "gluteo": {
+    "descripcion": "Glúteo mayor, medio y menor",
+    "valor": 0.0
+  },
+  "pierna": {
+    "descripcion": "Incluye cuádriceps, isquiotibiales y pantorrillas",
+    "valor": 0.0
+  },
+  "trapecio": {
+    "descripcion": "Músculo grande de la parte superior de la espalda y cuello",
+    "valor": 0.0
+  },
+  "core": {
+    "descripcion": "Zona central del cuerpo: abdomen, lumbares, glúteos y cadera",
+    "valor": 0.0
+  }
+}

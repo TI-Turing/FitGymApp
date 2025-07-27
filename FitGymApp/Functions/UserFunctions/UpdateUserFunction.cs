@@ -92,7 +92,7 @@ public class UpdateUserFunction
             return successResponse;
         }
         catch (Exception ex)
-        {
+         {
             logger.LogError(ex, "Error al actualizar usuario.");
             var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
             await errorResponse.WriteAsJsonAsync(new ApiResponse<Guid>

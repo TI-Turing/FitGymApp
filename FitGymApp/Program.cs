@@ -11,7 +11,8 @@ using Gymmetry.Repository.Services;
 using Gymmetry.Repository.Services.Interfaces;
 using Gymmetry.Repository.Persistence.Seed;
 using Gymmetry.Repository.Services.Cache;
- 
+using Microsoft.Extensions.Logging;
+
 var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
@@ -45,8 +46,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>(sp =>
 builder.Services.AddScoped<IFeedRepository, FeedRepository>(sp =>
     new FeedRepository(
         sp.GetRequiredService<GymmetryContext>(),
-        sp.GetRequiredService<Microsoft.Extensions.Configuration.IConfiguration>(),
-        sp.GetRequiredService<IRedisCacheService>()
+        sp.GetRequiredService<IConfiguration>(),
+        sp.GetRequiredService<IRedisCacheService>(),
+        sp.GetRequiredService<ILogger<FeedRepository>>()
     )
 );
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
@@ -63,6 +65,7 @@ builder.Services.AddScoped<IDailyExerciseRepository, DailyExerciseRepository>();
 builder.Services.AddScoped<IDailyHistoryRepository, DailyHistoryRepository>();
 builder.Services.AddScoped<IDailyRepository, DailyRepository>();
 builder.Services.AddScoped<IDietRepository, DietRepository>();
+builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<IEmployeeRegisterDailyRepository, EmployeeRegisterDailyRepository>();
 builder.Services.AddScoped<IEmployeeTypeRepository, EmployeeTypeRepository>();
 builder.Services.AddScoped<IEmployeeUserRepository, EmployeeUserRepository>();
@@ -113,6 +116,7 @@ builder.Services.AddScoped<IDailyExerciseService, DailyExerciseService>();
 builder.Services.AddScoped<IDailyHistoryService, DailyHistoryService>();
 builder.Services.AddScoped<IDailyService, DailyService>();
 builder.Services.AddScoped<IDietService, DietService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEmployeeRegisterDailyService, EmployeeRegisterDailyService>();
 builder.Services.AddScoped<IEmployeeTypeService, EmployeeTypeService>();
 builder.Services.AddScoped<IEmployeeUserService, EmployeeUserService>();
@@ -148,7 +152,12 @@ builder.Services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>
 
 // Configuración de Redis
 var redisConnectionString = configuration["Redis:ConnectionString"] ?? "localhost:6379";
-builder.Services.AddSingleton<IRedisCacheService>(sp => new RedisCacheService(redisConnectionString));
+builder.Services.AddSingleton<IRedisCacheService>(sp =>
+    new RedisCacheService(
+        redisConnectionString,
+        sp.GetRequiredService<ILogger<RedisCacheService>>()
+    )
+);
 
 // Aplicar migraciones y ejecutar seeds (opcional, solo en desarrollo o si es seguro)
 using (var scope = builder.Services.BuildServiceProvider().CreateScope())

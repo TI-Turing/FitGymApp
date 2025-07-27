@@ -1,0 +1,110 @@
+{
+    "perdida_peso": {
+        "descripcion": "Reducción de grasa corporal y control del peso",
+        "valor": 0.0
+    },
+    "masa_muscular": {
+        "descripcion": "Incremento de volumen muscular mediante hipertrofia",
+        "valor": 0.0
+    },
+    "definicion_muscular": {
+        "descripcion": "Reducir grasa manteniendo músculo para marcar los músculos",
+        "valor": 0.0
+    },
+    "fuerza": {
+        "descripcion": "Mejorar la capacidad para levantar más peso",
+        "valor": 0.0
+    },
+    "resistencia_fisica": {
+        "descripcion": "Aumentar la capacidad aeróbica y muscular para sostener el esfuerzo",
+        "valor": 0.0
+    },
+    "tonificacion": {
+        "descripcion": "Dar firmeza y forma al músculo sin ganar volumen",
+        "valor": 0.0
+    },
+    "movilidad": {
+        "descripcion": "Mejorar el rango de movimiento de articulaciones y músculos",
+        "valor": 0.0
+    },
+    "postura": {
+        "descripcion": "Corregir desequilibrios y alinear la postura corporal",
+        "valor": 0.0
+    },
+    "rehabilitacion": {
+        "descripcion": "Recuperación física post-lesión o post-cirugía",
+        "valor": 0.0
+    },
+    "salud_cardiovascular": {
+        "descripcion": "Mejorar el sistema circulatorio y prevenir enfermedades del corazón",
+        "valor": 0.0
+    },
+    "anti_estres": {
+        "descripcion": "Reducir estrés y ansiedad mediante ejercicio consciente o relajante",
+        "valor": 0.0
+    },
+    "energia": {
+        "descripcion": "Aumentar el nivel de energía diario mediante actividad física",
+        "valor": 0.0
+    },
+    "sueño": {
+        "descripcion": "Mejorar la calidad del descanso y del ciclo de sueño",
+        "valor": 0.0
+    },
+    "adulto_mayor": {
+        "descripcion": "Enfocado en movilidad, equilibrio y prevención de caídas en adultos mayores",
+        "valor": 0.0
+    },
+    "enfermedades_cronicas": {
+        "descripcion": "Apoyo al control de diabetes, hipertensión u otras condiciones",
+        "valor": 0.0
+    },
+    "entrenamiento_funcional": {
+        "descripcion": "Simula movimientos cotidianos para mejorar la funcionalidad corporal",
+        "valor": 0.0
+    },
+    "deportes_especificos": {
+        "descripcion": "Preparación física orientada a un deporte concreto",
+        "valor": 0.0
+    },
+    "pruebas_fisicas": {
+        "descripcion": "Preparación para pruebas físicas (militares, policía, bomberos)",
+        "valor": 0.0
+    },
+    "hiit": {
+        "descripcion": "Entrenamiento por intervalos de alta intensidad (quema grasa + resistencia)",
+        "valor": 0.0
+    },
+    "velocidad_agilidad": {
+        "descripcion": "Mejorar tiempo de reacción, velocidad y desplazamiento ágil",
+        "valor": 0.0
+    },
+    "entrenamiento_pareja": {
+        "descripcion": "Rutinas diseñadas para dos personas simultáneamente",
+        "valor": 0.0
+    },
+    "principiante": {
+        "descripcion": "Nivel inicial, baja exigencia, ideal para empezar",
+        "valor": 0.0
+    },
+    "intermedio": {
+        "descripcion": "Nivel medio de exigencia para usuarios con experiencia básica",
+        "valor": 0.0
+    },
+    "avanzado": {
+        "descripcion": "Nivel alto de exigencia, para usuarios entrenados",
+        "valor": 0.0
+    },
+    "rutina_corta": {
+        "descripcion": "Duración breve (5 a 15 min), ideal para falta de tiempo",
+        "valor": 0.0
+    },
+    "rutina_larga": {
+        "descripcion": "Sesiones prolongadas para resultados más intensos (30+ min)",
+        "valor": 0.0
+    },
+    "autoestima": {
+        "descripcion": "Mejorar confianza corporal y bienestar emocional",
+        "valor": 0.0
+    }
+}

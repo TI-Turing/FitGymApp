@@ -10,6 +10,6 @@ namespace Gymmetry.Application.Services.Interfaces
     {
         Task<bool> ValidateOtpAsync(Guid userId, string otp);
         Task<bool> ValidateOtpAsync(Guid userId, string otp, string verificationType);
-        Task<ApplicationResponse<string>> SendOtpAsync(Guid userId, string verificationType, string recipient, string method);
+        Task<ApplicationResponse<bool>> SendOtpAsync(Guid userId, string verificationType, string recipient, string method);
     }
 }
