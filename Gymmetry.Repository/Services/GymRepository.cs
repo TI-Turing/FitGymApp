@@ -146,5 +146,14 @@ namespace Gymmetry.Repository.Services
             }
             return Expression.Lambda<Func<Gym, bool>>(predicate, parameter);
         }
+
+        public async Task<IEnumerable<Gym>> FindGymsByNameAsync(string name)
+        {
+            return await _context.Gyms
+                .Where(e => e.IsActive && e.Name.Contains(name))
+                .Take(10)
+                .ToListAsync()
+                .ConfigureAwait(false);
+        }
     }
 }

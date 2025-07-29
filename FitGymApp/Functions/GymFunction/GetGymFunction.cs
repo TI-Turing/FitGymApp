@@ -182,5 +182,54 @@ namespace Gymmetry.Functions.GymFunction
                 return errorResponse;
             }
         }
+
+        [Function("Gym_FindGymsByNameFunction")]
+        public async Task<HttpResponseData> FindByNameAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "gyms/findbyname/{name}")] HttpRequestData req,
+            FunctionContext executionContext,
+            string name)
+        {
+            //TODO: Recibir la ciudad o ubicación para filtrar los Gyms por nombre y ubicación mas cercanos
+            var logger = executionContext.GetLogger("Gym_FindGymsByNameFunction");
+            logger.LogInformation($"Consultando Gyms por nombre: {name}");
+            if (!JwtValidator.ValidateJwt(req, out var error, out var userId))
+            {
+                var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
+                await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<Guid>
+                {
+                    Success = false,
+                    Message = error!,
+                    Data = default,
+                    StatusCode = StatusCodes.Status401Unauthorized
+                });
+                return unauthorizedResponse;
+            }
+            try
+            {
+                var result = await _service.FindGymsByNameAsync(name);
+                var response = req.CreateResponse(HttpStatusCode.OK);
+                await response.WriteAsJsonAsync(new ApiResponse<IEnumerable<Gym>>
+                {
+                    Success = result.Success,
+                    Message = result.Message,
+                    Data = result.Data,
+                    StatusCode = StatusCodes.Status200OK
+                });
+                return response;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error al consultar Gyms por nombre.");
+                var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await errorResponse.WriteAsJsonAsync(new ApiResponse<IEnumerable<Gym>>
+                {
+                    Success = false,
+                    Message = "Ocurrió un error al procesar la solicitud.",
+                    Data = null,
+                    StatusCode = StatusCodes.Status500InternalServerError
+                });
+                return errorResponse;
+            }
+        }
     }
 }

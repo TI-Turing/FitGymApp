@@ -348,6 +348,32 @@ namespace Gymmetry.Application.Services
             }
         }
 
+        public async Task<ApplicationResponse<IEnumerable<Gym>>> FindGymsByNameAsync(string name)
+        {
+            _logger.LogInformation("Starting FindGymsByNameAsync method with name: {Name}", name);
+            try
+            {
+                var entities = await _gymRepository.FindGymsByNameAsync(name).ConfigureAwait(false);
+                _logger.LogInformation("Retrieved {GymCount} gyms successfully with name contains: {Name}", entities.Count(), name);
+                return new ApplicationResponse<IEnumerable<Gym>>
+                {
+                    Success = true,
+                    Data = entities
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while finding gyms by name: {Name}", name);
+                await _logErrorService.LogErrorAsync(ex).ConfigureAwait(false);
+                return new ApplicationResponse<IEnumerable<Gym>>
+                {
+                    Success = false,
+                    Message = "Error técnico al buscar los gimnasios por nombre.",
+                    ErrorCode = "TechnicalError"
+                };
+            }
+        }
+
         public async Task<ApplicationResponse<byte[]>> GenerateGymQrAsync(Guid gymId)
         {
             _logger.LogInformation("Starting GenerateGymQrAsync method for GymId: {GymId}", gymId);

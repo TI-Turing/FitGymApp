@@ -16,5 +16,6 @@ namespace Gymmetry.Repository.Services.Interfaces
         Task<string> UploadGymLogoAsync(Guid gymId, byte[] image, string? fileName, string? contentType);
         Task<string?> GetLogoFromBlobStorageAsync(Guid gymId);
         Task SaveChangesAsync();
+        Task<IEnumerable<Gym>> FindGymsByNameAsync(string name);
     }
 }

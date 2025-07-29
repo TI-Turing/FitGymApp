@@ -51,6 +51,8 @@ builder.Services.AddScoped<IFeedRepository, FeedRepository>(sp =>
         sp.GetRequiredService<ILogger<FeedRepository>>()
     )
 );
+
+builder.Services.AddScoped<IAccessMethodTypeRepository, AccessMethodTypeRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<ILogErrorRepository, LogErrorRepository>();
 builder.Services.AddScoped<ILogLoginRepository, LogLoginRepository>();
@@ -101,6 +103,7 @@ builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 builder.Services.AddScoped<IGymImageRepository, GymImageRepository>();
 
 // Inyección de dependencias de servicios de aplicación
+builder.Services.AddScoped<IAccessMethodTypeService, AccessMethodTypeService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();

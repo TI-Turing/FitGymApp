@@ -19,5 +19,6 @@ namespace Gymmetry.Application.Services.Interfaces
         Task<ApplicationResponse<byte[]>> GenerateGymQrAsync(Guid gymId);
         Task<ApplicationResponse<GenerateGymQrResponse>> GenerateGymQrWithPlanTypeAsync(Guid gymId, string baseUrl);
         Task<ApplicationResponse<string>> UploadGymLogoAsync(UploadGymLogoRequest request);
+        Task<ApplicationResponse<IEnumerable<Gym>>> FindGymsByNameAsync(string name);
     }
 }
