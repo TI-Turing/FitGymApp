@@ -45,6 +45,38 @@ namespace Gymmetry.Application.Services
             };
             return new ApplicationResponse<bool> { Success = await _repo.AddAsync(log) };
         }
+
+        public async Task<ApplicationResponse<bool>> LogLoginAsync(Guid? userId, bool success, string refreshToken, DateTime refreshTokenExpiration, string? ip = null, string? message = null)
+        {
+            var log = new LogLogin
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId ?? Guid.Empty,
+                RefreshToken = refreshToken,
+                RefreshTokenExpiration = refreshTokenExpiration,
+                CreatedAt = DateTime.UtcNow,
+                Ip = ip,
+                IsActive = true,
+                IsSuccess = success
+            };
+            return new ApplicationResponse<bool> { Success = await _repo.AddAsync(log) };
+        }
+        public async Task<ApplicationResponse<LogLogin>> GetLogLoginByUserId(Guid userId)
+        {
+            var response = new ApplicationResponse<LogLogin>();
+            response.Success = true;
+            response.Data = await _repo.GetByUserIdAsync(userId);
+            response.ErrorCode = response.Data == null ? "NotFound" : null;
+            response.Message = response.Data == null ? "LogLogin not found for the specified user." : "LogLogin retrieved successfully.";
+            return response;
+        }
+
+        public async Task<ApplicationResponse<bool>> UpdateLogLoginAsync(LogLogin logLogin)
+        {
+            return await _repo.UpdateAsync(logLogin) 
+                ? new ApplicationResponse<bool> { Success = true, Message = "LogLogin updated successfully." } 
+                : new ApplicationResponse<bool> { Success = false, Message = "Failed to update LogLogin." };
+        }
     }
 
     public class LogChangeService : ILogChangeService

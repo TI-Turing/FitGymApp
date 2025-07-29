@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Gymmetry.Domain.DTO;
 
 namespace Gymmetry.Application.Services
 {
@@ -27,7 +28,7 @@ namespace Gymmetry.Application.Services
             _logErrorService = logErrorService;
         }
 
-        public async Task<LoginResponse?> LoginAsync(LoginRequest request)
+        public async Task<LoginResponse?> LoginAsync(LoginRequest request, string ip)
         {
             try
             {
@@ -51,14 +52,25 @@ namespace Gymmetry.Application.Services
                 }
                 request.Password = user.Password;
                 var response = await _authRepository.LoginAsync(request);
+                string refreshToken = Guid.NewGuid().ToString();
+                DateTime refreshTokenExpiration = DateTime.UtcNow.AddMonths(6);
                 if (response != null)
                 {
                     response.Token = await JwtTokenGenerator.GenerateTokenAsync(response.UserId, response.UserName, response.Email);
-                    await _logLoginService.LogLoginAsync(response.UserId, true, null, "Login exitoso");
+                    response.RefreshToken= refreshToken;
+                    response.TokenExpiration = DateTime.UtcNow.AddHours(1);
+                    response.RefreshTokenExpiration = refreshTokenExpiration;
+                    var logLogin = _logLoginService.GetLogLoginByUserId(response.UserId).Result.Data;
+                    if (logLogin != null)
+                    {
+                        logLogin.IsActive = false;
+                        await _logLoginService.UpdateLogLoginAsync(logLogin);
+                    }
+                    await _logLoginService.LogLoginAsync(response.UserId, true, refreshToken, refreshTokenExpiration, ip, "Login exitoso");
                 }
                 else
                 {
-                    await _logLoginService.LogLoginAsync(user.Id, false, null, "Login fallido: usuario inactivo o error en repositorio");
+                    await _logLoginService.LogLoginAsync(user.Id, false, ip, "Login fallido: usuario inactivo o error en repositorio");
                 }
                 return response;
             }
@@ -70,25 +82,58 @@ namespace Gymmetry.Application.Services
             }
         }
 
-        public async Task<RefreshTokenResponse?> RefreshTokenAsync(RefreshTokenRequest request)
+        public async Task<ApplicationResponse<RefreshTokenResponse>> RefreshTokenAsync(RefreshTokenRequest request)
         {
-            // Aquí deberías validar el refresh token y generar un nuevo JWT si es válido
-            // Por simplicidad, solo se regenera el token si el refresh token es igual a "valid-refresh-token"
-            if (request.RefreshToken == "valid-refresh-token")
+            // Validar el refresh token (ejemplo simplificado)
+            if (!string.IsNullOrEmpty(request.Token))
             {
-                // Aquí deberías obtener el usuario asociado al refresh token
-                // Para ejemplo, se usan datos dummy
-                var userId = Guid.NewGuid();
-                var userName = "usuario";
-                var email = "usuario@email.com";
-                var newToken = await JwtTokenGenerator.GenerateTokenAsync(userId, userName, email);
-                return await Task.FromResult(new RefreshTokenResponse
+                // Obtener el userId del token recibido
+                Guid userId;
+                try
                 {
-                    Token = newToken,
-                    RefreshToken = request.RefreshToken // En un caso real, deberías emitir un nuevo refresh token
-                });
+                    var principal = await JwtTokenGenerator.ValidateTokenAsync(request.Token);
+                    var subClaim = principal?.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)
+                        ?? principal?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                    if (subClaim == null || !Guid.TryParse(subClaim.Value, out userId))
+                        return null;
+                }
+                catch
+                {
+                    return null;
+                }
+                // Consultar el usuario por id
+                var user = await _userRepository.GetUserByIdAsync(userId);
+                if (user == null)
+                    return null;
+
+                var logLogin =_logLoginService.GetLogLoginByUserId(userId).Result;
+                string newToken = string.Empty;
+                if (logLogin.Data?.RefreshToken == request.RefreshToken)
+                {
+                     newToken = await JwtTokenGenerator.GenerateTokenAsync(user.Id, user.UserName ?? user.Email, user.Email, 60);
+                    return new ApplicationResponse<RefreshTokenResponse>
+                    {
+                        Success = true,
+                        Message = "Token refrescado correctamente.",
+                        Data = new RefreshTokenResponse
+                        {
+                            NewToken = newToken,
+                            TokenExpiration = DateTime.UtcNow.AddMinutes(60)
+                        }
+                    };
+                }
+                else
+                {
+                    return new ApplicationResponse<RefreshTokenResponse>
+                    {
+                        Success = false,
+                        Message = "Refresh token inválido o expirado.",
+                        Data = null
+                    };
+                }
+
             }
-            return await Task.FromResult<RefreshTokenResponse?>(null);
+            return null;
         }
     }
 }

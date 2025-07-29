@@ -4,6 +4,7 @@ using Gymmetry.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gymmetry.Domain.Migrations
 {
     [DbContext(typeof(GymmetryContext))]
-    partial class GymmetryContextModelSnapshot : ModelSnapshot
+    [Migration("20250728124314_AddGymFieldsAndGymImageEntity")]
+    partial class AddGymFieldsAndGymImageEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -834,7 +837,7 @@ namespace Gymmetry.Domain.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid?>("GymTypeId")
+                    b.Property<Guid>("GymTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("InstagramUrl")
@@ -1297,13 +1300,6 @@ namespace Gymmetry.Domain.Migrations
                     b.Property<bool>("IsSuccess")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RefreshToken")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<DateTime?>("RefreshTokenExpiration")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
 
@@ -1312,9 +1308,9 @@ namespace Gymmetry.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "UserId" }, "IX_FK_UserLogLogin");
 
-                    b.ToTable("LogLogins");
+                    b.ToTable("LogLogin", (string)null);
                 });
 
             modelBuilder.Entity("Gymmetry.Domain.Models.LogUninstall", b =>
@@ -2888,7 +2884,9 @@ namespace Gymmetry.Domain.Migrations
                 {
                     b.HasOne("Gymmetry.Domain.Models.GymType", "GymType")
                         .WithMany("Gyms")
-                        .HasForeignKey("GymTypeId");
+                        .HasForeignKey("GymTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Gymmetry.Domain.Models.User", null)
                         .WithMany()
@@ -2992,8 +2990,8 @@ namespace Gymmetry.Domain.Migrations
                     b.HasOne("Gymmetry.Domain.Models.User", "User")
                         .WithMany("LogLogins")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_UserLogLogin");
 
                     b.Navigation("User");
                 });

@@ -34,6 +34,7 @@ namespace Gymmetry.Functions.Auth
             logger.LogInformation("Procesando login de usuario.");
             try
             {
+
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var loginRequest = JsonConvert.DeserializeObject<LoginRequest>(requestBody);
                 var validationResult = ModelValidator.ValidateModel<LoginRequest, LoginResponse>(loginRequest, StatusCodes.Status400BadRequest);
@@ -44,7 +45,12 @@ namespace Gymmetry.Functions.Auth
                     return badResponse;
                 }
 
-                var result = await _authService.LoginAsync(loginRequest);
+                string? ip = req.Headers.TryGetValues("X-Forwarded-For", out var values) ? values.FirstOrDefault()?.Split(',')[0]?.Trim()
+                : req.Headers.TryGetValues("X-Original-For", out var originalForValues) ? originalForValues.FirstOrDefault()?.Split(':')[0]?.Trim()
+                : req.Headers.TryGetValues("REMOTE_ADDR", out var remoteValues) ? remoteValues.FirstOrDefault()
+                : null;
+
+                var result = await _authService.LoginAsync(loginRequest, ip);
                 if (result == null)
                 {
                     var unauthorizedResponse = req.CreateResponse(HttpStatusCode.Unauthorized);

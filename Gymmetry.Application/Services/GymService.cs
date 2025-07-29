@@ -174,8 +174,33 @@ namespace Gymmetry.Application.Services
                         ErrorCode = "NotFound"
                     };
                 }
-                var entity = _mapper.Map<Gym>(request);
-                var updated = await _gymRepository.UpdateGymAsync(entity).ConfigureAwait(false);
+                // Solo actualiza los campos que vienen en el request, los demás se mantienen
+                before.Name = string.IsNullOrEmpty(request.Name) ? before.Name : request.Name;
+                before.Nit = string.IsNullOrEmpty(request.Nit) ? before.Nit : request.Nit;
+                before.Email = string.IsNullOrEmpty(request.Email) ? before.Email : request.Email;
+                before.CountryId = request.CountryId != Guid.Empty ? request.CountryId : before.CountryId;
+                before.GymTypeId = request.GymTypeId != Guid.Empty ? request.GymTypeId : before.GymTypeId;
+                before.LogoUrl = request.LogoUrl ?? before.LogoUrl;
+                before.Description = request.Description ?? before.Description;
+                before.PhoneNumber = request.PhoneNumber ?? before.PhoneNumber;
+                before.WebsiteUrl = request.WebsiteUrl ?? before.WebsiteUrl;
+                before.SocialMediaLinks = request.SocialMediaLinks ?? before.SocialMediaLinks;
+                before.LegalRepresentative = request.LegalRepresentative ?? before.LegalRepresentative;
+                before.BillingEmail = request.BillingEmail ?? before.BillingEmail;
+                before.SubscriptionPlanId = request.SubscriptionPlanId ?? before.SubscriptionPlanId;
+                before.IsVerified = request.IsVerified;
+                before.Tags = request.Tags ?? before.Tags;
+                before.Owner_UserId = request.Owner_UserId ?? before.Owner_UserId;
+                before.BrandColor = request.BrandColor ?? before.BrandColor;
+                before.MaxBranchesAllowed = request.MaxBranchesAllowed ?? before.MaxBranchesAllowed;
+                before.QrImageUrl = request.QrImageUrl ?? before.QrImageUrl;
+                before.TrialEndsAt = request.TrialEndsAt ?? before.TrialEndsAt;
+                before.UpdatedAt = DateTime.UtcNow;
+                before.CreatedAt = before.CreatedAt;
+                before.Ip = ip;
+                before.IsActive = before.IsActive;
+
+                var updated = await _gymRepository.UpdateGymAsync(before).ConfigureAwait(false);
                 if (updated)
                 {
                     _logger.LogInformation("Gym updated successfully for GymId: {GymId}", request.Id);

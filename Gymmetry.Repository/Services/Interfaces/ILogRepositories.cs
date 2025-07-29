@@ -11,6 +11,8 @@ namespace Gymmetry.Repository.Services.Interfaces
     public interface ILogLoginRepository
     {
         Task<bool> AddAsync(LogLogin log);
+        Task<LogLogin> GetByUserIdAsync(Guid userId);
+        Task<bool> UpdateAsync(LogLogin log);
     }
     public interface ILogChangeRepository
     {

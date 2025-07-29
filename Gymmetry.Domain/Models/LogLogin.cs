@@ -9,6 +9,10 @@ public partial class LogLogin
 
     public bool IsSuccess { get; set; }
 
+    public string? RefreshToken { get; set; }
+
+    public DateTime? RefreshTokenExpiration { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }

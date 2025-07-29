@@ -4,6 +4,7 @@ using Gymmetry.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gymmetry.Domain.Migrations
 {
     [DbContext(typeof(GymmetryContext))]
-    partial class GymmetryContextModelSnapshot : ModelSnapshot
+    [Migration("20250728165701_UpdateLogLoginForRefreshTokenSupport")]
+    partial class UpdateLogLoginForRefreshTokenSupport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -834,7 +837,7 @@ namespace Gymmetry.Domain.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid?>("GymTypeId")
+                    b.Property<Guid>("GymTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("InstagramUrl")
@@ -2888,7 +2891,9 @@ namespace Gymmetry.Domain.Migrations
                 {
                     b.HasOne("Gymmetry.Domain.Models.GymType", "GymType")
                         .WithMany("Gyms")
-                        .HasForeignKey("GymTypeId");
+                        .HasForeignKey("GymTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Gymmetry.Domain.Models.User", null)
                         .WithMany()

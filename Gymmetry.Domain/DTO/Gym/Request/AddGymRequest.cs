@@ -9,7 +9,6 @@ namespace Gymmetry.Domain.DTO.Gym.Request
         public string Nit { get; set; } = null!;
         public string Email { get; set; } = null!;
         public Guid CountryId { get; set; }
-        public Guid GymPlanSelectedId { get; set; }
-        public Guid GymTypeId { get; set; }
+        public Guid Owner_UserId { get; set; }
     }
 }

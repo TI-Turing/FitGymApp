@@ -27,6 +27,15 @@ namespace Gymmetry.Repository.Services
             _context.LogLogins.Add(log);
             return await _context.SaveChangesAsync() > 0;
         }
+        public async Task<LogLogin> GetByUserIdAsync(Guid userId)
+        {
+            return await _context.LogLogins.Where(x=>x.UserId==userId && x.IsActive==true).FirstOrDefaultAsync();
+        }
+        public async Task<bool> UpdateAsync(LogLogin log)
+        {
+            _context.LogLogins.Update(log);
+            return await _context.SaveChangesAsync() > 0;
+        }
     }
     public class LogChangeRepository : ILogChangeRepository
     {

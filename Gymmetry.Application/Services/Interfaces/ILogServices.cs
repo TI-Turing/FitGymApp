@@ -1,4 +1,5 @@
 using Gymmetry.Domain.DTO;
+using Gymmetry.Domain.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -12,6 +13,9 @@ namespace Gymmetry.Application.Services.Interfaces
     public interface ILogLoginService
     {
         Task<ApplicationResponse<bool>> LogLoginAsync(Guid? userId, bool success, string? ip = null, string? message = null);
+        Task<ApplicationResponse<bool>> LogLoginAsync(Guid? userId, bool success, string refreshToken, DateTime refreshTokenExpiration, string? ip = null, string? message = null);
+        Task<ApplicationResponse<LogLogin>> GetLogLoginByUserId(Guid userId);
+        Task<ApplicationResponse<bool>> UpdateLogLoginAsync(LogLogin logLogin);
     }
 
     public interface ILogChangeService

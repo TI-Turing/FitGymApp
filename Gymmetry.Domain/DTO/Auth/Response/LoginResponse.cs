@@ -6,5 +6,8 @@ namespace Gymmetry.Domain.DTO.Auth.Response
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string? Token { get; set; }
-    }
+        public string? RefreshToken { get; set; }
+        public DateTime TokenExpiration { get; set; }
+        public DateTime RefreshTokenExpiration { get; set; }
+        }
 }

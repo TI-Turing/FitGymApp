@@ -122,6 +122,8 @@ public partial class GymmetryContext : DbContext
 
     public virtual DbSet<Feed> Feeds { get; set; }
 
+    public virtual DbSet<GymImage> GymImages { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AccessMethodType>(entity =>
@@ -466,6 +468,10 @@ public partial class GymmetryContext : DbContext
             entity.Property(e => e.Nit)
                 .HasMaxLength(20)
                 .HasColumnName("NIT");
+            entity.Property(e => e.FacbookUrl).HasMaxLength(255);
+            entity.Property(e => e.InstagramUrl).HasMaxLength(255);
+            entity.Property(e => e.Slogan).HasMaxLength(255);
+            entity.Property(e => e.PaisId);
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
             // Nueva relación: Owner_UserId como FK a User
@@ -608,20 +614,20 @@ public partial class GymmetryContext : DbContext
 
         modelBuilder.Entity<LogLogin>(entity =>
         {
-            entity.ToTable("LogLogin");
-
-            entity.HasIndex(e => e.UserId, "IX_FK_UserLogLogin");
-
+            entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.IsSuccess);
+            entity.Property(e => e.RefreshToken).HasMaxLength(255);
+            entity.Property(e => e.RefreshTokenExpiration);
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
             entity.Property(e => e.DeletedAt).HasColumnType("datetime");
             entity.Property(e => e.Ip).HasMaxLength(45);
-            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
-
-            entity.HasOne(d => d.User).WithMany(p => p.LogLogins)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_UserLogLogin");
+            entity.Property(e => e.IsActive);
+            entity.Property(e => e.UserId);
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.LogLogins)
+                .HasForeignKey(e => e.UserId);
         });
 
         modelBuilder.Entity<LogUninstall>(entity =>
@@ -1295,6 +1301,22 @@ public partial class GymmetryContext : DbContext
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_FeedUser");
+        });
+
+        modelBuilder.Entity<GymImage>(entity =>
+        {
+            entity.ToTable("GymImage");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Url).HasMaxLength(500);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.Ip).HasMaxLength(45);
+            entity.Property(e => e.IsActive);
+            entity.Property(e => e.GymId);
+            entity.Property(e => e.BranchId);
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Azure.Functions.Worker.Http;
 
 namespace Gymmetry.Functions.Auth
 {
@@ -24,8 +25,9 @@ namespace Gymmetry.Functions.Auth
         }
 
         [Function("Auth_RefreshTokenFunction")]
-        public async Task<ApiResponse<RefreshTokenResponse>> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "auth/refresh-token")] HttpRequest req)
+        public async Task<HttpResponseData> RunAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "auth/refresh-token")] HttpRequestData req,
+            FunctionContext executionContext)
         {
             _logger.LogInformation("Procesando solicitud de refresh token");
             try
@@ -33,37 +35,48 @@ namespace Gymmetry.Functions.Auth
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var refreshRequest = JsonConvert.DeserializeObject<RefreshTokenRequest>(requestBody);
                 var validationResult = ModelValidator.ValidateModel<RefreshTokenRequest, RefreshTokenResponse>(refreshRequest, StatusCodes.Status400BadRequest);
-                if (validationResult is not null) return validationResult;
+                if (validationResult is not null)
+                {
+                    var badResponse = req.CreateResponse(System.Net.HttpStatusCode.BadRequest);
+                    await badResponse.WriteAsJsonAsync(validationResult);
+                    return badResponse;
+                }
 
                 var result = await _authService.RefreshTokenAsync(refreshRequest);
                 if (result == null)
                 {
-                    return new ApiResponse<RefreshTokenResponse>
+                    var unauthorizedResponse = req.CreateResponse(System.Net.HttpStatusCode.Unauthorized);
+                    await unauthorizedResponse.WriteAsJsonAsync(new ApiResponse<RefreshTokenResponse>
                     {
                         Success = false,
                         Message = "Refresh token inválido o expirado.",
                         Data = null,
                         StatusCode = StatusCodes.Status401Unauthorized
-                    };
+                    });
+                    return unauthorizedResponse;
                 }
-                return new ApiResponse<RefreshTokenResponse>
+                var successResponse = req.CreateResponse(System.Net.HttpStatusCode.OK);
+                await successResponse.WriteAsJsonAsync(new ApiResponse<RefreshTokenResponse>
                 {
-                    Success = true,
-                    Message = "Token refrescado correctamente.",
-                    Data = result,
+                    Success = result.Success,
+                    Message = result.Message,
+                    Data = result.Data,
                     StatusCode = StatusCodes.Status200OK
-                };
+                });
+                return successResponse;
             }
             catch (System.Exception ex)
             {
                 _logger.LogError(ex, "Error al refrescar el token.");
-                return new ApiResponse<RefreshTokenResponse>
+                var errorResponse = req.CreateResponse(System.Net.HttpStatusCode.BadRequest);
+                await errorResponse.WriteAsJsonAsync(new ApiResponse<RefreshTokenResponse>
                 {
                     Success = false,
                     Message = "Ocurrió un error al procesar la solicitud.",
                     Data = null,
-                    StatusCode = StatusCodes.Status400BadRequest
-                };
+                    StatusCode = StatusCodes.Status500InternalServerError
+                });
+                return errorResponse;
             }
         }
     }

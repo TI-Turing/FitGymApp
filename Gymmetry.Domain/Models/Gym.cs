@@ -27,21 +27,13 @@ public partial class Gym
     public int? MaxBranchesAllowed { get; set; }
     public string? QrImageUrl { get; set; }
     public DateTime? TrialEndsAt { get; set; }
-
     public Guid CountryId { get; set; }
-
     public DateTime CreatedAt { get; set; }
-
     public DateTime? UpdatedAt { get; set; }
-
     public DateTime? DeletedAt { get; set; }
-
     public string? Ip { get; set; }
-
     public bool IsActive { get; set; }
-
-    public Guid GymTypeId { get; set; }
-
+    public Guid? GymTypeId { get; set; }
     public virtual GymType GymType { get; set; } = null!;
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
@@ -59,4 +51,9 @@ public partial class Gym
     public virtual ICollection<User> UserUserGymAssigneds { get; set; } = new List<User>();
 
     public virtual ICollection<PaymentAttempt> PaymentAttempts { get; set; } = new List<PaymentAttempt>();
+
+    public string? FacbookUrl { get; set; }
+    public string? InstagramUrl { get; set; }
+    public string? Slogan { get; set; }
+    public Guid? PaisId { get; set; }
 }

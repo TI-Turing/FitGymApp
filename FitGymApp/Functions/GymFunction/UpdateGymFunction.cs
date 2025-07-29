@@ -72,7 +72,7 @@ public class UpdateGymFunction
                 Success = result.Success,
                 Message = result.Message,
                 Data = objRequest.Id,
-                StatusCode = result.Success ? StatusCodes.Status200OK : StatusCodes.Status404NotFound
+                StatusCode = result.Success ? StatusCodes.Status202Accepted : StatusCodes.Status404NotFound
             });
             return response;
         }
