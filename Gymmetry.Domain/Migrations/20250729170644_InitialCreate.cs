@@ -117,6 +117,26 @@ namespace Gymmetry.Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GymImage",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    GymId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    BranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
+                    Ip = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GymImage", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GymPlanSelectedType",
                 columns: table => new
                 {
@@ -672,7 +692,11 @@ namespace Gymmetry.Domain.Migrations
                     DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     Ip = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    GymTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    GymTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FacbookUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    InstagramUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Slogan = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    PaisId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -681,8 +705,7 @@ namespace Gymmetry.Domain.Migrations
                         name: "FK_Gym_GymTypes_GymTypeId",
                         column: x => x.GymTypeId,
                         principalTable: "GymTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -782,7 +805,6 @@ namespace Gymmetry.Domain.Migrations
                     BirthDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     ProfileImageUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     DocumentTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DocumentType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     CountryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
@@ -792,6 +814,7 @@ namespace Gymmetry.Domain.Migrations
                     EmergencyName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     EmergencyPhone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     PhysicalExceptions = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhysicalExceptionsNotes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -801,7 +824,6 @@ namespace Gymmetry.Domain.Migrations
                     PlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserFitUser_UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserDiet_UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    GymUser_Id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     EmployeeRegisterDailyUser_UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ScheduleUser_UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserEmployeeUser_UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -835,11 +857,6 @@ namespace Gymmetry.Domain.Migrations
                         name: "FK_UserFitUser",
                         column: x => x.UserFitUser_UserId,
                         principalTable: "FitUser",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserGymUser",
-                        column: x => x.GymUser_Id,
-                        principalTable: "Gym",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserPlan",
@@ -914,11 +931,13 @@ namespace Gymmetry.Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LogLogin",
+                name: "LogLogins",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsSuccess = table.Column<bool>(type: "bit", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    RefreshTokenExpiration = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -928,12 +947,13 @@ namespace Gymmetry.Domain.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LogLogin", x => x.Id);
+                    table.PrimaryKey("PK_LogLogins", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserLogLogin",
+                        name: "FK_LogLogins_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1190,7 +1210,8 @@ namespace Gymmetry.Domain.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    Recipient = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1620,8 +1641,8 @@ namespace Gymmetry.Domain.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FK_UserLogLogin",
-                table: "LogLogin",
+                name: "IX_LogLogins_UserId",
+                table: "LogLogins",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -1824,11 +1845,6 @@ namespace Gymmetry.Domain.Migrations
                 column: "UserFitUser_UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FK_UserGymUser",
-                table: "User",
-                column: "GymUser_Id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FK_UserPlan",
                 table: "User",
                 column: "PlanId");
@@ -1986,10 +2002,6 @@ namespace Gymmetry.Domain.Migrations
                 table: "RoutineTemplate");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_UserGymUser",
-                table: "User");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_User_Gym_GymId",
                 table: "User");
 
@@ -2046,6 +2058,9 @@ namespace Gymmetry.Domain.Migrations
                 name: "Feed");
 
             migrationBuilder.DropTable(
+                name: "GymImage");
+
+            migrationBuilder.DropTable(
                 name: "JourneyEmployee");
 
             migrationBuilder.DropTable(
@@ -2058,7 +2073,7 @@ namespace Gymmetry.Domain.Migrations
                 name: "LogErrors");
 
             migrationBuilder.DropTable(
-                name: "LogLogin");
+                name: "LogLogins");
 
             migrationBuilder.DropTable(
                 name: "LogUninstall");

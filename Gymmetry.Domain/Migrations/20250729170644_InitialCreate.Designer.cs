@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gymmetry.Domain.Migrations
 {
     [DbContext(typeof(GymmetryContext))]
-    [Migration("20250727032413_AddRecipientToUserOTP")]
-    partial class AddRecipientToUserOTP
+    [Migration("20250729170644_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -833,8 +833,16 @@ namespace Gymmetry.Domain.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid>("GymTypeId")
+                    b.Property<string>("FacbookUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid?>("GymTypeId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("InstagramUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Ip")
                         .HasMaxLength(45)
@@ -869,11 +877,18 @@ namespace Gymmetry.Domain.Migrations
                     b.Property<Guid?>("Owner_UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("PaisId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("QrImageUrl")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Slogan")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("SocialMediaLinks")
                         .HasColumnType("nvarchar(max)");
@@ -900,6 +915,47 @@ namespace Gymmetry.Domain.Migrations
                     b.HasIndex("Owner_UserId");
 
                     b.ToTable("Gym", (string)null);
+                });
+
+            modelBuilder.Entity("Gymmetry.Domain.Models.GymImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid?>("GymId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Ip")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GymImage", (string)null);
                 });
 
             modelBuilder.Entity("Gymmetry.Domain.Models.GymPlanSelected", b =>
@@ -1244,6 +1300,13 @@ namespace Gymmetry.Domain.Migrations
                     b.Property<bool>("IsSuccess")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RefreshToken")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiration")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime");
 
@@ -1252,9 +1315,9 @@ namespace Gymmetry.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "UserId" }, "IX_FK_UserLogLogin");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("LogLogin", (string)null);
+                    b.ToTable("LogLogins");
                 });
 
             modelBuilder.Entity("Gymmetry.Domain.Models.LogUninstall", b =>
@@ -2366,10 +2429,6 @@ namespace Gymmetry.Domain.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("DocumentType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<Guid?>("DocumentTypeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -2392,10 +2451,6 @@ namespace Gymmetry.Domain.Migrations
 
                     b.Property<Guid?>("GymId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("GymUserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("GymUser_Id");
 
                     b.Property<Guid?>("IdEps")
                         .HasMaxLength(50)
@@ -2431,6 +2486,10 @@ namespace Gymmetry.Domain.Migrations
 
                     b.Property<string>("PhysicalExceptions")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhysicalExceptionsNotes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<Guid?>("PlanId")
                         .HasColumnType("uniqueidentifier");
@@ -2489,8 +2548,6 @@ namespace Gymmetry.Domain.Migrations
                     b.HasIndex(new[] { "UserEmployeeUserUserId" }, "IX_FK_UserEmployeeUser");
 
                     b.HasIndex(new[] { "UserFitUserUserId" }, "IX_FK_UserFitUser");
-
-                    b.HasIndex(new[] { "GymUserId" }, "IX_FK_UserGymUser");
 
                     b.HasIndex(new[] { "PlanId" }, "IX_FK_UserPlan");
 
@@ -2828,9 +2885,7 @@ namespace Gymmetry.Domain.Migrations
                 {
                     b.HasOne("Gymmetry.Domain.Models.GymType", "GymType")
                         .WithMany("Gyms")
-                        .HasForeignKey("GymTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GymTypeId");
 
                     b.HasOne("Gymmetry.Domain.Models.User", null)
                         .WithMany()
@@ -2934,8 +2989,8 @@ namespace Gymmetry.Domain.Migrations
                     b.HasOne("Gymmetry.Domain.Models.User", "User")
                         .WithMany("LogLogins")
                         .HasForeignKey("UserId")
-                        .IsRequired()
-                        .HasConstraintName("FK_UserLogLogin");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -3259,11 +3314,6 @@ namespace Gymmetry.Domain.Migrations
                         .WithMany("UserGyms")
                         .HasForeignKey("GymId");
 
-                    b.HasOne("Gymmetry.Domain.Models.Gym", "GymUser")
-                        .WithMany("UserUserGymAssigneds")
-                        .HasForeignKey("GymUserId")
-                        .HasConstraintName("FK_UserGymUser");
-
                     b.HasOne("Gymmetry.Domain.Models.Plan", "Plan")
                         .WithMany("Users")
                         .HasForeignKey("PlanId")
@@ -3297,8 +3347,6 @@ namespace Gymmetry.Domain.Migrations
                     b.Navigation("EmployeeRegisterDailyUserUser");
 
                     b.Navigation("Gym");
-
-                    b.Navigation("GymUser");
 
                     b.Navigation("Plan");
 
@@ -3426,8 +3474,6 @@ namespace Gymmetry.Domain.Migrations
                     b.Navigation("RoutineTemplates");
 
                     b.Navigation("UserGyms");
-
-                    b.Navigation("UserUserGymAssigneds");
                 });
 
             modelBuilder.Entity("Gymmetry.Domain.Models.GymPlanSelected", b =>

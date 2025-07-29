@@ -29,6 +29,18 @@ public partial class Branch
 
     public string Name { get; set; } = null!;
 
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public string? OpeningHours { get; set; }
+    public Guid? Manager_UserId { get; set; }
+    public string? ManagerPhone { get; set; }
+    public int? Capacity { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
+    public string? Notes { get; set; }
+    public string? ParkingInfo { get; set; }
+    public bool WifiAvailable { get; set; }
+
     public virtual AccessMethodType AccessMethod { get; set; } = null!;
 
     public virtual ICollection<DailyHistory> DailyHistories { get; set; } = new List<DailyHistory>();

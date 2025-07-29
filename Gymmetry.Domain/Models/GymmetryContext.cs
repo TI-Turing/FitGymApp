@@ -124,6 +124,14 @@ public partial class GymmetryContext : DbContext
 
     public virtual DbSet<GymImage> GymImages { get; set; }
 
+    public virtual DbSet<BranchService> BranchServices { get; set; }
+
+    public virtual DbSet<BranchServiceType> BranchServiceTypes { get; set; }
+
+    public virtual DbSet<CurrentOccupancy> CurrentOccupancies { get; set; }
+
+    public virtual DbSet<BranchMedia> BranchMedias { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AccessMethodType>(entity =>
@@ -1069,7 +1077,6 @@ public partial class GymmetryContext : DbContext
             entity.HasIndex(e => e.UserDietUserId, "IX_FK_UserDiet");
             entity.HasIndex(e => e.UserEmployeeUserUserId, "IX_FK_UserEmployeeUser");
             entity.HasIndex(e => e.UserFitUserUserId, "IX_FK_UserFitUser");
-            entity.HasIndex(e => e.GymUserId, "IX_FK_UserGymUser");
             entity.HasIndex(e => e.PlanId, "IX_FK_UserPlan");
             entity.HasIndex(e => e.UserTypeId, "IX_FK_UserUserType");
 
@@ -1101,7 +1108,7 @@ public partial class GymmetryContext : DbContext
             entity.Property(e => e.UserDietUserId).HasColumnName("UserDiet_UserId");
             entity.Property(e => e.UserEmployeeUserUserId).HasColumnName("UserEmployeeUser_UserId");
             entity.Property(e => e.UserFitUserUserId).HasColumnName("UserFitUser_UserId");
-            entity.Property(e => e.GymUserId).HasColumnName("GymUser_Id");
+            // entity.Property(e => e.GymUserId).HasColumnName("GymUser_Id"); // Eliminado
             entity.Property(e => e.UserName).HasMaxLength(100);
 
             entity.HasOne(d => d.EmployeeRegisterDailyUserUser).WithMany(p => p.Users)
@@ -1127,11 +1134,6 @@ public partial class GymmetryContext : DbContext
             entity.HasOne(d => d.UserFitUser).WithMany(p => p.Users)
                 .HasForeignKey(d => d.UserFitUserUserId)
                 .HasConstraintName("FK_UserFitUser");
-
-            entity.HasOne(d => d.GymUser)
-                .WithMany(p => p.UserUserGymAssigneds)
-                .HasForeignKey(d => d.GymUserId)
-                .HasConstraintName("FK_UserGymUser");
 
             entity.HasOne(d => d.UserType).WithMany(p => p.Users)
                 .HasForeignKey(d => d.UserTypeId)
@@ -1319,6 +1321,66 @@ public partial class GymmetryContext : DbContext
             entity.Property(e => e.BranchId);
         });
 
+        modelBuilder.Entity<BranchService>(entity =>
+        {
+            entity.ToTable("BranchService");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Notes).HasMaxLength(500);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.Ip).HasMaxLength(45);
+            entity.HasOne(e => e.Branch)
+                .WithMany()
+                .HasForeignKey(e => e.BranchId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.BranchServiceType)
+                .WithMany(t => t.BranchServices)
+                .HasForeignKey(e => e.BranchServiceTypeId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+        modelBuilder.Entity<BranchServiceType>(entity =>
+        {
+            entity.ToTable("BranchServiceType");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.Ip).HasMaxLength(45);
+        });
+
+        modelBuilder.Entity<CurrentOccupancy>(entity =>
+        {
+            entity.ToTable("CurrentOccupancy");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Occupancy);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.Ip).HasMaxLength(45);
+            entity.HasOne(e => e.Branch)
+                .WithMany()
+                .HasForeignKey(e => e.BranchId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+        modelBuilder.Entity<BranchMedia>(entity =>
+        {
+            entity.ToTable("BranchMedia");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Url).HasMaxLength(500);
+            entity.Property(e => e.MediaType).HasMaxLength(50);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.Ip).HasMaxLength(45);
+            entity.HasOne(e => e.Branch)
+                .WithMany()
+                .HasForeignKey(e => e.BranchId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
         OnModelCreatingPartial(modelBuilder);
     }
 

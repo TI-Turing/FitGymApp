@@ -63,6 +63,7 @@ namespace Gymmetry.Application.Services
             {
                 var entity = _mapper.Map<Gym>(request);
                 var created = await _gymRepository.CreateGymAsync(entity).ConfigureAwait(false);
+                await _userService.UpdateUserGymAsync(request.Owner_UserId, created.Id, "", "", true);
                 _logger.LogInformation("Gym created successfully with ID: {GymId}", created.Id);
 
                 // Enviar correo de notificación de creación de gimnasio

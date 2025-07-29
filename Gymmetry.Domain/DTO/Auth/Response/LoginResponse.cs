@@ -1,3 +1,5 @@
+
+
 namespace Gymmetry.Domain.DTO.Auth.Response
 {
     public class LoginResponse
@@ -9,5 +11,6 @@ namespace Gymmetry.Domain.DTO.Auth.Response
         public string? RefreshToken { get; set; }
         public DateTime TokenExpiration { get; set; }
         public DateTime RefreshTokenExpiration { get; set; }
-        }
+        public Models.User User { get; set; } = new Models.User();
+    }
 }

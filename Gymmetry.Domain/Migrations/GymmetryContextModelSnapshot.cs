@@ -120,6 +120,9 @@ namespace Gymmetry.Domain.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int?>("Capacity")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("CityId")
                         .HasColumnType("uniqueidentifier");
 
@@ -132,6 +135,9 @@ namespace Gymmetry.Domain.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("GymId")
                         .HasColumnType("uniqueidentifier");
 
@@ -141,8 +147,32 @@ namespace Gymmetry.Domain.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ManagerPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("Manager_UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OpeningHours")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ParkingInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("RegionId")
@@ -150,6 +180,9 @@ namespace Gymmetry.Domain.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("WifiAvailable")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -160,6 +193,126 @@ namespace Gymmetry.Domain.Migrations
                     b.HasIndex(new[] { "GymId" }, "IX_FK_GymBranch");
 
                     b.ToTable("Branch", (string)null);
+                });
+
+            modelBuilder.Entity("Gymmetry.Domain.Models.BranchMedia", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Ip")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MediaType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("BranchMedia", (string)null);
+                });
+
+            modelBuilder.Entity("Gymmetry.Domain.Models.BranchService", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BranchServiceTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Ip")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("BranchServiceTypeId");
+
+                    b.ToTable("BranchService", (string)null);
+                });
+
+            modelBuilder.Entity("Gymmetry.Domain.Models.BranchServiceType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Ip")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BranchServiceType", (string)null);
                 });
 
             modelBuilder.Entity("Gymmetry.Domain.Models.Brand", b =>
@@ -270,6 +423,40 @@ namespace Gymmetry.Domain.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comment", (string)null);
+                });
+
+            modelBuilder.Entity("Gymmetry.Domain.Models.CurrentOccupancy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Ip")
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Occupancy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("CurrentOccupancy", (string)null);
                 });
 
             modelBuilder.Entity("Gymmetry.Domain.Models.Daily", b =>
@@ -2449,10 +2636,6 @@ namespace Gymmetry.Domain.Migrations
                     b.Property<Guid?>("GymId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("GymUserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("GymUser_Id");
-
                     b.Property<Guid?>("IdEps")
                         .HasMaxLength(50)
                         .HasColumnType("uniqueidentifier")
@@ -2549,8 +2732,6 @@ namespace Gymmetry.Domain.Migrations
                     b.HasIndex(new[] { "UserEmployeeUserUserId" }, "IX_FK_UserEmployeeUser");
 
                     b.HasIndex(new[] { "UserFitUserUserId" }, "IX_FK_UserFitUser");
-
-                    b.HasIndex(new[] { "GymUserId" }, "IX_FK_UserGymUser");
 
                     b.HasIndex(new[] { "PlanId" }, "IX_FK_UserPlan");
 
@@ -2730,6 +2911,36 @@ namespace Gymmetry.Domain.Migrations
                     b.Navigation("Gym");
                 });
 
+            modelBuilder.Entity("Gymmetry.Domain.Models.BranchMedia", b =>
+                {
+                    b.HasOne("Gymmetry.Domain.Models.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+                });
+
+            modelBuilder.Entity("Gymmetry.Domain.Models.BranchService", b =>
+                {
+                    b.HasOne("Gymmetry.Domain.Models.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Gymmetry.Domain.Models.BranchServiceType", "BranchServiceType")
+                        .WithMany("BranchServices")
+                        .HasForeignKey("BranchServiceTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("BranchServiceType");
+                });
+
             modelBuilder.Entity("Gymmetry.Domain.Models.Comment", b =>
                 {
                     b.HasOne("Gymmetry.Domain.Models.Post", "Post")
@@ -2749,6 +2960,17 @@ namespace Gymmetry.Domain.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Gymmetry.Domain.Models.CurrentOccupancy", b =>
+                {
+                    b.HasOne("Gymmetry.Domain.Models.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("Gymmetry.Domain.Models.Daily", b =>
@@ -3317,11 +3539,6 @@ namespace Gymmetry.Domain.Migrations
                         .WithMany("UserGyms")
                         .HasForeignKey("GymId");
 
-                    b.HasOne("Gymmetry.Domain.Models.Gym", "GymUser")
-                        .WithMany("UserUserGymAssigneds")
-                        .HasForeignKey("GymUserId")
-                        .HasConstraintName("FK_UserGymUser");
-
                     b.HasOne("Gymmetry.Domain.Models.Plan", "Plan")
                         .WithMany("Users")
                         .HasForeignKey("PlanId")
@@ -3355,8 +3572,6 @@ namespace Gymmetry.Domain.Migrations
                     b.Navigation("EmployeeRegisterDailyUserUser");
 
                     b.Navigation("Gym");
-
-                    b.Navigation("GymUser");
 
                     b.Navigation("Plan");
 
@@ -3404,6 +3619,11 @@ namespace Gymmetry.Domain.Migrations
                     b.Navigation("Schedules");
 
                     b.Navigation("SubModules");
+                });
+
+            modelBuilder.Entity("Gymmetry.Domain.Models.BranchServiceType", b =>
+                {
+                    b.Navigation("BranchServices");
                 });
 
             modelBuilder.Entity("Gymmetry.Domain.Models.Brand", b =>
@@ -3484,8 +3704,6 @@ namespace Gymmetry.Domain.Migrations
                     b.Navigation("RoutineTemplates");
 
                     b.Navigation("UserGyms");
-
-                    b.Navigation("UserUserGymAssigneds");
                 });
 
             modelBuilder.Entity("Gymmetry.Domain.Models.GymPlanSelected", b =>

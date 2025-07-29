@@ -72,6 +72,9 @@ namespace Gymmetry.Application.Services
                 {
                     await _logLoginService.LogLoginAsync(user.Id, false, ip, "Login fallido: usuario inactivo o error en repositorio");
                 }
+                user.LogLogins=  new List<LogLogin>();
+                response.User = user;
+
                 return response;
             }
             catch (Exception ex)

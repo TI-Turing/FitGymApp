@@ -65,8 +65,6 @@ public partial class User
 
     public Guid? UserDietUserId { get; set; }
 
-    public Guid? GymUserId { get; set; }
-
     public Guid? EmployeeRegisterDailyUserUserId { get; set; }
 
     public Guid? ScheduleUserUserId { get; set; }
@@ -120,8 +118,6 @@ public partial class User
     public virtual EmployeeUser? UserEmployeeUser { get; set; }
 
     public virtual FitUser? UserFitUser { get; set; }
-
-    public virtual Gym? GymUser { get; set; }
 
     public virtual UserType? UserType { get; set; }
 

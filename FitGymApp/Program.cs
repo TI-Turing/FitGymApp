@@ -109,7 +109,7 @@ builder.Services.AddScoped<ILogErrorService, LogErrorService>();
 builder.Services.AddScoped<ILogLoginService, LogLoginService>();
 builder.Services.AddScoped<ILogChangeService, LogChangeService>();
 builder.Services.AddScoped<IBillService, BillService>();
-builder.Services.AddScoped<IBranchService, BranchService>();
+builder.Services.AddScoped<IBranchService, Gymmetry.Application.Services.BranchService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<ICategoryExerciseService, CategoryExerciseService>();
 builder.Services.AddScoped<IDailyExerciseHistoryService, DailyExerciseHistoryService>();

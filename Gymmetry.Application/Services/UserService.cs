@@ -315,7 +315,7 @@ namespace Gymmetry.Application.Services
             }
         }
 
-        private async Task<ApplicationResponse<bool>> ValidateUpdateUserGymRulesAsync(Guid userId, Guid gymId)
+        private async Task<ApplicationResponse<bool>> ValidateUpdateUserGymRulesAsync(Guid userId, Guid gymId, bool owner = false)
         {
             var user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
             if (user == null || user.IsActive != true)
@@ -342,18 +342,20 @@ namespace Gymmetry.Application.Services
                     ErrorCode = "GymInactiveOrNotFound"
                 };
             }
-
-            var activeGymPlanSelected = gym.GymPlanSelecteds?.Any(plan => plan.IsActive);
-            if (activeGymPlanSelected != true)
+            if (!owner)
             {
-                _logger.LogWarning("Gym does not have an active GymPlanSelected for GymId: {GymId}", gymId);
-                return new ApplicationResponse<bool>
+                var activeGymPlanSelected = gym.GymPlanSelecteds?.Any(plan => plan.IsActive);
+                if (activeGymPlanSelected != true)
                 {
-                    Success = false,
-                    Data = false,
-                    Message = "Gym does not have an active GymPlanSelected.",
-                    ErrorCode = "NoActiveGymPlanSelected"
-                };
+                    _logger.LogWarning("Gym does not have an active GymPlanSelected for GymId: {GymId}", gymId);
+                    return new ApplicationResponse<bool>
+                    {
+                        Success = false,
+                        Data = false,
+                        Message = "Gym does not have an active GymPlanSelected.",
+                        ErrorCode = "NoActiveGymPlanSelected"
+                    };
+                }
             }
 
             return new ApplicationResponse<bool>
@@ -363,16 +365,15 @@ namespace Gymmetry.Application.Services
             };
         }
 
-        public async Task<ApplicationResponse<bool>> UpdateUserGymAsync(Guid userId, Guid gymId, string ip = "", string invocationId = "")
+        public async Task<ApplicationResponse<bool>> UpdateUserGymAsync(Guid userId, Guid gymId, string ip = "", string invocationId = "", bool owner=false)
         {
             _logger.LogInformation("Starting UpdateUserGymAsync method for UserId: {UserId} and GymId: {GymId}", userId, gymId);
 
-            var validationResponse = await ValidateUpdateUserGymRulesAsync(userId, gymId).ConfigureAwait(false);
-            if (!validationResponse.Success)
-            {
-                return validationResponse;
-            }
-
+                var validationResponse = await ValidateUpdateUserGymRulesAsync(userId, gymId, owner).ConfigureAwait(false);
+                if (!validationResponse.Success)
+                {
+                    return validationResponse;
+                }
             try
             {
                 var user = await _userRepository.GetUserByIdAsync(userId).ConfigureAwait(false);
@@ -389,7 +390,7 @@ namespace Gymmetry.Application.Services
 
                 if (gymId != Guid.Empty)
                 {
-                    user.GymUserId = gymId;
+                    user.GymId = gymId;
                 }
 
                 var updated = await _userRepository.UpdateUserAsync(user).ConfigureAwait(false);
