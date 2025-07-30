@@ -28,11 +28,9 @@ namespace DataBaseModel
         public Nullable<System.DateTime> DeletedAt { get; set; }
         public string Ip { get; set; }
         public bool IsActive { get; set; }
-        public System.Guid GymId { get; set; }
-        public System.Guid PlanTypeId { get; set; }
+        public System.Guid UserId { get; set; }
     
-        public virtual Gym Gym { get; set; }
-        public virtual PlanType PlanType { get; set; }
+        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> User { get; set; }
     }

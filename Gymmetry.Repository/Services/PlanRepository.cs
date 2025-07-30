@@ -85,9 +85,6 @@ namespace Gymmetry.Repository.Services
             return await _context.Plans.Where(lambda).ToListAsync();
         }
 
-        public async Task<IEnumerable<Plan>> GetPlansByGymIdAsync(Guid gymId)
-        {
-            return await _context.Plans.Where(p => p.GymId == gymId && p.IsActive).ToListAsync();
-        }
+
     }
 }

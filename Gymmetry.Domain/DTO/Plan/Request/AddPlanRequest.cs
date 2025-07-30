@@ -7,7 +7,7 @@ namespace Gymmetry.Domain.DTO.Plan.Request
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public Guid GymId { get; set; }
         public Guid PlanTypeId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

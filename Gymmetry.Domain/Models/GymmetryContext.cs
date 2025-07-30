@@ -881,9 +881,8 @@ public partial class GymmetryContext : DbContext
         {
             entity.ToTable("Plan");
 
-            entity.HasIndex(e => e.GymId, "IX_FK_GymPlan");
-
             entity.HasIndex(e => e.PlanTypeId, "IX_FK_PlanTypePlan");
+            entity.HasIndex(e => e.UserId, "IX_Plan_UserId");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
@@ -893,15 +892,17 @@ public partial class GymmetryContext : DbContext
             entity.Property(e => e.StartDate).HasColumnType("datetime");
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
-            entity.HasOne(d => d.Gym).WithMany(p => p.Plans)
-                .HasForeignKey(d => d.GymId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_GymPlan");
-
             entity.HasOne(d => d.PlanType).WithMany(p => p.Plans)
                 .HasForeignKey(d => d.PlanTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PlanTypePlan");
+
+            // Relación 1 a 1 con User
+            entity.HasOne(d => d.User)
+                .WithOne(u => u.Plan)
+                .HasForeignKey<Plan>(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Plan_User_UserId");
         });
 
         modelBuilder.Entity<PlanType>(entity =>
@@ -1114,10 +1115,6 @@ public partial class GymmetryContext : DbContext
             entity.HasOne(d => d.EmployeeRegisterDailyUserUser).WithMany(p => p.Users)
                 .HasForeignKey(d => d.EmployeeRegisterDailyUserUserId)
                 .HasConstraintName("FK_EmployeeRegisterDailyUser");
-
-            entity.HasOne(d => d.Plan).WithMany(p => p.Users)
-                .HasForeignKey(d => d.PlanId)
-                .HasConstraintName("FK_UserPlan");
 
             entity.HasOne(d => d.ScheduleUserUser).WithMany(p => p.Users)
                 .HasForeignKey(d => d.ScheduleUserUserId)

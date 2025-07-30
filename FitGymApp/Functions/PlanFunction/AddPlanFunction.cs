@@ -91,7 +91,7 @@ public class AddPlanFunction
                 Success = false,
                 Message = "Ocurrió un error al procesar la solicitud.",
                 Data = default,
-                StatusCode = StatusCodes.Status400BadRequest
+                StatusCode = StatusCodes.Status500InternalServerError
             });
             return errorResponse;
         }

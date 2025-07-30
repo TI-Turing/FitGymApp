@@ -21,15 +21,13 @@ public partial class Plan
 
     public bool IsActive { get; set; }
 
-    public Guid GymId { get; set; }
+    public Guid UserId { get; set; } // FK to User
 
     public Guid PlanTypeId { get; set; }
 
-    public virtual Gym Gym { get; set; } = null!;
+    public virtual User User { get; set; } = null!;
 
     public virtual PlanType PlanType { get; set; } = null!;
-
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
 
     public virtual PaymentAttempt? PaymentAttempt { get; set; }
 }
