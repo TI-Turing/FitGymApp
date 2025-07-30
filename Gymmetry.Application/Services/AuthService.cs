@@ -87,14 +87,13 @@ namespace Gymmetry.Application.Services
 
         public async Task<ApplicationResponse<RefreshTokenResponse>> RefreshTokenAsync(RefreshTokenRequest request)
         {
-            // Validar el refresh token (ejemplo simplificado)
+            // Permitir access token vencido, solo validar formato y firma
             if (!string.IsNullOrEmpty(request.Token))
             {
-                // Obtener el userId del token recibido
                 Guid userId;
                 try
                 {
-                    var principal = await JwtTokenGenerator.ValidateTokenAsync(request.Token);
+                    var principal = await JwtTokenGenerator.ValidateTokenIgnoreExpirationAsync(request.Token);
                     var subClaim = principal?.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)
                         ?? principal?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
                     if (subClaim == null || !Guid.TryParse(subClaim.Value, out userId))
@@ -109,11 +108,12 @@ namespace Gymmetry.Application.Services
                 if (user == null)
                     return null;
 
-                var logLogin =_logLoginService.GetLogLoginByUserId(userId).Result;
+                var logLogin = _logLoginService.GetLogLoginByUserId(userId).Result;
                 string newToken = string.Empty;
-                if (logLogin.Data?.RefreshToken == request.RefreshToken)
+                // Validar refresh token y expiración
+                if (logLogin.Data?.RefreshToken == request.RefreshToken && logLogin.Data?.RefreshTokenExpiration > DateTime.UtcNow)
                 {
-                     newToken = await JwtTokenGenerator.GenerateTokenAsync(user.Id, user.UserName ?? user.Email, user.Email, 60);
+                    newToken = await JwtTokenGenerator.GenerateTokenAsync(user.Id, user.UserName ?? user.Email, user.Email, 60);
                     return new ApplicationResponse<RefreshTokenResponse>
                     {
                         Success = true,
@@ -134,7 +134,6 @@ namespace Gymmetry.Application.Services
                         Data = null
                     };
                 }
-
             }
             return null;
         }

@@ -133,7 +133,7 @@ public class UpdateUserFunction
             if (data == null || data.UserId == Guid.Empty || data.GymId == Guid.Empty)
             {
                 var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-                await badResponse.WriteAsJsonAsync(new ApiResponse<Guid>
+                await badResponse.WriteAsJsonAsync(new ApiResponse<bool>
                 {
                     Success = false,
                     Message = "Debe enviar UserId y GymId válidos.",
@@ -152,21 +152,21 @@ public class UpdateUserFunction
             if (!result.Success)
             {
                 var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
-                await notFoundResponse.WriteAsJsonAsync(new ApiResponse<Guid>
+                await notFoundResponse.WriteAsJsonAsync(new ApiResponse<bool>
                 {
                     Success = false,
                     Message = result.Message,
-                    Data = data.UserId,
+                    Data = false,
                     StatusCode = StatusCodes.Status404NotFound
                 });
                 return notFoundResponse;
             }
             var successResponse = req.CreateResponse(HttpStatusCode.OK);
-            await successResponse.WriteAsJsonAsync(new ApiResponse<Guid>
+            await successResponse.WriteAsJsonAsync(new ApiResponse<bool>
             {
                 Success = true,
                 Message = result.Message,
-                Data = data.UserId,
+                Data = true,
                 StatusCode = StatusCodes.Status200OK
             });
             return successResponse;
@@ -175,11 +175,11 @@ public class UpdateUserFunction
         {
             logger.LogError(ex, "Error al actualizar GymUserId de usuario.");
             var errorResponse = req.CreateResponse(HttpStatusCode.InternalServerError);
-            await errorResponse.WriteAsJsonAsync(new ApiResponse<Guid>
+            await errorResponse.WriteAsJsonAsync(new ApiResponse<bool>
             {
                 Success = false,
                 Message = "Ocurrió un error al procesar la solicitud.",
-                Data = default,
+                Data = false,
                 StatusCode = StatusCodes.Status500InternalServerError
             });
             return errorResponse;

@@ -115,5 +115,30 @@ namespace Gymmetry.Application.Services
                 return Task.FromResult<ClaimsPrincipal?>(null);
             }
         }
+
+        public static Task<ClaimsPrincipal?> ValidateTokenIgnoreExpirationAsync(string token)
+        {
+            Initialize();
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_secretKey!);
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidIssuer = _issuer,
+                    ValidAudience = _audience,
+                    ValidateLifetime = false, // Ignorar expiración
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuerSigningKey = true
+                }, out _);
+                return Task.FromResult<ClaimsPrincipal?>(principal);
+            }
+            catch
+            {
+                return Task.FromResult<ClaimsPrincipal?>(null);
+            }
+        }
     }
 }

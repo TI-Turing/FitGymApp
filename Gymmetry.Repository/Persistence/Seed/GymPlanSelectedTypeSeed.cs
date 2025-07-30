@@ -13,7 +13,7 @@ namespace Gymmetry.Repository.Persistence.Seed
             {
                 context.GymPlanSelectedTypes.Add(new GymPlanSelectedType
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("4942557C-1B1C-4F45-8C31-0AC4185F78E4"),
                     Name = "Plan Básico",
                     CreatedAt = new DateTime(2024, 1, 1),
                     IsActive = true,
@@ -27,7 +27,7 @@ namespace Gymmetry.Repository.Persistence.Seed
             {
                 context.GymPlanSelectedTypes.Add(new GymPlanSelectedType
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("0B6D30CF-EF67-4A1B-9584-7B0C17E86730"),
                     Name = "Plan Pro",
                     CreatedAt = new DateTime(2024, 1, 1),
                     IsActive = true,
@@ -41,7 +41,7 @@ namespace Gymmetry.Repository.Persistence.Seed
             {
                 context.GymPlanSelectedTypes.Add(new GymPlanSelectedType
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("3F0AAB23-C712-4836-B3FD-A51303469319"),
                     Name = "Plan Premium",
                     CreatedAt = new DateTime(2024, 1, 1),
                     IsActive = true,
@@ -55,7 +55,7 @@ namespace Gymmetry.Repository.Persistence.Seed
             {
                 context.GymPlanSelectedTypes.Add(new GymPlanSelectedType
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("9C251808-3C44-4659-AFED-16A93D349808"),
                     Name = "Plan Corporativo",
                     CreatedAt = new DateTime(2024, 1, 1),
                     IsActive = true,
