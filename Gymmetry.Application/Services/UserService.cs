@@ -95,18 +95,18 @@ namespace Gymmetry.Application.Services
                 var created = await _userRepository.CreateUserAsync(user).ConfigureAwait(false);
                 _logger.LogInformation("User created successfully with ID: {UserId}", created.Id);
 
-                // Enviar correo de bienvenida
-                //_ = _emailService.SendEmailAsync(
-                //    created.Email,
-                //    "¡Bienvenido a Gymmetry!",
-                //    $"<h1>Bienvenido, {created.Name ?? created.Email}!</h1><p>Gracias por registrarte en Gymmetry.</p>"
-                //);
-                //// Enviar correo de verificación
-                //_ = _emailService.SendEmailAsync(
-                //    created.Email,
-                //    "Verifica tu correo electrónico",
-                //    $"<p>Por favor verifica tu correo haciendo clic en el siguiente enlace: <a href='{{verification_link}}'>Verificar</a></p>"
-                //);
+                // Enviar correo de bienvenida usando EmailTemplates
+                _ = _emailService.SendEmailAsync(
+                    created.Email,
+                    EmailTemplates.WelcomeTitle,
+                    EmailTemplates.WelcomeBody(created.Name ?? created.Email)
+                );
+                // Enviar correo de verificación usando EmailTemplates
+                _ = _emailService.SendEmailAsync(
+                    created.Email,
+                    EmailTemplates.VerificationTitle,
+                    EmailTemplates.VerificationBody
+                );
 
                 return new ApplicationResponse<User>
                 {

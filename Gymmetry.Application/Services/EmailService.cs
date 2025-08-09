@@ -22,7 +22,7 @@ namespace Gymmetry.Application.Services
             try
             {
                 _logger.LogInformation("Sending email to {To} with subject {Subject}", to, subject);
-                //return await _emailRepository.SendEmailAsync(to, subject, htmlContent, from).ConfigureAwait(false);
+                return await _emailRepository.SendEmailAsync(to, subject, htmlContent, from).ConfigureAwait(false);
                 return true;
             }
             catch (Exception ex)

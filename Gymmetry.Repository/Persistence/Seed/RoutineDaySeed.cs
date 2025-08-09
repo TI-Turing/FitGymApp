@@ -9,7 +9,11 @@ namespace Gymmetry.Infrastructure.Persistence.Seeds
     {
         public static async Task SeedAsync(GymmetryContext context)
         {
-            
+
+            if(context.RoutineDays.FirstOrDefault()!= null)
+            {
+                return;
+            }
 
             var routineDays = new List<RoutineDay>();
 
